@@ -43,10 +43,15 @@ data class Door(
 @Composable
 fun DoorComponent(doors: List<Door>) {
 
-    Column(modifier = Modifier
+    Column(
+        modifier = Modifier
         //.padding(horizontal = 16.dp)
     ) {
-        Text(text = "출입문", style = MaterialTheme.typography.titleMedium)
+        Text(
+            text = "출입문",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold
+        )
         Spacer(modifier = Modifier.height(12.dp))
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -99,7 +104,7 @@ fun DoorCard(door: Door) {
                         .wrapContentWidth(),
                     contentAlignment = Alignment.Center,
 
-                ) {
+                    ) {
                     Text( // 출입문 이름
                         text = door.number,
                         style = MaterialTheme.typography.labelSmall,
@@ -121,7 +126,7 @@ fun DoorCard(door: Door) {
                 style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
                 color = if (door.wheel) Color(0xFF3C8458) else Color(0xFF999999),
 
-            )
+                )
         }
     }
 }
@@ -130,6 +135,6 @@ fun DoorCard(door: Door) {
 @Composable
 private fun DoorPreview() {
     val doors = mutableListOf(Door("https://", "창의관", "A", false))
-    doors.add(Door("https://","창의관","A-2",true))
+    doors.add(Door("https://", "창의관", "A-2", true))
     DoorComponent(doors)
 }

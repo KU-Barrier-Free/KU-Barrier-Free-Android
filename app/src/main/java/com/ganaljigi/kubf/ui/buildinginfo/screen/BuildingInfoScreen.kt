@@ -33,6 +33,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
 import com.ganaljigi.kubf.ui.buildinginfo.component.Door
@@ -48,7 +49,6 @@ data class BuildingInfo(
     val imageUrl: String,
     val floors: String?
 )
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,8 +70,13 @@ fun BuildingInfoScreen(
                         Icon(Icons.Filled.ArrowBack, contentDescription = "뒤로")
                     }
                 },
-                title = { Text(text = building.name, textAlign = TextAlign.Center
-                    ) },
+                title = {
+                    Text(
+                        text = building.name,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+                },
                 actions = {
                     IconButton(onClick = onSearch) {
                         Icon(Icons.Filled.Search, contentDescription = "검색")
@@ -99,7 +104,7 @@ fun BuildingInfoScreen(
                     modifier = Modifier.matchParentSize()
                 )
             }
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(20.dp))
 
             // 건물 이름, 번호
             Row(
@@ -120,7 +125,11 @@ fun BuildingInfoScreen(
             Spacer(Modifier.height(24.dp))
 
             // 소속 부서
-            Text(text = "소속 부서", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Text(
+                text = "소속 부서",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
             Spacer(Modifier.height(12.dp))
             Text(
                 text = building.department,
@@ -138,4 +147,28 @@ fun BuildingInfoScreen(
 
         }
     }
+}
+
+@Preview
+@Composable
+private fun PreviewBuilding() {
+    val doors = mutableListOf(Door("https://", "창의관", "A", false))
+    doors.add(Door("https://", "창의관", "A-2", true))
+    val features = mutableListOf(Feature("카페"))
+    features.add(Feature("편의점"))
+    features.add(Feature("복사실"))
+    features.add(Feature("편의점"))
+    features.add(Feature("복사실"))
+    features.add(Feature("편의점"))
+    features.add(Feature("복사실"))
+    features.add(Feature("편의점"))
+    features.add(Feature("복사실"))
+    val building = BuildingInfo("창의관", 1, "강의동", "http://", "5")
+    BuildingInfoScreen(
+        building, features, doors,
+        onBack = {},
+        onSearch = {},
+        onFeatureClick = {},
+        onDoorClick = {})
+
 }
