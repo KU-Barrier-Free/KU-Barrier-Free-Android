@@ -43,7 +43,9 @@ data class Door(
 @Composable
 fun DoorComponent(doors: List<Door>) {
 
-    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+    Column(modifier = Modifier
+        //.padding(horizontal = 16.dp)
+    ) {
         Text(text = "출입문", style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.height(12.dp))
         LazyRow(

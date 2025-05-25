@@ -52,7 +52,7 @@ fun FeatureComponent(
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(10.dp))
-                        .background(Color(0xFF656565))
+                        .background(Color(0xFFF8F8F8))
                         .clickable { onClick(feature) }
                         .padding(horizontal = 12.dp, vertical = 6.dp)
                 ) {
