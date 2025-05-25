@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -37,7 +36,7 @@ data class Door(
 )
 
 /**
- * 출입문 컴포넌트 - 문 사진과 휠체어 가능 여부
+ * 출입문 컴포넌트 - 문 사진과 휠체어 가능 여부,
  * 가로로 스크롤 가능
  */
 @Composable
@@ -55,7 +54,6 @@ fun DoorComponent(doors: List<Door>) {
         Spacer(modifier = Modifier.height(12.dp))
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(end = 8.dp)
         ) {
             items(doors) { door ->
                 DoorCard(door)
@@ -65,8 +63,11 @@ fun DoorComponent(doors: List<Door>) {
 }
 
 /**
- * 출입문 정보 - 문 사진, 휠체어 여부
- * clickable인지? 클릭하면 상세 정보로 이동하는지 ?
+ * 출입문 정보
+ * 1. 문 사진
+ * 2. 휠체어 여부
+ * 3. clickable인지? - 클릭하면 상세 정보로 이동하는지 ?
+ * 4. 사진은 url? 파일? 파일은 무리가 있을 것 같다.
  */
 @Composable
 fun DoorCard(door: Door) {

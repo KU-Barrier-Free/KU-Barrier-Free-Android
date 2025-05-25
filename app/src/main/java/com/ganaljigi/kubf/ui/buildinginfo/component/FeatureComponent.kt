@@ -32,6 +32,14 @@ data class Feature(
     val label: String
 )
 
+/**
+ * 주요시설 컴포넌트
+ * 1. 주요시설 리스트 받아오기
+ * 2. FlowRow로 주요시설 나타내기
+ * 3. clickable 한지?
+ * 4. 이미지는 그대로 쓰면 되는지?
+ */
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun FeatureComponent(

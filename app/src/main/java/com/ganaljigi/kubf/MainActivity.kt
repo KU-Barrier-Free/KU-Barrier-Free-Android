@@ -18,6 +18,9 @@ class MainActivity : ComponentActivity() {
         setContent(){
             val doors = mutableListOf(Door("https://", "창의관", "A", false))
             doors.add(Door("https://","창의관","A-2",true))
+            doors.add(Door("https://","창의관","A-2",false))
+            doors.add(Door("https://","창의관","A-2",true))
+            doors.add(Door("https://","창의관","A-2",true))
             val features = mutableListOf(Feature("카페"))
             features.add(Feature("편의점"))
             features.add(Feature("복사실"))
