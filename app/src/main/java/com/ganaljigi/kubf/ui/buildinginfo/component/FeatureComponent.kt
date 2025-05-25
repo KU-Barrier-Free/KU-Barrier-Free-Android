@@ -1,45 +1,93 @@
 package com.ganaljigi.kubf.ui.buildinginfo.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
+data class Feature(
+    val label: String
+)
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun FeatureInfo(features:List<String>) {
-    FlowRow(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        features.forEach { label->
-            Box(
-                modifier = Modifier.clip(RoundedCornerShape(12.dp))
-                    .background(Color(0xFFF8F8F8))
-                    .padding(horizontal = 12.dp, vertical = 6.dp)
-            ){
-                Text(text = label)
+fun FeatureComponent(
+    features: List<Feature>,
+    onClick: (Feature) -> Unit={}
+) {
+    Column {
+        Text(
+            text = "주요시설",
+            style = MaterialTheme.typography.titleMedium
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            features.forEach { feature ->
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(Color(0xFF656565))
+                        .clickable { onClick(feature) }
+                        .padding(horizontal = 12.dp, vertical = 6.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.AccountBox,
+                            contentDescription = feature.label,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Text(
+                            text = feature.label,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                }
             }
         }
     }
+
 }
 
 @Preview
 @Composable
 private fun FeaturePreview() {
-    val features = mutableListOf("카페")
-    FeatureInfo(features)
+    val features = mutableListOf(Feature("카페"))
+    features.add(Feature("편의점"))
+    features.add(Feature("복사실"))
+    features.add(Feature("편의점"))
+    features.add(Feature("복사실"))
+    features.add(Feature("편의점"))
+    features.add(Feature("복사실"))
+    features.add(Feature("편의점"))
+    features.add(Feature("복사실"))
+    FeatureComponent(features)
 }
