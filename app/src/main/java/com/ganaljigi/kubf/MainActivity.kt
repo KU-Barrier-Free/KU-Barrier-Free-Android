@@ -11,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.ganaljigi.kubf.navigation.MainNavHost
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,29 +21,15 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             KUBFAndroidTheme {
+                val navController = rememberNavController()
+
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                    MainNavHost(
+                        padding = innerPadding,
+                        navController = navController,
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    KUBFAndroidTheme {
-        Greeting("Android")
     }
 }
