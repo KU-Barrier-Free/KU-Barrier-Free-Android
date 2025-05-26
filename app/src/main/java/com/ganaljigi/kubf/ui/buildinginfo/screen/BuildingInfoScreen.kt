@@ -146,8 +146,8 @@ fun BuildingInfoScreen(
 @Preview
 @Composable
 private fun PreviewBuilding() {
-    val doors = mutableListOf(Door("https://", "창의관", "A", false))
-    doors.add(Door("https://", "창의관", "A-2", true))
+    val doors = mutableListOf(Door("https://", "경영관", "A", false))
+    doors.add(Door("https://", "경영관", "A-2", true))
     val features = mutableListOf(Feature("카페"))
     features.add(Feature("편의점"))
     features.add(Feature("복사실"))
@@ -157,7 +157,7 @@ private fun PreviewBuilding() {
     features.add(Feature("복사실"))
     features.add(Feature("편의점"))
     features.add(Feature("복사실"))
-    val building = BuildingInfo("창의관", 1, "강의동", "http://", "5")
+    val building = BuildingInfo("경영관", 2, "경영대학", "http://", "5")
     BuildingInfoScreen(
         building, features, doors,
         onBack = {},

@@ -34,6 +34,12 @@ data class Room(
 
 )
 
+/**
+ * 강의실 썸네일 컴포넌트
+ * - Room 데이터 받기
+ * - clickable 범위 모호
+ * - 이미지 - 세로크기는 고정하고 비율은 유지 <- 방법 모름
+ */
 @Composable
 fun RoomComponent(
     room: Room,

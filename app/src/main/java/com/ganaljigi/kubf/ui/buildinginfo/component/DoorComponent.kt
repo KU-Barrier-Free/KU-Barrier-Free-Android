@@ -36,8 +36,8 @@ data class Door(
 )
 
 /**
- * 출입문 컴포넌트 - 문 사진과 휠체어 가능 여부,
- * 가로로 스크롤 가능
+ * - 출입문 컴포넌트 - 문 사진과 휠체어 가능 여부,
+ * - 가로로 스크롤 가능
  */
 @Composable
 fun DoorComponent(doors: List<Door>) {
@@ -64,10 +64,10 @@ fun DoorComponent(doors: List<Door>) {
 
 /**
  * 출입문 정보
- * 1. 문 사진
- * 2. 휠체어 여부
- * 3. clickable인지? - 클릭하면 상세 정보로 이동하는지 ?
- * 4. 사진은 url? 파일? 파일은 무리가 있을 것 같다.
+ * - 문 사진
+ * - 휠체어 여부
+ * - clickable인지? - 클릭하면 상세 정보로 이동하는지 ?
+ * - 사진은 url? 파일? 파일은 무리가 있을 것 같다.
  */
 @Composable
 fun DoorCard(door: Door) {
