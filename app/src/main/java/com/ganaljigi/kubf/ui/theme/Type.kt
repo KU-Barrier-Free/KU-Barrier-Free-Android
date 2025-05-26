@@ -2,6 +2,7 @@ package com.ganaljigi.kubf.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -126,3 +127,21 @@ data class KUBFTypography(
     val buildingInfoSpecial: TextStyle,
 )
 
+val LocalTypography = staticCompositionLocalOf { KUBFTypography(
+    bold18 = PretendardBold,
+    semiBold20 = PretendardSemiBold,
+    semiBold18 = PretendardSemiBold,
+    semiBold16 = PretendardSemiBold,
+    semiBold14 = PretendardSemiBold,
+    semiBold13 = PretendardSemiBold,
+    medium20 = PretendardMedium,
+    medium15 = PretendardMedium,
+    medium14 = PretendardMedium,
+    medium13 = PretendardMedium,
+    regular16 = PretendardRegular,
+    regular14 = PretendardRegular,
+    regular13 = PretendardRegular,
+    regular12 = PretendardRegular,
+    homeSpecial = PretendardMedium,
+    buildingInfoSpecial = PretendardMedium
+) }
