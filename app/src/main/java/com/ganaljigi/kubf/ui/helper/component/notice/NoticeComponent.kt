@@ -3,18 +3,20 @@ package com.ganaljigi.kubf.ui.helper.component.notice
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,9 +27,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-//Helper화면의 NoticeBox
+//Helper화면의 NoticeBox의 Title
 @Composable
-fun NoticeBox(
+fun NoticeTitle(
     onNavigateClick: () -> Unit
 ) {
     Column(
@@ -43,7 +45,8 @@ fun NoticeBox(
         ) {
             Text(
                 text = "공지사항",
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 18.sp
             )
 
             IconButton(onClick = onNavigateClick) {
@@ -62,9 +65,13 @@ fun NoticeBox(
 fun NoticeTopAppBar(
     onBackClick: () -> Unit
 ) {
-    TopAppBar(
-        title={
+    CenterAlignedTopAppBar(
+        title={2
             Row(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .height(48.dp)
+                    .statusBarsPadding(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -72,6 +79,7 @@ fun NoticeTopAppBar(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.Black,
+
                     //fontFamily = FontFamily(Font(R.font.pretendard_semibold))
                 )
             }
@@ -87,16 +95,19 @@ fun NoticeTopAppBar(
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.White
-        ),
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(48.dp)
+        )
     )
 }
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewNoticeTopAppBar() {
+fun NoticeBoxPreview() {
+    NoticeTitle() {}
+}
+
+@Preview(showBackground = true)
+@Composable
+fun NoticeTopAppBarPreview() {
     NoticeTopAppBar (
         onBackClick = {}
     )
