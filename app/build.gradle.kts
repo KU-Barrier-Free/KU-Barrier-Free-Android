@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.mobileprogrammingmiddle"
+    namespace = "com.ganalijigi.kubf"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.mobileprogrammingmiddle"
+        applicationId = "com.ganalijigi.kubf"
         minSdk = 30
         targetSdk = 35
         versionCode = 1
