@@ -1,6 +1,7 @@
 package com.ganaljigi.kubf.ui.helper.component.topappbar
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -30,6 +31,7 @@ fun HelperTopAppBar(
     TopAppBar(
         title={
             Row(
+                modifier = Modifier.fillMaxHeight(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -42,7 +44,10 @@ fun HelperTopAppBar(
             }
         },
         navigationIcon = {
-            IconButton(onClick = onBackClick) {
+            IconButton(
+                onClick = onBackClick,
+                modifier = Modifier.fillMaxHeight()
+            ) {
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowLeft,
                     contentDescription = "뒤로가기",
