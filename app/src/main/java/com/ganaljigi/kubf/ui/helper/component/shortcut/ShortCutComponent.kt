@@ -46,5 +46,76 @@ fun ShortCutTitle() {
 }
 
 //바로가기 작은 박스
+@Composable
+fun ShortCutItem(
+    modifier: Modifier= Modifier,
+    text: String,
+    iconResId: Int,
+    onClick: () -> Unit
+) {
+    Surface (
+        modifier=modifier
+            .width(328.dp)
+            .height(48.dp),
+        shape = RoundedCornerShape(8.dp),
+        color = Color.White,
+        shadowElevation = 4.dp,
+        border = BorderStroke(1.dp, Color.LightGray),
+        onClick = onClick
+    ) {
+        Row(
+            modifier= Modifier
+                .fillMaxSize()
+                .padding(start = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id=iconResId),
+                contentDescription = "바로가기 아이콘",
+                modifier= Modifier.size(20.dp)
+            )
+            Spacer(modifier= Modifier.width(8.dp))
+
+            Text(
+                text=text,
+                color = Color(0xFF3C8458),
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                //fontFamily = FontFamily(Font(R.font.pretendard_medium))
+            )
+            Spacer(modifier= Modifier.weight(1f))
+
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowRight,
+                contentDescription = "해당 바로가기 웹뷰 ㄱㄱ",
+                tint = Color.LightGray,
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .size(20.dp)
+            )
+        }
+    }
+}
 
 //바로가기 큰 박스
+//@Composable
+//fun ShortCutBox(
+//
+//) {
+//    Column(
+//        modifier = Modifier
+//            //.padding(),
+//        //vertical 어쩌고
+//    ) {
+//        ShortCutItem(
+//            text = "장애학생 도우미",
+//            iconResId =
+//        ) { }
+//    }
+//}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewShortCutTitle() {
+    ShortCutTitle()
+}
