@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 
 @Composable
 fun MainNavHost(
@@ -43,7 +44,15 @@ fun MainNavHost(
 //            )
         }
 
-        composable<Routes.BuildingInfo> {
+        composable<Routes.Notice> {
+//            NoticeScreen(
+//                padding = padding,
+//                navigateBack = { navController.popBackStack() },
+//            )
+        }
+
+        composable<Routes.BuildingInfo> { navBackStackEntry ->
+            val buildingNumber = navBackStackEntry.toRoute<Routes.BuildingInfo>().number
 //             BuildingInfoScreen(
 //                padding = padding,
 //                navigateToRoomInfo = { roomId ->
@@ -53,7 +62,8 @@ fun MainNavHost(
 //             )
         }
 
-        composable<Routes.RoomInfo> {
+        composable<Routes.RoomInfo> { navBackStackEntry ->
+            val roomNumber = navBackStackEntry.toRoute<Routes.BuildingInfo>().number
 //             RoomInfoScreen(
 //                padding = padding,
 //                roomId = it.toRoute<Routes.RoomInfo>().roomId,

@@ -16,8 +16,8 @@ sealed interface Routes {
     data object Notice : Routes
 
     @Serializable
-    data object BuildingInfo : Routes
+    data class BuildingInfo(val number: Int) : Routes
 
     @Serializable
-    data object RoomInfo : Routes
+    data class RoomInfo(val number: Int) : Routes
 }
