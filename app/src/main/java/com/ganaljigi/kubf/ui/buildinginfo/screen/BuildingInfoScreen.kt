@@ -35,6 +35,8 @@ import com.ganaljigi.kubf.ui.buildinginfo.component.Door
 import com.ganaljigi.kubf.ui.buildinginfo.component.DoorComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.Feature
 import com.ganaljigi.kubf.ui.buildinginfo.component.FeatureComponent
+import com.ganaljigi.kubf.ui.buildinginfo.component.Room
+import com.ganaljigi.kubf.ui.buildinginfo.component.RoomComponent
 
 data class BuildingInfo(
     val name: String,
@@ -138,7 +140,8 @@ fun BuildingInfoScreen(
             )
             Spacer(Modifier.height(20.dp))
             DoorComponent(doors = doors)
-
+            Spacer(Modifier.height(20.dp))
+            RoomComponent(Room("http://","201","전산실습실","강의실","경사로"))
         }
     }
 }
@@ -157,6 +160,7 @@ private fun PreviewBuilding() {
     features.add(Feature("복사실"))
     features.add(Feature("편의점"))
     features.add(Feature("복사실"))
+
     val building = BuildingInfo("경영관", 2, "경영대학", "http://", "5")
     BuildingInfoScreen(
         building, features, doors,
