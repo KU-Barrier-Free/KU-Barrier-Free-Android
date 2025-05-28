@@ -36,7 +36,6 @@ data class Feature(
  * 주요시설 컴포넌트
  * - 주요시설 리스트 받아오기
  * - FlowRow로 주요시설 나타내기
- * - clickable 한지?
  * - 이미지는 그대로 쓰면 되는지?
  */
 

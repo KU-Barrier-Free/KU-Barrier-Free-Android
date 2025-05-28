@@ -39,13 +39,12 @@ data class Room(
     val name: String,
     val use: String,
     val note: String
-
+    //val hasNote : Bool
 )
 
 /**
  * 강의실 썸네일 컴포넌트
  * - Room 데이터 받기
- * - clickable 범위 모호
  * - 이미지 - 세로크기는 고정하고 비율은 유지 <- 방법 모름
  */
 @Composable
@@ -107,6 +106,7 @@ fun RoomComponent(
                 }
             }
             Spacer(Modifier.height(14.dp))
+            //if(hasNote){}
             Row {
                 Text(
                     text = "특이사항",
@@ -122,7 +122,9 @@ fun RoomComponent(
                 )
             }
             Spacer(Modifier.height(12.dp))
+            // if(hasImage) {}
             Row {
+                // AsyncImage
                 Image(
                     painter = rememberAsyncImagePainter(room.imageUrl),
                     contentDescription = "${room.number} 이미지",

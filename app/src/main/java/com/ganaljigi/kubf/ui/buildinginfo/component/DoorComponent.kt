@@ -103,6 +103,7 @@ fun DoorCard(door: Door) {
                         .background(Color(0xFF656565))
                         .height(16.dp)
                         .wrapContentWidth(),
+                    // 1글자일 땐 그냥 동그라미, 아닐 때 이렇게
                     contentAlignment = Alignment.Center,
 
                     ) {
@@ -123,7 +124,7 @@ fun DoorCard(door: Door) {
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = if (door.wheel) "가능 O" else "불가능 X",
+                text = if (door.wheel) "가능 O" else "불가능 X", // 왼쪽 정렬 해야됨
                 style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
                 color = if (door.wheel) Color(0xFF3C8458) else Color(0xFF999999),
 
