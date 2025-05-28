@@ -29,7 +29,7 @@ fun HelperTopAppBar(
     onBackClick: () -> Unit
 ) {
     TopAppBar(
-        title={
+        title = {
             Row(
                 modifier = Modifier.fillMaxHeight(),
                 verticalAlignment = Alignment.CenterVertically

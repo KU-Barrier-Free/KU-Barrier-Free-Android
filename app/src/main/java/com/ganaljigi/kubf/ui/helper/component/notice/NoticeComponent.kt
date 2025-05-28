@@ -66,7 +66,8 @@ fun NoticeTopAppBar(
     onBackClick: () -> Unit
 ) {
     CenterAlignedTopAppBar(
-        title={2
+        title = {
+            2
             Row(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -108,7 +109,7 @@ fun NoticeBoxPreview() {
 @Preview(showBackground = true)
 @Composable
 fun NoticeTopAppBarPreview() {
-    NoticeTopAppBar (
+    NoticeTopAppBar(
         onBackClick = {}
     )
 }

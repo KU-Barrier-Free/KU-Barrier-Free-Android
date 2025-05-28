@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.sp
 //바로가기 제목 박스
 @Composable
 fun ShortCutTitle() {
-    Row (
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
@@ -48,13 +48,13 @@ fun ShortCutTitle() {
 //바로가기 작은 박스
 @Composable
 fun ShortCutItem(
-    modifier: Modifier= Modifier,
+    modifier: Modifier = Modifier,
     text: String,
     iconResId: Int,
     onClick: () -> Unit
 ) {
-    Surface (
-        modifier=modifier
+    Surface(
+        modifier = modifier
             .width(328.dp)
             .height(48.dp),
         shape = RoundedCornerShape(8.dp),
@@ -64,26 +64,26 @@ fun ShortCutItem(
         onClick = onClick
     ) {
         Row(
-            modifier= Modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(start = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id=iconResId),
+                painter = painterResource(id = iconResId),
                 contentDescription = "바로가기 아이콘",
-                modifier= Modifier.size(20.dp)
+                modifier = Modifier.size(20.dp)
             )
-            Spacer(modifier= Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(8.dp))
 
             Text(
-                text=text,
+                text = text,
                 color = Color(0xFF3C8458),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
                 //fontFamily = FontFamily(Font(R.font.pretendard_medium))
             )
-            Spacer(modifier= Modifier.weight(1f))
+            Spacer(modifier = Modifier.weight(1f))
 
             Icon(
                 imageVector = Icons.Default.KeyboardArrowRight,
