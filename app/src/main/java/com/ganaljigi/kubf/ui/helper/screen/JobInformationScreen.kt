@@ -6,7 +6,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.ganaljigi.kubf.ui.helper.component.NoticeWebView
-import com.ganaljigi.kubf.ui.helper.component.notice.NoticeTopAppBar
+import com.ganaljigi.kubf.ui.helper.component.WebViewTopAppBar
 
 
 @Composable
@@ -15,7 +15,10 @@ fun JobInformationScreen(
 ) {
     Scaffold(
         topBar = {
-            NoticeTopAppBar(onBackClick = onBackClick)
+            WebViewTopAppBar (
+                textTitle = "채용 정보",
+                onBackClick = onBackClick
+            )
         }
     ) { innerPadding ->
         NoticeWebView(

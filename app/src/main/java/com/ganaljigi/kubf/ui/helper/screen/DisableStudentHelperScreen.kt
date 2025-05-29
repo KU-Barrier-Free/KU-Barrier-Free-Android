@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.ganaljigi.kubf.ui.helper.component.WebViewTopAppBar
 import com.ganaljigi.kubf.ui.helper.component.NoticeWebView
-import com.ganaljigi.kubf.ui.helper.component.notice.NoticeTopAppBar
 
 @Composable
 fun DisableStudentHelperScreen(
@@ -14,11 +14,14 @@ fun DisableStudentHelperScreen(
 ) {
     Scaffold(
         topBar = {
-            NoticeTopAppBar(onBackClick = onBackClick)
+            WebViewTopAppBar(
+                textTitle = "장애학생 도우미",
+                onBackClick = onBackClick
+            )
         }
     ) { innerPadding ->
         NoticeWebView(
-            url = "",
+            url = "https://www.konkuk.ac.kr/csd/15235/subview.do",
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)

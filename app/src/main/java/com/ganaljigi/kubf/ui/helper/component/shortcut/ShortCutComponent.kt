@@ -26,6 +26,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.ui.theme.KUBFTypography
 
 //바로가기 제목 박스
 @Composable
@@ -39,8 +41,9 @@ fun ShortCutTitle() {
     ) {
         Text(
             text = "바로가기",
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 18.sp
+            style = KUBFAndroidTheme.typography.semiBold18.copy(
+                fontSize = 18.sp
+            )
         )
     }
 }
@@ -79,9 +82,9 @@ fun ShortCutItem(
             Text(
                 text = text,
                 color = Color(0xFF3C8458),
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
-                //fontFamily = FontFamily(Font(R.font.pretendard_medium))
+                style = KUBFAndroidTheme.typography.medium14.copy(
+                    fontSize = 14.sp
+                )
             )
             Spacer(modifier = Modifier.weight(1f))
 
