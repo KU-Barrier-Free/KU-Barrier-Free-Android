@@ -8,7 +8,6 @@ import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,21 +24,22 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.ui.theme.Gray2
 import com.ganaljigi.kubf.ui.theme.Gray4
-import com.ganaljigi.kubf.ui.theme.Green
+import com.ganaljigi.kubf.ui.theme.MainGreen
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.ui.util.conditionalModifier
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun KUBFSearchBar(
     modifier: Modifier = Modifier,
-    value: String = "",
-    onValueChange: (String) -> Unit = {},
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
     onValueCleared: () -> Unit = {},
     placeHolderText: String = "",
     interactionSource: MutableInteractionSource,
@@ -47,26 +47,26 @@ fun KUBFSearchBar(
 ) {
     Row(
         modifier = modifier
-            .then(
-                if (isFocused)
-                    Modifier
-                        .border(
-                            width = 1.dp,
-                            shape = RoundedCornerShape(10.dp),
-                            color = Green
-                        )
-                        .background(Color.White)
-                else Modifier
+            .conditionalModifier(
+                condition = isFocused,
+                modifierIfTrue = Modifier
+                    .border(
+                        width = 1.dp,
+                        shape = RoundedCornerShape(10.dp),
+                        color = MainGreen
+                    )
+                    .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
+                modifierIfFalse = Modifier
                     .shadow(1.dp, shape = RoundedCornerShape(10.dp), clip = true)
             )
-            .background(Color.White)
+            .background(color = Color.White, shape = RoundedCornerShape(10.dp))
             .padding(horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_search_bar_leading),
             contentDescription = "검색 아이콘",
-            tint = if (isFocused) Green else Color.Unspecified,
+            tint = if (isFocused) MainGreen else Color.Unspecified,
         )
         BasicTextField(
             value = value,
@@ -79,7 +79,7 @@ fun KUBFSearchBar(
             cursorBrush = SolidColor(Gray4), // Cursor color
             textStyle = KUBFAndroidTheme.typography.medium15.copy(),
             decorationBox = { innerTextField ->
-                if (value.isEmpty()) {
+                if (value.text.isEmpty()) {
                     Text(
                         text = placeHolderText,
                         style = KUBFAndroidTheme.typography.medium15.copy(
@@ -90,7 +90,7 @@ fun KUBFSearchBar(
                 innerTextField()
             }
         )
-        if (value.isNotEmpty()) {
+        if (value.text.isNotEmpty()) {
             Icon(
                 modifier = Modifier.clickable { onValueCleared() },
                 painter = painterResource(R.drawable.ic_searchbar_close),
@@ -101,10 +101,10 @@ fun KUBFSearchBar(
     }
 }
 
-@Preview(showBackground = true, widthDp = 360, heightDp = 100)
+@Preview(widthDp = 360, heightDp = 100)
 @Composable
 private fun KUBFSearchBarPreview() {
-    var value by remember { mutableStateOf("") }
+    var value by remember { mutableStateOf(TextFieldValue()) }
     val interactionSource = remember { MutableInteractionSource() }
     Column {
         KUBFSearchBar(
