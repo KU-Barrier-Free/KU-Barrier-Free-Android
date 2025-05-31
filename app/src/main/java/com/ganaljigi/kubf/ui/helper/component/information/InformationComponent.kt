@@ -3,6 +3,7 @@ package com.ganaljigi.kubf.ui.helper.component.information
 import android.graphics.drawable.Icon
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -14,6 +15,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SegmentedButtonDefaults.Icon
@@ -71,8 +74,10 @@ fun InfoItemBox(
             ) {
                 Icon(
                     imageVector=icon,
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp)
+                    contentDescription = label,
+                    modifier = Modifier
+                        .size(20.dp)
+                        .align(Alignment.Top)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
@@ -115,6 +120,79 @@ fun MapBox(
 }
 
 //전체 정보 박스
+@Composable
+fun InfoBox(
+
+) {
+    Column(
+        modifier = Modifier
+            .width(328.dp)
+            .wrapContentHeight()
+            .border(
+                color = Color(0xFFF4F4F4),
+                shape = RoundedCornerShape(8.dp),
+                width = 1.dp
+            )
+    ) {
+        //주소
+        InfoItemBox(
+            icon = Icons.Default.LocationOn,
+            label = "주소"
+        ) {
+            Column {
+                Text(
+                    text = "서울시 광진구 능동로 120 (05029)\n건국대학교 학생회관 1층",
+                    style = KUBFAndroidTheme.typography.regular14.copy(
+                        fontSize = 14.sp
+                    )
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = "장애학생 지원센터: 105호\n장애학생 휴게실: 105-1호",
+                    style = KUBFAndroidTheme.typography.regular14.copy(
+                        fontSize = 14.sp,
+                        color = Color(0xFF3C8458)
+                    )
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        //지도
+        MapBox()
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        //전화번호
+        InfoItemBox(
+            icon = Icons.Default.Phone,
+            label = "전화번호"
+        ) {
+            Text(
+                text = "02-450-3968",
+                style = KUBFAndroidTheme.typography.regular14.copy(
+                    fontSize = 14.sp
+                )
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        //이메일
+        InfoItemBox(
+            icon = Icons.Default.Email,
+            label = "이메일"
+        ) {
+            Text(
+                text = "csd@konkuk.ac.kr",
+                style = KUBFAndroidTheme.typography.regular14.copy(
+                    fontSize = 14.sp
+                )
+            )
+        }
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
@@ -142,4 +220,10 @@ fun InfoItemBoxPreview() {
             )
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun InfoBoxPreview() {
+    InfoBox()
 }
