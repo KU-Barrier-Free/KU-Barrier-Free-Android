@@ -11,7 +11,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.material3.Text
@@ -50,11 +53,13 @@ fun InformationTitle() {
 @Composable
 fun InfoItemBox(
     icon: ImageVector,
-    label: String
+    label: String,
+    content: @Composable () -> Unit
 ) {
     Box(
         modifier = Modifier
-            .size(width = 304.dp, height = 92.dp)
+            .width(304.dp)
+            .wrapContentHeight()
             .padding(horizontal = 12.dp)
     ) {
         Row {
@@ -121,4 +126,20 @@ fun InformationTitlePreview() {
 @Composable
 fun MapBoxPreview() {
     MapBox()
+}
+
+@Preview(showBackground = true)
+@Composable
+fun InfoItemBoxPreview() {
+    InfoItemBox(
+        icon = Icons.Default.Phone,
+        label = "전화번호"
+    ) {
+        Text(
+            text = "02-450-3968",
+            style = KUBFAndroidTheme.typography.regular14.copy(
+                fontSize = 14.sp
+            )
+        )
+    }
 }
