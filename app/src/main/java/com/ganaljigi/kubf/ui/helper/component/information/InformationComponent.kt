@@ -1,13 +1,19 @@
 package com.ganaljigi.kubf.ui.helper.component.information
 
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,6 +42,24 @@ fun InformationTitle() {
 //정보 하나 박스
 
 //지도 박스
+@Composable
+fun MapBox(
+    modifier: Modifier= Modifier
+) {
+    Box(
+        modifier=modifier
+            .size(width = 304.dp, height = 164.98.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .border(
+                width = 1.dp,
+                color = Color(0xFFF4F4F4),
+                shape = RoundedCornerShape(10.dp)
+
+            )
+    ) {
+
+    }
+}
 
 //전체 정보 박스
 
@@ -43,4 +67,10 @@ fun InformationTitle() {
 @Composable
 fun InformationTitlePreview() {
     InformationTitle()
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MapBoxPreview() {
+    MapBox()
 }
