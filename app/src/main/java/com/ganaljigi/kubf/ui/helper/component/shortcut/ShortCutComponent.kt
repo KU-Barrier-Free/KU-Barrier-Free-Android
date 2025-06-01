@@ -53,7 +53,7 @@ fun ShortCutTitle() {
 fun ShortCutItem(
     modifier: Modifier = Modifier,
     text: String,
-    iconResId: Int,
+    iconResId: Int? = null,
     onClick: () -> Unit
 ) {
     Surface(
@@ -72,11 +72,23 @@ fun ShortCutItem(
                 .padding(start = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(id = iconResId),
-                contentDescription = "바로가기 아이콘",
-                modifier = Modifier.size(20.dp)
-            )
+            // 아이콘이 null이면 기본 아이콘 또는 빈 박스 대체
+            if (iconResId != null) {
+                Image(
+                    painter = painterResource(id = iconResId),
+                    contentDescription = "바로가기 아이콘",
+                    modifier = Modifier.size(20.dp)
+                )
+            } else {
+                // 기본 아이콘으로 대체 (예시: search 아이콘)
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowRight, // 또는 Search 등
+                    contentDescription = "기본 아이콘",
+                    modifier = Modifier.size(20.dp),
+                    tint = Color.Gray
+                )
+            }
+
             Spacer(modifier = Modifier.width(8.dp))
 
             Text(
