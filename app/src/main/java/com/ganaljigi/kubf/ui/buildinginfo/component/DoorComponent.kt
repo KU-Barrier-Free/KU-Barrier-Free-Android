@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
+import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 
 data class Door(
     val imageUrl: String,
@@ -42,24 +43,15 @@ data class Door(
 @Composable
 fun DoorComponent(doors: List<Door>) {
 
-    Column(
-        modifier = Modifier
-        //.padding(horizontal = 16.dp)
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.padding(horizontal = 16.dp)
     ) {
-        Text(
-            text = "출입문",
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            items(doors) { door ->
-                DoorCard(door)
-            }
+        items(doors) { door ->
+            DoorCard(door)
         }
     }
+
 }
 
 /**
@@ -120,15 +112,15 @@ fun DoorCard(door: Door) {
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = "휠체어 진입",
-                style = MaterialTheme.typography.bodySmall
+                style = KUBFAndroidTheme.typography.regular13
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = if (door.wheel) "가능 O" else "불가능 X", // 왼쪽 정렬 해야됨
-                style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
-                color = if (door.wheel) Color(0xFF3C8458) else Color(0xFF999999),
-
+                style = KUBFAndroidTheme.typography.semiBold14.copy(
+                    color = if (door.wheel) Color(0xFF3C8458) else Color(0xFF999999)
                 )
+            )
         }
     }
 }
