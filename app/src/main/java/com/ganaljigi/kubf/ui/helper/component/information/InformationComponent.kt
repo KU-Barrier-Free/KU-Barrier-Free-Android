@@ -1,6 +1,7 @@
 package com.ganaljigi.kubf.ui.helper.component.information
 
 import android.graphics.drawable.Icon
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -65,12 +66,15 @@ fun InfoItemBox(
             .wrapContentHeight()
             .padding(horizontal = 12.dp)
     ) {
-        Row {
+        Row (
+            verticalAlignment = Alignment.Top,
+            modifier = Modifier.fillMaxWidth()
+        ) {
             //작은 박스1: 아이콘, 정보 종류 제목
             Row(
                 modifier = Modifier
                     .size(width = 80.dp, height = 20.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.Top
             ) {
                 Icon(
                     imageVector=icon,
@@ -90,10 +94,12 @@ fun InfoItemBox(
             Spacer(modifier = Modifier.width(12.dp))
 
             //작은 박스2: 안에 설명들?!
-            Box(
-                modifier = Modifier.fillMaxHeight()
+            Column (
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f)
             ) {
-
+                content()
             }
         }
     }
@@ -128,6 +134,7 @@ fun InfoBox(
         modifier = Modifier
             .width(328.dp)
             .wrapContentHeight()
+            .background(color = Color(0xFFF4F4F4))
             .border(
                 color = Color(0xFFF4F4F4),
                 shape = RoundedCornerShape(8.dp),
