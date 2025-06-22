@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,25 +38,26 @@ fun HelperScreen(
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()),
+            //horizontalAlignment = Alignment.CenterHorizontally
         ) {
             //공지사항
             NoticeTitle {}
             NoticeItem(
-                title = "",
-                date = "",
+                title = "[KIRD] 포용성장사업_이공계 장애 대학(원)생 경력개발 멘토링 모집 홍보 새글",
+                date = "2025.05.13",
                 number = 47,
                 index = 0
             )
             NoticeItem(
-                title = "",
-                date = "",
+                title = "스텝업탐방캠프 2기 참여자 모집",
+                date = "2025.05.13",
                 number = 46,
                 index = 1
             )
             NoticeItem(
-                title = "",
-                date = "",
+                title = "2025 동행, 국가유산 ‘빛나는 우리를 만나다’「마음으로 듣는 국가유산」 역사 기행 참여 안내 새글",
+                date = "2025.05.13",
                 number = 45,
                 index = 2
             )
@@ -65,9 +67,9 @@ fun HelperScreen(
             //바로가기
             ShortCutTitle()
             Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier
-                    .padding(horizontal = 16.dp)
+                    //.padding(horizontal = 16.dp)
             ) {
                 ShortCutItem(
                     text = "장애학생 도우미",
@@ -90,7 +92,9 @@ fun HelperScreen(
 
             //정보
             InformationTitle()
-            InfoBox()
+            InfoBox(
+                //modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
         }
