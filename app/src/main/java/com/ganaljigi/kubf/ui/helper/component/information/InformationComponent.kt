@@ -62,7 +62,7 @@ fun InfoItemBox(
 ) {
     Box(
         modifier = Modifier
-            .width(304.dp)
+            .fillMaxWidth()
             .wrapContentHeight()
             .padding(horizontal = 12.dp)
     ) {
@@ -132,8 +132,10 @@ fun InfoBox(
 ) {
     Column(
         modifier = Modifier
-            .width(328.dp)
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
             .wrapContentHeight()
+            .clip(RoundedCornerShape(8.dp))
             .background(color = Color(0xFFF4F4F4))
             .border(
                 color = Color(0xFFF4F4F4),
@@ -178,6 +180,7 @@ fun InfoBox(
         ) {
             Text(
                 text = "02-450-3968",
+                modifier = Modifier.height(20.dp),
                 style = KUBFAndroidTheme.typography.regular14.copy(
                     fontSize = 14.sp
                 )
