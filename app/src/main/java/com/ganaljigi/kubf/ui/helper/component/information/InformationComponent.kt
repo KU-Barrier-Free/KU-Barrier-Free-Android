@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -112,7 +113,10 @@ fun MapBox(
 ) {
     Box(
         modifier=modifier
-            .size(width = 304.dp, height = 164.98.dp)
+            //.size(width = 304.dp, height = 164.98.dp)
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp)
+            .aspectRatio(1.842f)
             .clip(RoundedCornerShape(10.dp))
             .border(
                 width = 1.dp,
