@@ -6,7 +6,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -42,6 +41,7 @@ fun HomeSearchBar(
     onValueChange: (TextFieldValue) -> Unit = {},
     onValueCleared: () -> Unit = {},
     onChipClick: (SearchKeyword) -> Unit,
+    onSearchButtonClick: () -> Unit = {},
     value: TextFieldValue,
     searchKeywordEntry: List<SearchKeyword>
 ) {
@@ -62,6 +62,7 @@ fun HomeSearchBar(
             value = value,
             onValueChange = onValueChange,
             onValueCleared = onValueCleared,
+            onSearchButtonClick = onSearchButtonClick,
             placeHolderText = "건물, 편의시설 검색",
             interactionSource = interactionSource,
             isFocused = isFocused
