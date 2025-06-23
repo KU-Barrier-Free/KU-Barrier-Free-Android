@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -24,9 +26,11 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.ui.theme.Gray2
 import com.ganaljigi.kubf.ui.theme.Gray4
@@ -41,6 +45,7 @@ fun KUBFSearchBar(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
     onValueCleared: () -> Unit = {},
+    onSearchClick: () -> Unit = {},
     placeHolderText: String = "",
     interactionSource: MutableInteractionSource,
     isFocused: Boolean = false
@@ -77,13 +82,20 @@ fun KUBFSearchBar(
             singleLine = true,
             interactionSource = interactionSource,
             cursorBrush = SolidColor(Gray4), // Cursor color
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Search
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = { onSearchClick() }
+            ),
             textStyle = KUBFAndroidTheme.typography.medium15.copy(),
             decorationBox = { innerTextField ->
                 if (value.text.isEmpty()) {
                     Text(
                         text = placeHolderText,
                         style = KUBFAndroidTheme.typography.medium15.copy(
-                            color = Gray2
+                            color = Gray2,
+//                            fontSize = 15.sp
                         )
                     )
                 }
