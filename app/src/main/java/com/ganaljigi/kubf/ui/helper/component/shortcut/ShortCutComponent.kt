@@ -58,12 +58,13 @@ fun ShortCutItem(
 ) {
     Surface(
         modifier = modifier
-            .width(328.dp)
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
             .height(48.dp),
         shape = RoundedCornerShape(8.dp),
         color = Color.White,
-        shadowElevation = 4.dp,
-        border = BorderStroke(1.dp, Color.LightGray),
+        shadowElevation = 2.dp,
+        border = BorderStroke(1.dp, Color(0xFFEEEEEE)),
         onClick = onClick
     ) {
         Row(

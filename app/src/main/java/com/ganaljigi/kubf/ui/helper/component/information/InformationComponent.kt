@@ -74,7 +74,8 @@ fun InfoItemBox(
             //작은 박스1: 아이콘, 정보 종류 제목
             Row(
                 modifier = Modifier
-                    .size(width = 80.dp, height = 20.dp),
+                    .weight(80f)
+                    .height(20.dp),
                 verticalAlignment = Alignment.Top
             ) {
                 Icon(
@@ -97,8 +98,7 @@ fun InfoItemBox(
             //작은 박스2: 안에 설명들?!
             Column (
                 modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f)
+                    .weight(212f)
             ) {
                 content()
             }
@@ -147,6 +147,7 @@ fun InfoBox(
                 width = 1.dp
             )
     ) {
+        Spacer(modifier = Modifier.height(16.dp))
         //주소
         InfoItemBox(
             icon = Icons.Default.LocationOn,
@@ -156,7 +157,8 @@ fun InfoBox(
                 Text(
                     text = "서울시 광진구 능동로 120 (05029)\n건국대학교 학생회관 1층",
                     style = KUBFAndroidTheme.typography.regular14.copy(
-                        fontSize = 14.sp
+                        fontSize = 14.sp,
+                        lineHeight = 20.sp
                     )
                 )
                 Spacer(modifier = Modifier.height(12.dp))
@@ -164,7 +166,8 @@ fun InfoBox(
                     text = "장애학생 지원센터: 105호\n장애학생 휴게실: 105-1호",
                     style = KUBFAndroidTheme.typography.regular14.copy(
                         fontSize = 14.sp,
-                        color = Color(0xFF3C8458)
+                        color = Color(0xFF3C8458),
+                        lineHeight = 20.sp
                     )
                 )
             }
@@ -205,6 +208,7 @@ fun InfoBox(
                 )
             )
         }
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 

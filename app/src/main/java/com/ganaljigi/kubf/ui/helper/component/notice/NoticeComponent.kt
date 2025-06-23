@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.sp
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import java.sql.Date
 
+//공지사항도 ID
+
 //Helper화면의 NoticeBox의 Title
 @Composable
 fun NoticeTitle(
@@ -43,7 +45,7 @@ fun NoticeTitle(
             Text(
                 text = "공지사항",
                 style = KUBFAndroidTheme.typography.semiBold18.copy(
-                    fontSize = 18.sp
+                   fontSize = 18.sp
                 )
             )
 
@@ -77,7 +79,8 @@ fun NoticeItem(
         Text(
             text = title,
             style = KUBFAndroidTheme.typography.medium14.copy(
-                fontSize = 14.sp
+                fontSize = 14.sp,
+                lineHeight = 22.sp
             )
         )
         Spacer(modifier = Modifier.height(8.dp))
