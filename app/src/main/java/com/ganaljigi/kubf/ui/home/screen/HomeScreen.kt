@@ -2,18 +2,22 @@ package com.ganaljigi.kubf.ui.home.screen
 
 import android.R.attr.value
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -25,9 +29,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ganaljigi.kubf.ui.common.model.MapToggle
 import com.ganaljigi.kubf.ui.common.model.SearchKeyword
+import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoChip
 import com.ganaljigi.kubf.ui.home.component.HomeSearchBar
 import com.ganaljigi.kubf.ui.home.component.HomeToggle
+import com.ganaljigi.kubf.ui.home.component.NoticeButton
 import com.ganaljigi.kubf.ui.home.viewmodel.ToggleUiState
+import com.ganaljigi.kubf.ui.theme.Gray2
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 
 @Composable
@@ -52,56 +59,85 @@ fun HomeScreen(
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
-    Column(
+    Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .padding(padding)
-    ) {
+            .padding(padding),
+//        containerColor = Color.White,
+        topBar = {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.White)
+                    .padding(horizontal = 20.dp, vertical = 15.dp)
+            ) {
+                Text(
+                    text = "KU-Barrier Free",
+                    style = KUBFAndroidTheme.typography.medium20
+                )
+            }
+        }
+    ) { innerPadding ->
+
+        // TODO : Map Component
         Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.White)
-                .padding(horizontal = 20.dp, vertical = 15.dp)
-        ) {
-            Text(
-                text = "KU-Barrier Free",
-                style = KUBFAndroidTheme.typography.medium20
-            )
-        }
-
-        HomeSearchBar(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-                .focusRequester(focusRequester),
-            onValueChange = { searchValue = it },
-            onValueCleared = { searchValue = TextFieldValue("") },
-            onChipClick = { searchKeyword ->
-                searchValue = TextFieldValue(
-                    text = searchKeyword.label,
-                    selection = TextRange(searchKeyword.label.length)
-                )
-                focusManager.clearFocus()
-            },
-            onSearchButtonClick = {
-                // TODO:  검색 기능
-                focusManager.clearFocus()
-            },
-            value = searchValue,
-            searchKeywordEntry = SearchKeyword.entries
+                .fillMaxSize()
+                .background(Gray2)
         )
 
-        HomeToggle(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
+                .padding(innerPadding)
                 .padding(horizontal = 16.dp),
-            toggleUiStates = toggleUiState,
-            onToggleClick = { toggle ->
-                toggleUiState = toggleUiState.toMutableList()
-                    .map { if (it.toggle == toggle) it.copy(isSelected = !it.isSelected) else it }
-                    .toList()
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column {
+                HomeSearchBar(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                        .focusRequester(focusRequester),
+                    onValueChange = { searchValue = it },
+                    onValueCleared = { searchValue = TextFieldValue("") },
+                    onChipClick = { searchKeyword ->
+                        searchValue = TextFieldValue(
+                            text = searchKeyword.label,
+                            selection = TextRange(searchKeyword.label.length)
+                        )
+                        focusManager.clearFocus()
+                    },
+                    onSearchButtonClick = {
+                        // TODO:  검색 기능
+                        focusManager.clearFocus()
+                    },
+                    value = searchValue,
+                    searchKeywordEntry = SearchKeyword.entries
+                )
+
+                HomeToggle(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    toggleUiStates = toggleUiState,
+                    onToggleClick = { toggle ->
+                        toggleUiState = toggleUiState.toMutableList()
+                            .map { if (it.toggle == toggle) it.copy(isSelected = !it.isSelected) else it }
+                            .toList()
+                    }
+                )
             }
-        )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 20.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                BarrierFreeInfoChip()
+                NoticeButton()
+            }
+        }
     }
 }
 
