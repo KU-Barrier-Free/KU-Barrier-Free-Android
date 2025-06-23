@@ -15,7 +15,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,6 +49,8 @@ fun HomeScreen(
             }
         )
     }
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
 
     Column(
         modifier = Modifier
@@ -67,7 +72,8 @@ fun HomeScreen(
         HomeSearchBar(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .focusRequester(focusRequester),
             onValueChange = { searchValue = it },
             onValueCleared = { searchValue = TextFieldValue("") },
             onChipClick = { searchKeyword ->
@@ -75,6 +81,11 @@ fun HomeScreen(
                     text = searchKeyword.label,
                     selection = TextRange(searchKeyword.label.length)
                 )
+                focusManager.clearFocus()
+            },
+            onSearchButtonClick = {
+                // TODO:  검색 기능
+                focusManager.clearFocus()
             },
             value = searchValue,
             searchKeywordEntry = SearchKeyword.entries

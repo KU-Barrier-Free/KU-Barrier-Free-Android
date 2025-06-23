@@ -30,7 +30,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.ui.theme.Gray2
 import com.ganaljigi.kubf.ui.theme.Gray4
@@ -45,7 +44,7 @@ fun KUBFSearchBar(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
     onValueCleared: () -> Unit = {},
-    onSearchClick: () -> Unit = {},
+    onSearchButtonClick: () -> Unit = {},
     placeHolderText: String = "",
     interactionSource: MutableInteractionSource,
     isFocused: Boolean = false
@@ -86,7 +85,7 @@ fun KUBFSearchBar(
                 imeAction = ImeAction.Search
             ),
             keyboardActions = KeyboardActions(
-                onSearch = { onSearchClick() }
+                onSearch = { onSearchButtonClick() }
             ),
             textStyle = KUBFAndroidTheme.typography.medium15.copy(),
             decorationBox = { innerTextField ->
@@ -95,7 +94,6 @@ fun KUBFSearchBar(
                         text = placeHolderText,
                         style = KUBFAndroidTheme.typography.medium15.copy(
                             color = Gray2,
-//                            fontSize = 15.sp
                         )
                     )
                 }
