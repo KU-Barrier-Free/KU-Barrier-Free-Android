@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.ganaljigi.kubf.ui.common.model.MapToggle
 import com.ganaljigi.kubf.ui.common.model.SearchKeyword
 import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoChip
+import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoItem
 import com.ganaljigi.kubf.ui.home.component.HomeSearchBar
 import com.ganaljigi.kubf.ui.home.component.HomeToggle
 import com.ganaljigi.kubf.ui.home.component.NoticeButton
@@ -39,7 +40,8 @@ import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 
 @Composable
 fun HomeScreen(
-    padding: PaddingValues
+    padding: PaddingValues,
+    navigateToNotice: () -> Unit = { }
 ) {
     var searchValue by remember {
         mutableStateOf(
@@ -56,6 +58,9 @@ fun HomeScreen(
             }
         )
     }
+    var isBarrierFreeShown by remember {
+        mutableStateOf(false)
+    }
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
@@ -63,7 +68,6 @@ fun HomeScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(padding),
-//        containerColor = Color.White,
         topBar = {
             Box(
                 modifier = Modifier
@@ -134,8 +138,18 @@ fun HomeScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Bottom
             ) {
-                BarrierFreeInfoChip()
-                NoticeButton()
+                BarrierFreeInfoItem(
+                    visible = isBarrierFreeShown,
+                )
+                if (!isBarrierFreeShown) {
+                    BarrierFreeInfoChip {
+                        isBarrierFreeShown = !isBarrierFreeShown
+                    }
+
+                    NoticeButton {
+                        navigateToNotice()
+                    }
+                }
             }
         }
     }
