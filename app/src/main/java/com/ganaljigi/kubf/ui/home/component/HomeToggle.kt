@@ -1,5 +1,6 @@
 package com.ganaljigi.kubf.ui.home.component
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -8,10 +9,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,6 +25,7 @@ import com.ganaljigi.kubf.ui.home.viewmodel.ToggleUiState
 import com.ganaljigi.kubf.ui.theme.MainGreen
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.theme.LightGreen
+import com.ganaljigi.kubf.ui.util.noRippleClickable
 
 @Composable
 fun HomeToggle(
@@ -51,41 +56,43 @@ fun HomeToggleChip(
     toggle: MapToggle,
     onToggleClick: () -> Unit = {}
 ) {
-    Row(
+    Surface(
         modifier = modifier
-            .background(
-                if (isSelected) LightGreen else Color.White,
-                shape = RoundedCornerShape(20.dp)
+            .noRippleClickable { onToggleClick() },
+        shadowElevation = 2.dp,
+        shape = RoundedCornerShape(20.dp),
+        color =
+            if (isSelected) LightGreen else Color.White,
+        border = if (isSelected) {
+            BorderStroke(
+                width = 1.dp,
+                color = MainGreen
             )
-            .then(
-                if (isSelected)
-                    Modifier
-                        .border(
-                            width = 1.dp,
-                            color = MainGreen,
-                            shape = RoundedCornerShape(20.dp)
-                        )
-                else Modifier
-            )
-            .clickable { onToggleClick() }
-            .padding(horizontal = 8.dp, vertical = 6.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
+        } else null
     ) {
-        Icon(
-            painter = painterResource(toggle.iconRes),
-            contentDescription = toggle.label,
-            tint = Color.Unspecified,
-        )
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 8.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Icon(
+                painter = painterResource(toggle.iconRes),
+                contentDescription = toggle.label,
+                tint = Color.Unspecified,
+            )
 
-        Text(
-            text = toggle.label,
-            style = KUBFAndroidTheme.typography.medium13
-        )
+            Text(
+                text = toggle.label,
+                style = KUBFAndroidTheme.typography.medium13.copy(
+                    color = if (isSelected) MainGreen else Color.Black
+                )
+            )
+        }
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun HomeTogglePreview() {
     HomeToggle(
