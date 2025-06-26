@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import java.sql.Date
 
@@ -92,14 +93,14 @@ fun NoticeItem(
             Text(
                 text = date,
                 style = KUBFAndroidTheme.typography.regular13.copy(
-                    color = Color(0xFF999999),
+                    color = Gray3,
                     fontSize = 13.sp
                 )
             )
             Text(
                 text = "번호: $number",
                 style = KUBFAndroidTheme.typography.regular13.copy(
-                    color = Color(0xFF999999),
+                    color = Gray3,
                     fontSize = 13.sp
                 )
             )

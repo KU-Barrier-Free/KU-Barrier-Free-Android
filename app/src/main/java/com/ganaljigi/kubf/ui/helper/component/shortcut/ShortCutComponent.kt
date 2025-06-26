@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ganaljigi.kubf.ui.theme.Green
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.theme.KUBFTypography
 
@@ -94,7 +95,7 @@ fun ShortCutItem(
 
             Text(
                 text = text,
-                color = Color(0xFF3C8458),
+                color = Green,
                 style = KUBFAndroidTheme.typography.medium14.copy(
                     fontSize = 14.sp
                 )

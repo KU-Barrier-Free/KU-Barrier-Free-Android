@@ -33,6 +33,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ganaljigi.kubf.ui.helper.component.shortcut.ShortCutTitle
+import com.ganaljigi.kubf.ui.theme.Gray1
+import com.ganaljigi.kubf.ui.theme.Green
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 
 //정보 제목 박스
@@ -120,7 +122,7 @@ fun MapBox(
             .clip(RoundedCornerShape(10.dp))
             .border(
                 width = 1.dp,
-                color = Color(0xFFF4F4F4),
+                color = Gray1,
                 shape = RoundedCornerShape(10.dp)
 
             )
@@ -140,9 +142,9 @@ fun InfoBox(
             .padding(horizontal = 16.dp)
             .wrapContentHeight()
             .clip(RoundedCornerShape(8.dp))
-            .background(color = Color(0xFFF4F4F4))
+            .background(color = Gray1)
             .border(
-                color = Color(0xFFF4F4F4),
+                color = Gray1,
                 shape = RoundedCornerShape(8.dp),
                 width = 1.dp
             )
@@ -166,7 +168,7 @@ fun InfoBox(
                     text = "장애학생 지원센터: 105호\n장애학생 휴게실: 105-1호",
                     style = KUBFAndroidTheme.typography.regular14.copy(
                         fontSize = 14.sp,
-                        color = Color(0xFF3C8458),
+                        color = Green,
                         lineHeight = 20.sp
                     )
                 )
