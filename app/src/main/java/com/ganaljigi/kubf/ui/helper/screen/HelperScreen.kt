@@ -39,7 +39,6 @@ fun HelperScreen(
             modifier = Modifier
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState()),
-            //horizontalAlignment = Alignment.CenterHorizontally
         ) {
             //공지사항
             NoticeTitle {}
@@ -69,7 +68,6 @@ fun HelperScreen(
             Column(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier
-                    //.padding(horizontal = 16.dp)
             ) {
                 ShortCutItem(
                     text = "장애학생 도우미",
@@ -93,7 +91,6 @@ fun HelperScreen(
             //정보
             InformationTitle()
             InfoBox(
-                //modifier = Modifier.align(Alignment.CenterHorizontally)
             )
 
             Spacer(modifier = Modifier.height(16.dp))

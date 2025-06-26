@@ -40,9 +40,6 @@ fun WebViewTopAppBar(
             ) {
                 Text(
                     text = textTitle,
-//                    fontSize = 20.sp,
-//                    fontWeight = FontWeight.SemiBold,
-//                    color = Color.Black,
                     style = KUBFAndroidTheme.typography.medium13.copy(
                         fontSize = 16.sp
                     )

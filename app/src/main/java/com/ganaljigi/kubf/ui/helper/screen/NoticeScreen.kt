@@ -28,11 +28,3 @@ fun HelperNoticeScreen(
         )
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun HelperNoticeScreenPreview() {
-//    HelperNoticeScreen (
-//        onBackClick = {}
-//    )
-//}

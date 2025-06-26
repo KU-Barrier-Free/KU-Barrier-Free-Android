@@ -113,23 +113,6 @@ fun ShortCutItem(
     }
 }
 
-//바로가기 큰 박스
-//@Composable
-//fun ShortCutBox(
-//
-//) {
-//    Column(
-//        modifier = Modifier
-//            //.padding(),
-//        //vertical 어쩌고
-//    ) {
-//        ShortCutItem(
-//            text = "장애학생 도우미",
-//            iconResId =
-//        ) { }
-//    }
-//}
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewShortCutTitle() {
