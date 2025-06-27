@@ -2,7 +2,6 @@ package com.ganaljigi.kubf.ui.common.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Column
@@ -36,6 +35,7 @@ import com.ganaljigi.kubf.ui.theme.Gray4
 import com.ganaljigi.kubf.ui.theme.MainGreen
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.util.conditionalModifier
+import com.ganaljigi.kubf.ui.util.noRippleClickable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,7 +44,7 @@ fun KUBFSearchBar(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
     onValueCleared: () -> Unit = {},
-    onSearchButtonClick: () -> Unit = {},
+    onSearchKeyboardClick: () -> Unit = {},
     placeHolderText: String = "",
     interactionSource: MutableInteractionSource,
     isFocused: Boolean = false
@@ -85,7 +85,7 @@ fun KUBFSearchBar(
                 imeAction = ImeAction.Search
             ),
             keyboardActions = KeyboardActions(
-                onSearch = { onSearchButtonClick() }
+                onSearch = { onSearchKeyboardClick() }
             ),
             textStyle = KUBFAndroidTheme.typography.medium15.copy(),
             decorationBox = { innerTextField ->
@@ -102,7 +102,7 @@ fun KUBFSearchBar(
         )
         if (value.text.isNotEmpty()) {
             Icon(
-                modifier = Modifier.clickable { onValueCleared() },
+                modifier = Modifier.noRippleClickable { onValueCleared() },
                 painter = painterResource(R.drawable.ic_searchbar_close),
                 contentDescription = "검색어 비우기",
                 tint = Color.Unspecified,
