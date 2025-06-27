@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -37,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.ui.helper.component.shortcut.ShortCutTitle
 import com.ganaljigi.kubf.ui.theme.Gray1
+import com.ganaljigi.kubf.ui.theme.Gray4
 import com.ganaljigi.kubf.ui.theme.Green
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 
@@ -74,7 +76,9 @@ fun InfoItemBox(
     ) {
         Row (
             verticalAlignment = Alignment.Top,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                //.height(IntrinsicSize.Min)
         ) {
             //작은 박스1: 아이콘, 정보 종류 제목
             Row(
@@ -94,8 +98,11 @@ fun InfoItemBox(
                 Text(
                     text = label,
                     style = KUBFAndroidTheme.typography.semiBold14.copy(
-                        fontSize = 14.sp
-                    )
+                        fontSize = 14.sp,
+                        color = Gray4
+                    ),
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
                 )
             }
             Spacer(modifier = Modifier.width(12.dp))
@@ -160,6 +167,7 @@ fun InfoBox(
             label = "주소"
         ) {
             Column {
+                Spacer(modifier = Modifier.height(1.5.dp))
                 Text(
                     text = "서울시 광진구 능동로 120 (05029)\n건국대학교 학생회관 1층",
                     style = KUBFAndroidTheme.typography.regular14.copy(
@@ -191,13 +199,17 @@ fun InfoBox(
             iconResId = R.drawable.ic_helper_phone,
             label = "전화번호"
         ) {
-            Text(
-                text = "02-450-3968",
-                modifier = Modifier.height(20.dp),
-                style = KUBFAndroidTheme.typography.regular14.copy(
-                    fontSize = 14.sp
+            Column {
+                Spacer(modifier = Modifier.height(1.5.dp))
+                Text(
+                    text = "02-450-3968",
+                    modifier = Modifier.height(20.dp),
+                    style = KUBFAndroidTheme.typography.regular14.copy(
+                        fontSize = 14.sp,
+                        lineHeight = 20.sp
+                    )
                 )
-            )
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -210,7 +222,8 @@ fun InfoBox(
             Text(
                 text = "csd@konkuk.ac.kr",
                 style = KUBFAndroidTheme.typography.regular14.copy(
-                    fontSize = 14.sp
+                    fontSize = 14.sp,
+                    lineHeight = 20.sp
                 )
             )
         }
