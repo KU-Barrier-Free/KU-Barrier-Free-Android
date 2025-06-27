@@ -48,8 +48,8 @@ fun BarrierFreeInfoItem(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
-                .background(Color.White.copy(alpha = 0.8f))
                 .clip(RoundedCornerShape(20.dp))
+                .background(Color.White.copy(alpha = 0.8f))
                 .noRippleClickable(onClick)
         ) {
             Box(
