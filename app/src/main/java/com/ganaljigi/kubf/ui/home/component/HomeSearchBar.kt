@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,7 +42,7 @@ fun HomeSearchBar(
     onValueChange: (TextFieldValue) -> Unit = {},
     onValueCleared: () -> Unit = {},
     onChipClick: (SearchKeyword) -> Unit,
-    onSearchButtonClick: () -> Unit = {},
+    onSearchKeyboardClick: () -> Unit = {},
     value: TextFieldValue,
     searchKeywordEntry: List<SearchKeyword>
 ) {
@@ -62,7 +63,7 @@ fun HomeSearchBar(
             value = value,
             onValueChange = onValueChange,
             onValueCleared = onValueCleared,
-            onSearchButtonClick = onSearchButtonClick,
+            onSearchKeyboardClick = onSearchKeyboardClick,
             placeHolderText = "건물, 편의시설 검색",
             interactionSource = interactionSource,
             isFocused = isFocused
@@ -130,17 +131,17 @@ fun ToggleChip(
 @Preview(showBackground = false, widthDp = 360, heightDp = 400)
 @Composable
 private fun HomeSearchBarPreview() {
-    val value by remember {
+    var value by remember {
         mutableStateOf(
             TextFieldValue(
-                text = "initialString",
-                selection = TextRange("initialString".length),
+                text = "",
+                selection = TextRange.Zero,
             )
         )
     }
     HomeSearchBar(
         onValueChange = {},
-        onValueCleared = {},
+        onValueCleared = {value = TextFieldValue("")},
         value = value,
         searchKeywordEntry = SearchKeyword.entries,
         onChipClick = {}

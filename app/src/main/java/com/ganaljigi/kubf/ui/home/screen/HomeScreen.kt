@@ -1,6 +1,5 @@
 package com.ganaljigi.kubf.ui.home.screen
 
-import android.R.attr.value
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -112,7 +111,7 @@ fun HomeScreen(
                         )
                         focusManager.clearFocus()
                     },
-                    onSearchButtonClick = {
+                    onSearchKeyboardClick = {
                         // TODO:  검색 기능
                         focusManager.clearFocus()
                     },
