@@ -1,6 +1,7 @@
 package com.ganaljigi.kubf.ui.helper.component.information
 
 import android.graphics.drawable.Icon
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -29,9 +30,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.ui.helper.component.shortcut.ShortCutTitle
 import com.ganaljigi.kubf.ui.theme.Gray1
 import com.ganaljigi.kubf.ui.theme.Green
@@ -59,7 +62,7 @@ fun InformationTitle() {
 //정보 하나 박스
 @Composable
 fun InfoItemBox(
-    icon: ImageVector,
+    iconResId: Int,
     label: String,
     content: @Composable () -> Unit
 ) {
@@ -78,10 +81,10 @@ fun InfoItemBox(
                 modifier = Modifier
                     .weight(80f)
                     .height(20.dp),
-                verticalAlignment = Alignment.Top
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector=icon,
+                Image(
+                    painter = painterResource(id=iconResId),
                     contentDescription = label,
                     modifier = Modifier
                         .size(20.dp)
@@ -101,6 +104,7 @@ fun InfoItemBox(
             Column (
                 modifier = Modifier
                     .weight(212f)
+                    .align(Alignment.CenterVertically)
             ) {
                 content()
             }
@@ -152,7 +156,7 @@ fun InfoBox(
         Spacer(modifier = Modifier.height(16.dp))
         //주소
         InfoItemBox(
-            icon = Icons.Default.LocationOn,
+            iconResId = R.drawable.ic_helper_address,
             label = "주소"
         ) {
             Column {
@@ -184,7 +188,7 @@ fun InfoBox(
 
         //전화번호
         InfoItemBox(
-            icon = Icons.Default.Phone,
+            iconResId = R.drawable.ic_helper_phone,
             label = "전화번호"
         ) {
             Text(
@@ -200,7 +204,7 @@ fun InfoBox(
 
         //이메일
         InfoItemBox(
-            icon = Icons.Default.Email,
+            iconResId = R.drawable.ic_helper_email,
             label = "이메일"
         ) {
             Text(
@@ -230,7 +234,7 @@ fun MapBoxPreview() {
 @Composable
 fun InfoItemBoxPreview() {
     InfoItemBox(
-        icon = Icons.Default.Phone,
+        iconResId = R.drawable.ic_helper_phone,
         label = "전화번호"
     ) {
         Text(

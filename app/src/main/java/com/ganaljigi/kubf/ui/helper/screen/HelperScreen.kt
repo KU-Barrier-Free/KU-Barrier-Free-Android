@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.ui.helper.component.information.InfoBox
 import com.ganaljigi.kubf.ui.helper.component.information.InformationTitle
 import com.ganaljigi.kubf.ui.helper.component.notice.NoticeItem
@@ -71,17 +72,17 @@ fun HelperScreen(
             ) {
                 ShortCutItem(
                     text = "장애학생 도우미",
-                    //iconResId =,
+                    iconResId = R.drawable.ic_helper_disablestudenthelper,
                     onClick = {}
                 )
                 ShortCutItem(
                     text = "지원 업무",
-                    //iconResId =,
+                    iconResId = R.drawable.ic_helper_support,
                     onClick = {}
                 )
                 ShortCutItem(
                     text = "채용 정보",
-                    //iconResId =,
+                    iconResId = R.drawable.ic_helper_jobinformation,
                     onClick = {}
                 )
             }
