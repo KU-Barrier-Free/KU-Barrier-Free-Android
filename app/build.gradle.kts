@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.implementation
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -75,5 +77,13 @@ dependencies {
     // Coil
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+
+    // Permissions
+    implementation(libs.accompanist.permissions)
+
+    // Google Map
+    implementation(libs.play.services.maps)
+    implementation(libs.maps.compose)
+
 
 }
