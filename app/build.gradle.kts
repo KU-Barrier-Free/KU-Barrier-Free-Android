@@ -82,6 +82,7 @@ dependencies {
     implementation(libs.accompanist.permissions)
 
     // Google Map
+    implementation(libs.play.services.location)
     implementation(libs.play.services.maps)
     implementation(libs.maps.compose)
 
