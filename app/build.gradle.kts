@@ -36,6 +36,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = mapsApiKey.toString()
+        buildConfigField("String", "GOOGLE_MAPS_ID", localProperties["GOOGLE_MAPS_ID"].toString())
     }
 
     buildTypes {
