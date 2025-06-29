@@ -15,10 +15,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,19 +25,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.rememberAsyncImagePainter
+import coil3.compose.AsyncImage
+import com.ganaljigi.kubf.ui.theme.Gray3
 
 data class Room(
-    val imageUrl:String,
+    val imageUrl:List<String>,
     val number: String,
     val name: String,
     val use: String,
-    val note: String
-    //val hasNote : Bool
+    val note: List<String>
 )
 
 /**
@@ -52,8 +49,11 @@ fun RoomComponent(
     room: Room,
     onClick: () -> Unit = {}
 ) {
+    val hasNote: Boolean = room.note.isNotEmpty()
+    val hasImage = room.imageUrl.isNotEmpty()
     Box(
         modifier = Modifier
+            .width(328.dp)
             .shadow(
                 elevation = 2.dp,
                 shape = RoundedCornerShape(20.dp),
@@ -65,6 +65,7 @@ fun RoomComponent(
             )
             .padding(16.dp)
             .clickable { onClick }
+
 
 
     ) {
@@ -105,48 +106,37 @@ fun RoomComponent(
                     )
                 }
             }
-            Spacer(Modifier.height(14.dp))
-            //if(hasNote){}
-            Row {
-                Text(
-                    text = "특이사항",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFF999999)
-                )
-                Spacer(Modifier.width(16.dp))
-                Text(
-                    text = "${room.note}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFF999999),
-                    fontWeight = FontWeight.Bold
-                )
+            if (hasNote){
+                Spacer(Modifier.height(14.dp))
+                Row {
+                    Text(
+                        text = "특이사항",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Gray3
+                    )
+                    Spacer(Modifier.width(16.dp))
+                    Text(
+                        text = "${room.note}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Gray3,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
-            Spacer(Modifier.height(12.dp))
-            // if(hasImage) {}
-            Row {
-                // AsyncImage
-                Image(
-                    painter = rememberAsyncImagePainter(room.imageUrl),
-                    contentDescription = "${room.number} 이미지",
-                    contentScale = ContentScale.FillHeight,
-                    modifier = Modifier
-                        .height(84.dp)
-                        .wrapContentWidth()
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(Color.LightGray)
-                )
-                Spacer(Modifier.width(8.dp))
-                Image(
-                    painter = rememberAsyncImagePainter(room.imageUrl),
-                    contentDescription = "${room.number} 이미지",
-                    contentScale = ContentScale.FillHeight,
-                    modifier = Modifier
-                        .height(84.dp)
-                        .wrapContentWidth()
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(Color.Gray)
-                )
+            if(hasImage) {
+                Spacer(Modifier.height(12.dp))
+                Row {
+                    AsyncImage(
+                        model = room.imageUrl,
+                        contentDescription = room.number + "이미지",
+                        modifier = Modifier.height(84.dp)
+                            .wrapContentWidth()
+                            .clip(RoundedCornerShape(10.dp))
+                    )
+                    Spacer(Modifier.width(8.dp))
+                }
             }
+
         }
     }
 }
@@ -154,6 +144,7 @@ fun RoomComponent(
 @Preview
 @Composable
 private fun PreviewRoom() {
-    val room = Room("https://","101", "전산실습실", "강의실", "경사로")
+    var urlL = mutableListOf("http")
+    val room = Room(urlL,"101", "전산실습실", "강의실", mutableListOf<String>())
     RoomComponent(room)
 }
