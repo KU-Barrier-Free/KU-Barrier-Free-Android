@@ -23,10 +23,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
+import com.ganaljigi.kubf.ui.theme.Gray3
+import com.ganaljigi.kubf.ui.theme.Gray4
+import com.ganaljigi.kubf.ui.theme.Green
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 
 data class Door(
@@ -51,15 +53,12 @@ fun DoorComponent(doors: List<Door>) {
             DoorCard(door)
         }
     }
-
 }
 
 /**
  * 출입문 정보
  * - 문 사진
  * - 휠체어 여부
- * - clickable인지? - 클릭하면 상세 정보로 이동하는지 ?
- * - 사진은 url? 파일? 파일은 무리가 있을 것 같다.
  */
 @Composable
 fun DoorCard(door: Door) {
@@ -71,7 +70,7 @@ fun DoorCard(door: Door) {
         Column(
             modifier = Modifier
                 .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.Start
         ) {
             Box(
                 modifier = Modifier
@@ -92,7 +91,7 @@ fun DoorCard(door: Door) {
                         .align(Alignment.TopStart)
                         .padding(4.dp)
                         .clip(RoundedCornerShape(20.dp))
-                        .background(Color(0xFF656565))
+                        .background(Gray4)
                         .height(16.dp)
                         .wrapContentWidth(),
                     // 1글자일 땐 그냥 동그라미, 아닐 때 이렇게
@@ -106,7 +105,6 @@ fun DoorCard(door: Door) {
                         modifier = Modifier.padding(horizontal = 3.dp)
                     )
                 }
-
             }
 
             Spacer(modifier = Modifier.height(4.dp))
@@ -116,9 +114,9 @@ fun DoorCard(door: Door) {
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = if (door.wheel) "가능 O" else "불가능 X", // 왼쪽 정렬 해야됨
+                text = if (door.wheel) "가능 O" else "불가능 X",
                 style = KUBFAndroidTheme.typography.semiBold14.copy(
-                    color = if (door.wheel) Color(0xFF3C8458) else Color(0xFF999999)
+                    color = if (door.wheel) Green else Gray3
                 )
             )
         }

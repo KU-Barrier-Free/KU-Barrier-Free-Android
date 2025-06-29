@@ -1,6 +1,5 @@
 package com.ganaljigi.kubf.ui.buildinginfo.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,19 +25,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import coil3.compose.rememberAsyncImagePainter
 import com.ganaljigi.kubf.ui.buildinginfo.component.Door
 import com.ganaljigi.kubf.ui.buildinginfo.component.DoorComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.Feature
 import com.ganaljigi.kubf.ui.buildinginfo.component.FeatureComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.Room
 import com.ganaljigi.kubf.ui.buildinginfo.component.RoomComponent
+import com.ganaljigi.kubf.ui.theme.Gray3
+import com.ganaljigi.kubf.ui.theme.Gray4
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 
 data class BuildingInfo(
@@ -73,7 +72,10 @@ fun BuildingInfoScreen(
                     Text(
                         text = building.name,
                         modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        style = KUBFAndroidTheme.typography.medium15.copy(
+                            fontSize=16.sp
+                        )
                     )
                 },
                 actions = {
@@ -117,7 +119,7 @@ fun BuildingInfoScreen(
                 Text(
                     text = "건물번호: ${building.number}",
                     style = KUBFAndroidTheme.typography.regular14,
-                    color = Color(0xFF999999)
+                    color = Gray3
                 )
             }
             Spacer(Modifier.height(24.dp))
@@ -132,7 +134,7 @@ fun BuildingInfoScreen(
             Text(
                 text = building.department,
                 style = KUBFAndroidTheme.typography.regular14,
-                color = Color(0xFF656565),
+                color = Gray4,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
             Spacer(Modifier.height(20.dp))
@@ -155,7 +157,7 @@ fun BuildingInfoScreen(
             Spacer(modifier = Modifier.height(12.dp))
             DoorComponent(doors = doors)
             Spacer(Modifier.height(20.dp))
-            RoomComponent(Room("http://","201","전산실습실","강의실","경사로"))
+            RoomComponent(Room(mutableListOf("https"),"201","전산실습실","강의실", mutableListOf("경사로")))
         }
     }
 }
