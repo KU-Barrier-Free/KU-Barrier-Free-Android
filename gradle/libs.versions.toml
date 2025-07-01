@@ -1,5 +1,4 @@
 [versions]
-accompanistPermissions = "0.37.3"
 agp = "8.10.0"
 kotlin = "2.0.0"
 coreKtx = "1.10.1"
@@ -19,6 +18,7 @@ hiltManager = "1.2.0"
 kotlinxSerializationJson = "1.8.0"
 playServicesLocation = "21.3.0"
 playServicesMaps = "19.2.0"
+accompanistPermissions = "0.37.3"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
