@@ -53,7 +53,7 @@ fun BarrierFreeInfoItem(
                 .noRippleClickable(onClick)
         ) {
             Box(
-                modifier = modifier
+                modifier = Modifier
                     .matchParentSize()
                     .blur(8.dp, BlurredEdgeTreatment.Unbounded)
             )
