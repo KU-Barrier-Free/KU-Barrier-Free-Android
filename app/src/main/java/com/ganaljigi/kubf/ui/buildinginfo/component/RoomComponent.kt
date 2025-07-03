@@ -1,6 +1,5 @@
 package com.ganaljigi.kubf.ui.buildinginfo.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -29,7 +28,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.ganaljigi.kubf.ui.theme.Black
 import com.ganaljigi.kubf.ui.theme.Gray3
+import com.ganaljigi.kubf.ui.theme.Gray4
+import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 
 data class Room(
     val imageUrl:List<String>,
@@ -53,7 +55,7 @@ fun RoomComponent(
     val hasImage = room.imageUrl.isNotEmpty()
     Box(
         modifier = Modifier
-            .width(328.dp)
+            .fillMaxWidth()
             .shadow(
                 elevation = 2.dp,
                 shape = RoundedCornerShape(20.dp),
@@ -61,13 +63,10 @@ fun RoomComponent(
             )
             .clip(RoundedCornerShape(20.dp))
             .background(
-                color = MaterialTheme.colorScheme.surface
+                color = Color(0xFFFFFFFF)
             )
             .padding(16.dp)
             .clickable { onClick }
-
-
-
     ) {
         Box(
             modifier = Modifier.matchParentSize(),
@@ -77,16 +76,16 @@ fun RoomComponent(
                 imageVector = Icons.Default.KeyboardArrowRight,
                 contentDescription = "navTo${room.number}",
                 modifier = Modifier.size(24.dp),
-                tint = Color(0xFF656565)
+                tint = Gray4
             )
         }
         Column {
             Row {
                 Text(
                     text = "${room.number}호 ${room.name}",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = KUBFAndroidTheme.typography.semiBold16,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = Black
                 )
                 Spacer(Modifier.width(8.dp))
                 Box(
@@ -111,13 +110,13 @@ fun RoomComponent(
                 Row {
                     Text(
                         text = "특이사항",
-                        style = MaterialTheme.typography.bodySmall,
+                        style = KUBFAndroidTheme.typography.regular13,
                         color = Gray3
                     )
                     Spacer(Modifier.width(16.dp))
-                    Text(
+                    Text( // 리스트 차례대로 읽는 for문
                         text = "${room.note}",
-                        style = MaterialTheme.typography.bodySmall,
+                        style = KUBFAndroidTheme.typography.medium14,
                         color = Gray3,
                         fontWeight = FontWeight.Bold
                     )
@@ -125,7 +124,7 @@ fun RoomComponent(
             }
             if(hasImage) {
                 Spacer(Modifier.height(12.dp))
-                Row {
+                Row { // 리스트 차례대로 읽는 for문 넣기
                     AsyncImage(
                         model = room.imageUrl,
                         contentDescription = room.number + "이미지",
@@ -145,6 +144,6 @@ fun RoomComponent(
 @Composable
 private fun PreviewRoom() {
     var urlL = mutableListOf("http")
-    val room = Room(urlL,"101", "전산실습실", "강의실", mutableListOf<String>())
+    val room = Room(urlL,"101", "전산실습실", "강의실", mutableListOf("경사로"))
     RoomComponent(room)
 }
