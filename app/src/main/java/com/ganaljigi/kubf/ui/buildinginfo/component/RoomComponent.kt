@@ -34,7 +34,7 @@ import com.ganaljigi.kubf.ui.theme.Gray4
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 
 data class Room(
-    val imageUrl:List<String>,
+    val imageUrl: List<String>,
     val number: String,
     val name: String,
     val use: String,
@@ -71,7 +71,7 @@ fun RoomComponent(
         Box(
             modifier = Modifier.matchParentSize(),
             contentAlignment = Alignment.TopEnd
-        ){
+        ) {
             Icon(
                 imageVector = Icons.Default.KeyboardArrowRight,
                 contentDescription = "navTo${room.number}",
@@ -105,7 +105,7 @@ fun RoomComponent(
                     )
                 }
             }
-            if (hasNote){
+            if (hasNote) {
                 Spacer(Modifier.height(14.dp))
                 Row {
                     Text(
@@ -114,28 +114,30 @@ fun RoomComponent(
                         color = Gray3
                     )
                     Spacer(Modifier.width(16.dp))
-                    Text( // 리스트 차례대로 읽는 for문
-                        text = "${room.note}",
+                    Text(
+                        text = room.note.joinToString(separator = ", "),
                         style = KUBFAndroidTheme.typography.medium14,
                         color = Gray3,
                         fontWeight = FontWeight.Bold
                     )
                 }
             }
-            if(hasImage) {
+            if (hasImage) {
                 Spacer(Modifier.height(12.dp))
-                Row { // 리스트 차례대로 읽는 for문 넣기
-                    AsyncImage(
-                        model = room.imageUrl,
-                        contentDescription = room.number + "이미지",
-                        modifier = Modifier.height(84.dp)
-                            .wrapContentWidth()
-                            .clip(RoundedCornerShape(10.dp))
-                    )
-                    Spacer(Modifier.width(8.dp))
+                Row { // 리팩터링 할것
+                    room.imageUrl.forEach { url ->
+                        AsyncImage(
+                            model = room.imageUrl,
+                            contentDescription = room.number + "이미지",
+                            modifier = Modifier
+                                .height(84.dp)
+                                .wrapContentWidth()
+                                .clip(RoundedCornerShape(10.dp))
+                        )
+                        Spacer(Modifier.width(8.dp))
+                    }
                 }
             }
-
         }
     }
 }
@@ -144,6 +146,6 @@ fun RoomComponent(
 @Composable
 private fun PreviewRoom() {
     var urlL = mutableListOf("http")
-    val room = Room(urlL,"101", "전산실습실", "강의실", mutableListOf("경사로"))
+    val room = Room(urlL, "101", "전산실습실", "강의실", mutableListOf("경사로"))
     RoomComponent(room)
 }
