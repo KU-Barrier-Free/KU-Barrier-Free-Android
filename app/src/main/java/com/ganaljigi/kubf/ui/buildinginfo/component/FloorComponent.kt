@@ -42,42 +42,10 @@ data class TotalBuilding(
 
 @Composable
 fun FloorComponent(
-    building: TotalBuilding,
+    current: FloorInfo,
     onRoomClick: (Room) -> Unit
 ) {
-    var selectedIndex by remember { mutableStateOf(0) }
-    val floors = building.floorList
     Column {
-        TabRow(
-            selectedTabIndex =  selectedIndex,
-            indicator = { position ->
-                TabRowDefaults.Indicator(
-                    Modifier
-                        .tabIndicatorOffset(position[selectedIndex])
-                        .height(2.dp),
-                    color = Green
-                )
-            },
-            modifier = Modifier.fillMaxWidth()
-        )  {
-            floors.forEachIndexed {idx, floorInfo ->
-                Tab(
-                    modifier = Modifier.weight(1f).fillMaxHeight(),
-                    selected = idx == selectedIndex,
-                    onClick = {selectedIndex = idx},
-                    text = {
-                        Text(
-                            text = "${floorInfo.floorNum}층",
-                            textAlign = TextAlign.Center,
-                            style = if (idx == selectedIndex) KUBFAndroidTheme.typography.regular14 else KUBFAndroidTheme.typography.medium14,
-                            color = if (idx == selectedIndex) Green else Gray4
-                        )
-                    }
-                )
-            }
-        }
-        Spacer(Modifier.height(16.dp))
-        val current = floors[selectedIndex]
         if(current.imageUrl.isNotBlank()){
             AsyncImage(
                 model = current.imageUrl,
@@ -99,7 +67,7 @@ fun FloorComponent(
             current.rooms.forEach{room->
                 RoomComponent(
                     room = room,
-                    onClick = {}
+                    onClick = {onRoomClick}
                 )
             }
         }
@@ -115,7 +83,5 @@ private fun FloorCompPreview() {
     val rooms = mutableListOf(Room(urllist,"101", "전산실습실", "강의실", mutableListOf<String>()))
     val floorInfos = mutableListOf(FloorInfo(1,"https://",features, rooms))
     floorInfos.add(FloorInfo(2,"https://",features, rooms))
-    //floorInfos.add(FloorInfo(3,"https://",features, rooms))
-    val totalBuilding = TotalBuilding(2, floorInfos)
-    FloorComponent(totalBuilding) { }
+
 }

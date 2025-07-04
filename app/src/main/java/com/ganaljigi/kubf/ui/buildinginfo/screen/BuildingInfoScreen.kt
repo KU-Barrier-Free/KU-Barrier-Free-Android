@@ -1,10 +1,11 @@
 package com.ganaljigi.kubf.ui.buildinginfo.screen
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,9 +19,17 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,6 +50,7 @@ import com.ganaljigi.kubf.ui.buildinginfo.component.Room
 import com.ganaljigi.kubf.ui.buildinginfo.component.TotalBuilding
 import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.Gray4
+import com.ganaljigi.kubf.ui.theme.Green
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 
 data class BuildingInfo(
@@ -52,7 +62,7 @@ data class BuildingInfo(
 )
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun BuildingInfoScreen(
     building: BuildingInfo,
@@ -63,6 +73,9 @@ fun BuildingInfoScreen(
     onSearch: () -> Unit,
     onDoorClick: (Door) -> Unit
 ) {
+    var selectedIndex by remember { mutableStateOf(0) }
+    val floors = totalFloor.floorList
+    val current = floors[selectedIndex]
     Scaffold(
         topBar = {
             TopAppBar(
@@ -176,11 +189,45 @@ fun BuildingInfoScreen(
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
                 Spacer(Modifier.height(12.dp))
-                FloorComponent(totalFloor) { }
+            }
+
+            stickyHeader {
+                TabRow(
+                    selectedTabIndex = selectedIndex,
+                    indicator = { position ->
+                        TabRowDefaults.Indicator(
+                            Modifier
+                                .tabIndicatorOffset(position[selectedIndex])
+                                .height(2.dp),
+                            color = Green
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    floors.forEachIndexed { idx, floorInfo ->
+                        Tab(
+                            selected = idx == selectedIndex,
+                            onClick = { selectedIndex = idx },
+                            text = {
+                                Text(
+                                    text = "${floorInfo.floorNum}층",
+                                    textAlign = TextAlign.Center,
+                                    style = if (idx == selectedIndex) KUBFAndroidTheme.typography.regular14 else KUBFAndroidTheme.typography.medium14,
+                                    color = if (idx == selectedIndex) Green else Gray4
+                                )
+                            }
+                        )
+                    }
+                }
+            }
+            item {
+                Spacer(Modifier.height(16.dp))
+                FloorComponent(current) { }
             }
         }
     }
 }
+
 
 
 @Preview
