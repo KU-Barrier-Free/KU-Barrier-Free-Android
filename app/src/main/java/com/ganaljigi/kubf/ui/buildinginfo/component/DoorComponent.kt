@@ -1,6 +1,5 @@
 package com.ganaljigi.kubf.ui.buildinginfo.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -22,10 +22,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.rememberAsyncImagePainter
+import coil3.compose.AsyncImage
+import com.ganaljigi.kubf.ui.theme.Gray2
 import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.Gray4
 import com.ganaljigi.kubf.ui.theme.Green
@@ -77,14 +77,12 @@ fun DoorCard(door: Door) {
                     .fillMaxWidth()
                     .size(80.dp)
             ) {
-                Image(
-                    painter = rememberAsyncImagePainter(door.imageUrl),
+                AsyncImage(
+                    model = door.imageUrl,
                     contentDescription = "${door.label} ${door.number}",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .matchParentSize()
+                    modifier = Modifier.matchParentSize()
                         .clip(RoundedCornerShape(10.dp))
-                        .background(Color.LightGray)
+                        .background(Gray2)
                 )
                 Box(
                     modifier = Modifier
@@ -93,20 +91,18 @@ fun DoorCard(door: Door) {
                         .clip(RoundedCornerShape(20.dp))
                         .background(Gray4)
                         .height(16.dp)
+                        .widthIn(min = 16.dp)
                         .wrapContentWidth(),
-                    // 1글자일 땐 그냥 동그라미, 아닐 때 이렇게
                     contentAlignment = Alignment.Center,
-
                     ) {
                     Text( // 출입문 이름
                         text = door.number,
-                        style = MaterialTheme.typography.labelSmall,
+                        style = KUBFAndroidTheme.typography.medium14,
                         color = Color.White,
                         modifier = Modifier.padding(horizontal = 3.dp)
                     )
                 }
             }
-
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = "휠체어 진입",
@@ -127,6 +123,6 @@ fun DoorCard(door: Door) {
 @Composable
 private fun DoorPreview() {
     val doors = mutableListOf(Door("https://", "창의관", "A", false))
-    doors.add(Door("https://", "창의관", "A-2", true))
+    doors.add(Door("https://", "창의관", "B", true))
     DoorComponent(doors)
 }
