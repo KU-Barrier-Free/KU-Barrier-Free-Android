@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">KUBFAndroid</string>
+
+    <!-- Home -->
+    <string name="home_notice_button_description">장애학생지원센터 이동 버튼</string>
+    <string name="home_search_bar_place_holder">건물, 편의시설 검색</string>
+    <string name="kubf_search_bar_icon_description">검색 아이콘</string>
+
+    
 </resources>
