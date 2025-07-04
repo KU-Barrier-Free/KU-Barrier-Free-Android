@@ -5,19 +5,18 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -34,8 +33,12 @@ import com.ganaljigi.kubf.ui.buildinginfo.component.Door
 import com.ganaljigi.kubf.ui.buildinginfo.component.DoorComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.Feature
 import com.ganaljigi.kubf.ui.buildinginfo.component.FeatureComponent
+import com.ganaljigi.kubf.ui.buildinginfo.component.FloorComponent
+import com.ganaljigi.kubf.ui.buildinginfo.component.FloorInfo
+import com.ganaljigi.kubf.ui.buildinginfo.component.NoteComponent
+import com.ganaljigi.kubf.ui.buildinginfo.component.Notes
 import com.ganaljigi.kubf.ui.buildinginfo.component.Room
-import com.ganaljigi.kubf.ui.buildinginfo.component.RoomComponent
+import com.ganaljigi.kubf.ui.buildinginfo.component.TotalBuilding
 import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.Gray4
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
@@ -45,7 +48,7 @@ data class BuildingInfo(
     val number: Int,
     val department: String,
     val imageUrl: String,
-    val floors: String?
+    val notes: Notes
 )
 
 
@@ -55,9 +58,9 @@ fun BuildingInfoScreen(
     building: BuildingInfo,
     features: List<Feature>,
     doors: List<Door>,
+    totalFloor: TotalBuilding,
     onBack: () -> Unit,
     onSearch: () -> Unit,
-    onFeatureClick: (Feature) -> Unit,
     onDoorClick: (Door) -> Unit
 ) {
     Scaffold(
@@ -74,7 +77,7 @@ fun BuildingInfoScreen(
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
                         style = KUBFAndroidTheme.typography.medium15.copy(
-                            fontSize=16.sp
+                            fontSize = 16.sp
                         )
                     )
                 },
@@ -85,82 +88,100 @@ fun BuildingInfoScreen(
                 }
             )
         }
-    ) { innerPadding ->
-        Column(
+    ) { inner ->
+        LazyColumn(
             modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(innerPadding)
-                //.padding(16.dp)
+                .padding(inner)
+                .fillMaxSize()
         ) {
-            // 건물 이미지
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-            ) {
-                AsyncImage(
-                    model = building.imageUrl,
-                    contentDescription = "${building.name} 이미지",
-                    modifier = Modifier.background(color = Color.LightGray).fillMaxWidth()
-                )
-            }
-            Spacer(Modifier.height(16.dp))
+            item {
+                // 건물 이미지
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                ) {
+                    AsyncImage(
+                        model = building.imageUrl,
+                        contentDescription = "${building.name} 이미지",
+                        modifier = Modifier
+                            .background(color = Color.LightGray)
+                            .fillMaxWidth()
+                    )
+                }
+                Spacer(Modifier.height(16.dp))
 
-            // 건물 이름, 번호
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
-            ) {
+                // 건물 이름, 번호
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = building.name,
+                        style = KUBFAndroidTheme.typography.bold18
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = "건물번호: ${building.number}",
+                        style = KUBFAndroidTheme.typography.regular14,
+                        color = Gray3
+                    )
+                }
+                Spacer(Modifier.height(24.dp))
                 Text(
-                    text = building.name,
-                    style = KUBFAndroidTheme.typography.bold18
+                    text = "소속 부서",
+                    style = KUBFAndroidTheme.typography.semiBold16,
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
-                Spacer(Modifier.width(8.dp))
+                Spacer(Modifier.height(12.dp))
                 Text(
-                    text = "건물번호: ${building.number}",
+                    text = building.department,
                     style = KUBFAndroidTheme.typography.regular14,
-                    color = Gray3
+                    color = Gray4,
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
+                Spacer(Modifier.height(20.dp))
+                Text(
+                    text = "주요시설",
+                    style = KUBFAndroidTheme.typography.semiBold16,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                FeatureComponent(
+                    features = features
+                )
+                Spacer(Modifier.height(20.dp))
+                Text(
+                    text = "출입문",
+                    style = KUBFAndroidTheme.typography.semiBold16,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                DoorComponent(doors = doors)
+                Spacer(Modifier.height(20.dp))
+                if (building.notes.note.isNotBlank()) {
+                    Text(
+                        text = "특이사항",
+                        style = KUBFAndroidTheme.typography.semiBold16,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    NoteComponent(note = building.notes)
+                    Spacer(Modifier.height(20.dp))
+                }
+                Spacer(Modifier.height(16.dp))
+                Text(
+                    text = "층별 정보",
+                    style = KUBFAndroidTheme.typography.semiBold16,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+                Spacer(Modifier.height(12.dp))
+                FloorComponent(totalFloor) { }
             }
-            Spacer(Modifier.height(24.dp))
-
-            // 소속 부서
-            Text(
-                text = "소속 부서",
-                style = KUBFAndroidTheme.typography.semiBold16,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-            Spacer(Modifier.height(12.dp))
-            Text(
-                text = building.department,
-                style = KUBFAndroidTheme.typography.regular14,
-                color = Gray4,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-            Spacer(Modifier.height(20.dp))
-            Text(
-                text = "주요시설",
-                style = KUBFAndroidTheme.typography.semiBold16,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            FeatureComponent(
-                features = features,
-                onClick = onFeatureClick
-            )
-            Spacer(Modifier.height(20.dp))
-            Text(
-                text = "출입문",
-                style = KUBFAndroidTheme.typography.semiBold16,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            DoorComponent(doors = doors)
-            Spacer(Modifier.height(20.dp))
-            RoomComponent(Room(mutableListOf("https"),"201","전산실습실","강의실", mutableListOf("경사로")))
         }
     }
 }
+
 
 @Preview
 @Composable
@@ -176,13 +197,17 @@ private fun PreviewBuilding() {
     features.add(Feature("복사실"))
     features.add(Feature("편의점"))
     features.add(Feature("복사실"))
-
-    val building = BuildingInfo("경영관", 2, "경영대학", "http://", "5")
+    val urllist = mutableListOf("httpsL")
+    val rooms = mutableListOf(Room(urllist, "101", "전산실습실", "강의실", mutableListOf<String>()))
+    val floorInfos = mutableListOf(FloorInfo(1, "https://", features, rooms))
+    floorInfos.add(FloorInfo(2, "https://", features, rooms))
+    //floorInfos.add(FloorInfo(3,"https://",features, rooms))
+    val totalBuilding = TotalBuilding(2, floorInfos)
+    val building = BuildingInfo("경영관", 2, "경영대학", "http://", Notes("2층 구름다리로", ""))
     BuildingInfoScreen(
-        building, features, doors,
+        building, features, doors, totalBuilding,
         onBack = {},
         onSearch = {},
-        onFeatureClick = {},
         onDoorClick = {})
 
 }

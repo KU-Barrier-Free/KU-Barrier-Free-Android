@@ -2,15 +2,12 @@ package com.ganaljigi.kubf.ui.buildinginfo.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -81,29 +78,25 @@ fun FloorComponent(
         }
         Spacer(Modifier.height(16.dp))
         val current = floors[selectedIndex]
-
-        LazyColumn(
+        if(current.imageUrl.isNotBlank()){
+            AsyncImage(
+                model = current.imageUrl,
+                contentDescription = "${current.floorNum}층 사진",
+                contentScale = ContentScale.Crop,
+            )
+            Spacer(Modifier.height(20.dp))
+        }
+        if (current.features.isNotEmpty()){
+            FeatureComponent(current.features)
+            Spacer(Modifier.height(20.dp))
+        }
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp),
-            contentPadding = PaddingValues(bottom = 20.dp)
         ){
-            if(current.imageUrl.isNotBlank()){
-                item {
-                    AsyncImage(
-                        model = current.imageUrl,
-                        contentDescription = "${current.floorNum}층 사진",
-                        contentScale = ContentScale.Crop,
-                    )
-                }
-            }
-            if (current.features.isNotEmpty()){
-                item{
-                    FeatureComponent(current.features)
-                }
-            }
-            items(current.rooms){room->
+            current.rooms.forEach{room->
                 RoomComponent(
                     room = room,
                     onClick = {}
