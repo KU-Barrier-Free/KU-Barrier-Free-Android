@@ -14,7 +14,7 @@ import coil3.compose.AsyncImage
 import com.ganaljigi.kubf.ui.theme.Gray4
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 
-data class Notes( // 데이터가 어떤 식으로 전달될지 잘 모르겠다.
+data class Notes(
     val note:String,
     val imageUrl:String
 )
