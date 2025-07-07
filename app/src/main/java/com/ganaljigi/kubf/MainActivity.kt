@@ -9,7 +9,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.ganaljigi.kubf.navigation.MainNavHost
+import com.ganaljigi.kubf.ui.helper.screen.HelperScreen
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
+
+//import com.kakao.sdk.common.util.Utility
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,14 +20,15 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             KUBFAndroidTheme {
-                val navController = rememberNavController()
-
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MainNavHost(
-                        padding = innerPadding,
-                        navController = navController,
-                    )
-                }
+//                val navController = rememberNavController()
+//
+//                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+//                    MainNavHost(
+//                        padding = innerPadding,
+//                        navController = navController,
+//                    )
+//                }
+                HelperScreen {  }
             }
         }
     }
