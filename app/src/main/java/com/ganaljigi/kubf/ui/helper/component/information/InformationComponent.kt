@@ -39,8 +39,9 @@ import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.ui.helper.component.shortcut.ShortCutTitle
 import com.ganaljigi.kubf.ui.theme.Gray1
 import com.ganaljigi.kubf.ui.theme.Gray4
-import com.ganaljigi.kubf.ui.theme.Green
+import com.ganaljigi.kubf.ui.theme.MainGreen
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.ui.theme.MainGreen
 
 //정보 제목 박스
 @Composable
@@ -180,7 +181,7 @@ fun InfoBox(
                     text = "장애학생 지원센터: 105호\n장애학생 휴게실: 105-1호",
                     style = KUBFAndroidTheme.typography.regular14.copy(
                         fontSize = 14.sp,
-                        color = Green,
+                        color = MainGreen,
                         lineHeight = 20.sp
                     )
                 )
