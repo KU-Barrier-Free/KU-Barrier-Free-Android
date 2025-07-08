@@ -139,7 +139,7 @@ fun MapBox(
     val latLng = LatLng(37.54210, 127.0783)
     val latLngState = MarkerState(position = latLng)
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(latLng, 10f)
+        position = CameraPosition.fromLatLngZoom(latLng, 17f)
     }
 
     Box(
