@@ -32,15 +32,20 @@ import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoChip
 import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoItem
 import com.ganaljigi.kubf.ui.home.component.HomeSearchBar
 import com.ganaljigi.kubf.ui.home.component.HomeToggle
+import com.ganaljigi.kubf.ui.home.component.MapComponent
 import com.ganaljigi.kubf.ui.home.component.NoticeButton
 import com.ganaljigi.kubf.ui.home.viewmodel.ToggleUiState
 import com.ganaljigi.kubf.ui.theme.Gray2
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
 fun HomeScreen(
     padding: PaddingValues,
-    navigateToNotice: () -> Unit = { }
+    navigateToHelper: () -> Unit = { },
+    navigateToBuildingInfo: (Int) -> Unit = { },
 ) {
     var searchValue by remember {
         mutableStateOf(
@@ -63,6 +68,11 @@ fun HomeScreen(
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
+    val konkukUniversity = LatLng(37.5407, 127.0785)
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(konkukUniversity, 16f)
+    }
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -82,11 +92,11 @@ fun HomeScreen(
         }
     ) { innerPadding ->
 
-        // TODO : Map Component
-        Box(
+        MapComponent(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Gray2)
+                .padding(innerPadding),
+            cameraPosition = cameraPositionState
         )
 
         Column(
@@ -139,14 +149,16 @@ fun HomeScreen(
             ) {
                 BarrierFreeInfoItem(
                     visible = isBarrierFreeShown,
-                )
+                ) {
+                    isBarrierFreeShown = !isBarrierFreeShown
+                }
                 if (!isBarrierFreeShown) {
                     BarrierFreeInfoChip {
                         isBarrierFreeShown = !isBarrierFreeShown
                     }
 
                     NoticeButton {
-                        navigateToNotice()
+                        navigateToHelper()
                     }
                 }
             }

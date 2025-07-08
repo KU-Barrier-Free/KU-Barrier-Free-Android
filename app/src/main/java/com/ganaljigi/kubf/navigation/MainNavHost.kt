@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.ganaljigi.kubf.ui.home.screen.HomeScreen
 
 @Composable
 fun MainNavHost(
@@ -15,7 +16,7 @@ fun MainNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = Routes.Splash,
+        startDestination = Routes.Home,
     ) {
         composable<Routes.Splash> {
 //            SplashScreen(
@@ -29,11 +30,11 @@ fun MainNavHost(
         }
 
         composable<Routes.Home> {
-//            HomeScreen(
-//                padding = padding,
-//                navigateToHelper = { navController.navigate(Routes.Helper) },
-//                navigateToBuildingInfo = { navController.navigate(Routes.BuildingInfo) },
-//            )
+            HomeScreen(
+                padding = padding,
+                navigateToHelper = { navController.navigate(Routes.Helper) },
+                navigateToBuildingInfo = { navController.navigate(Routes.BuildingInfo) },
+            )
         }
 
         composable<Routes.Helper> {

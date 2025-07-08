@@ -16,6 +16,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.KUBFAndroid"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${GOOGLE_MAPS_API_KEY}" />
+
         <activity
             android:name="com.ganaljigi.kubf.MainActivity"
             android:exported="true"
