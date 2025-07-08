@@ -15,6 +15,8 @@ hilt = "2.52"
 hiltNavigationCompose = "1.2.0"
 hiltManager = "1.2.0"
 kotlinxSerializationJson = "1.8.0"
+google-maps = "18.0.2"
+maps-compose = "2.11.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -41,6 +43,8 @@ hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref
 hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 hilt-manager = {group = "androidx.hilt" , name = "hilt-compiler", version.ref = "hiltManager"}
+google-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "google-maps" }
+maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "maps-compose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

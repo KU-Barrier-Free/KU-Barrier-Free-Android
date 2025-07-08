@@ -1,16 +1,15 @@
 package com.ganaljigi.kubf.ui.helper.component.information
 
-import android.graphics.drawable.Icon
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.snapping.SnapPosition.Center.position
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,30 +17,42 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material3.Icon
-import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ganalijigi.kubf.R
-import com.ganaljigi.kubf.ui.helper.component.shortcut.ShortCutTitle
 import com.ganaljigi.kubf.ui.theme.Gray1
 import com.ganaljigi.kubf.ui.theme.Gray4
-import com.ganaljigi.kubf.ui.theme.MainGreen
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.theme.MainGreen
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.ui.unit.dp
+import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.CameraUpdateFactory
+import kotlinx.coroutines.launch
+import com.google.android.gms.maps.model.*
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.MapType
 
 //정보 제목 박스
 @Composable
@@ -125,8 +136,14 @@ fun InfoItemBox(
 fun MapBox(
     modifier: Modifier= Modifier
 ) {
+    val latLng = LatLng(37.54210, 127.0783)
+    val latLngState = MarkerState(position = latLng)
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(latLng, 10f)
+    }
+
     Box(
-        modifier=modifier
+        modifier = modifier
             //.size(width = 304.dp, height = 164.98.dp)
             .fillMaxWidth()
             .padding(horizontal = 12.dp)
@@ -136,10 +153,17 @@ fun MapBox(
                 width = 1.dp,
                 color = Gray1,
                 shape = RoundedCornerShape(10.dp)
-
             )
     ) {
-
+        GoogleMap (
+            modifier = Modifier.fillMaxSize(),
+            cameraPositionState = cameraPositionState,
+        ) {
+            Marker(
+                state = latLngState,
+                title = "장애학생지원센터"
+            )
+        }
     }
 }
 

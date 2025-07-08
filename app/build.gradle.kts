@@ -76,4 +76,7 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
+    // Map
+    implementation(libs.google.maps)
+    implementation(libs.maps.compose)
 }
