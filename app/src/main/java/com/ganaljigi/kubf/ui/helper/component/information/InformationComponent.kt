@@ -142,6 +142,11 @@ fun MapBox(
         position = CameraPosition.fromLatLngZoom(latLng, 17f)
     }
 
+    var uiSettings by remember { mutableStateOf(MapUiSettings()) }
+    var properties by remember {
+        mutableStateOf(MapProperties(mapType = MapType.NORMAL))
+    }
+
     Box(
         modifier = modifier
             //.size(width = 304.dp, height = 164.98.dp)
@@ -158,6 +163,8 @@ fun MapBox(
         GoogleMap (
             modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
+            properties = properties,
+            uiSettings = uiSettings
         ) {
             Marker(
                 state = latLngState,
@@ -165,6 +172,21 @@ fun MapBox(
             )
         }
     }
+
+    val coroutineScope = rememberCoroutineScope()
+    Button(
+        onClick = {
+            coroutineScope.launch {
+                cameraPositionState.animate(
+                    CameraUpdateFactory.newCameraPosition(
+                        CameraPosition.fromLatLngZoom(
+                            latLng, 17f
+                        )
+                    )
+                )
+            }
+        }
+    ) {}
 }
 
 //전체 정보 박스
