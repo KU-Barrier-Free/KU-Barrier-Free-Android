@@ -172,21 +172,6 @@ fun MapBox(
             )
         }
     }
-
-    val coroutineScope = rememberCoroutineScope()
-    Button(
-        onClick = {
-            coroutineScope.launch {
-                cameraPositionState.animate(
-                    CameraUpdateFactory.newCameraPosition(
-                        CameraPosition.fromLatLngZoom(
-                            latLng, 17f
-                        )
-                    )
-                )
-            }
-        }
-    ) {}
 }
 
 //전체 정보 박스
