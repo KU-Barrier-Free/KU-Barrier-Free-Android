@@ -53,10 +53,10 @@ fun SupportScreen(
         }
 
         val url = when (tabIndex) {
-            0 -> ""
-            1 -> ""
-            2 -> ""
-            3 -> ""
+            0 -> "https://www.konkuk.ac.kr/csd/15230/subview.do"
+            1 -> "https://www.konkuk.ac.kr/csd/15231/subview.do"
+            2 -> "https://www.konkuk.ac.kr/csd/15232/subview.do"
+            3 -> "https://www.konkuk.ac.kr/csd/15233/subview.do"
             else -> ""
         }
 
