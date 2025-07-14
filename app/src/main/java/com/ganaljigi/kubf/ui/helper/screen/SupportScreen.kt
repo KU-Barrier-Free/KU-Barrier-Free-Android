@@ -52,22 +52,34 @@ fun SupportScreen(
             Tab(
                 selected = tabIndex == 0,
                 onClick = { tabIndex = 0 },
-                text = { Text("교수/학습") }
+                text = { Text(
+                    text = "교수/학습",
+                    style = KUBFAndroidTheme.typography.medium14
+                ) }
             )
             Tab(
                 selected = tabIndex == 1,
                 onClick = { tabIndex = 1 },
-                text = { Text("기자재") }
+                text = { Text(
+                    text = "기자재",
+                    style = KUBFAndroidTheme.typography.medium14
+                ) }
             )
             Tab(
                 selected = tabIndex == 2,
                 onClick = { tabIndex = 2 },
-                text = { Text("장학 제도") }
+                text = { Text(
+                    text = "장학 제도",
+                    style = KUBFAndroidTheme.typography.medium14
+                ) }
             )
             Tab(
                 selected = tabIndex == 3,
                 onClick = { tabIndex = 3 },
-                text = { Text("시설 현황") }
+                text = { Text(
+                    text = "시설 현황",
+                    style = KUBFAndroidTheme.typography.medium14
+                ) }
             )
 
         }
