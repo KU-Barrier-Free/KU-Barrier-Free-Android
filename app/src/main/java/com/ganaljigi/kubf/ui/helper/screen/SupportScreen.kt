@@ -2,10 +2,13 @@ package com.ganaljigi.kubf.ui.helper.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -15,6 +18,10 @@ import com.ganaljigi.kubf.ui.helper.component.WebViewTopAppBar
 import com.ganaljigi.kubf.ui.helper.component.NoticeWebView
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.ui.theme.MainGreen
 
 @Composable
 fun SupportScreen(
@@ -28,7 +35,20 @@ fun SupportScreen(
             onBackClick = onBackClick
         )
 
-        TabRow(selectedTabIndex = tabIndex) {
+        TabRow(
+            selectedTabIndex = tabIndex,
+            containerColor = Color.White,
+            contentColor = MainGreen,
+            indicator = { tabPositions ->
+                TabRowDefaults.Indicator(
+                    Modifier
+                        .tabIndicatorOffset(tabPositions[tabIndex])
+                        .height(5.dp),
+                    color = MainGreen
+                )
+            },
+            modifier = Modifier.height(40.dp)
+        ) {
             Tab(
                 selected = tabIndex == 0,
                 onClick = { tabIndex = 0 },
