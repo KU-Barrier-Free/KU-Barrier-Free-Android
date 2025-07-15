@@ -20,4 +20,7 @@ sealed interface Routes {
 
     @Serializable
     data class RoomInfo(val number: Int) : Routes
+
+    @Serializable
+    data object Support : Routes
 }
