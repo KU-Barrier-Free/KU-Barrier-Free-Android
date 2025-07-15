@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
@@ -29,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,6 +54,7 @@ import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.Gray4
 import com.ganaljigi.kubf.ui.theme.Green
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
+import kotlinx.coroutines.launch
 
 data class BuildingInfo(
     val name: String,
@@ -76,6 +79,8 @@ fun BuildingInfoScreen(
     var selectedIndex by remember { mutableStateOf(0) }
     val floors = totalFloor.floorList
     val current = floors[selectedIndex]
+    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -103,6 +108,7 @@ fun BuildingInfoScreen(
         }
     ) { inner ->
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .padding(inner)
                 .fillMaxSize()
@@ -207,7 +213,12 @@ fun BuildingInfoScreen(
                     floors.forEachIndexed { idx, floorInfo ->
                         Tab(
                             selected = idx == selectedIndex,
-                            onClick = { selectedIndex = idx },
+                            onClick = {
+                                selectedIndex = idx
+                                scope.launch {
+                                    listState.animateScrollToItem(1)
+                                }
+                            },
                             text = {
                                 Text(
                                     text = "${floorInfo.floorNum}층",
@@ -227,7 +238,6 @@ fun BuildingInfoScreen(
         }
     }
 }
-
 
 
 @Preview
