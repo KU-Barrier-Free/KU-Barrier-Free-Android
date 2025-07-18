@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,7 +35,6 @@ enum class Facility(val label: String, @DrawableRes val iconResId:Int){
     SERVICE("IT-서비스센터",R.drawable.ic_feature_itser),
     PARK("주차장",R.drawable.ic_feature_park);
 }
-// TODO : enum 명 바꾸기
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -62,7 +62,8 @@ fun FacilityComponent(
                     Icon(
                         painter = painterResource(facility.iconResId),
                         contentDescription = facility.label,
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(20.dp),
+                        tint = Color.Unspecified
                     )
                     Text(
                         text = facility.label,
