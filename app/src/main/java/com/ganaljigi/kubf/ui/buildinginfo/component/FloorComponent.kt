@@ -16,7 +16,7 @@ import coil3.compose.AsyncImage
 data class FloorInfo(
     val floorNum : Int,
     val imageUrl: String,
-    val features: List<Feature>,
+    val facilities: List<Facility>,
     val rooms: List<Room>
 )
 
@@ -39,8 +39,8 @@ fun FloorComponent(
             )
             Spacer(Modifier.height(20.dp))
         }
-        if (current.features.isNotEmpty()){
-            FeatureComponent(current.features)
+        if (current.facilities.isNotEmpty()){
+            FacilityComponent(current.facilities)
             Spacer(Modifier.height(20.dp))
         }
         Column(
@@ -62,10 +62,9 @@ fun FloorComponent(
 @Preview
 @Composable
 private fun FloorCompPreview() {
-    val features = mutableListOf(Feature("카페"))
-    features.add(Feature("휴게실"))
+    val facilities = Facility.entries.toList()
     val urllist = mutableListOf("httpsL")
     val rooms = mutableListOf(Room(urllist,"101", "전산실습실", "강의실", mutableListOf<String>()))
-    val floorInfos = mutableListOf(FloorInfo(1,"https://",features, rooms))
-    floorInfos.add(FloorInfo(2,"https://",features, rooms))
+    val floorInfos = mutableListOf(FloorInfo(1,"https://",facilities, rooms))
+    floorInfos.add(FloorInfo(2,"https://",facilities, rooms))
 }

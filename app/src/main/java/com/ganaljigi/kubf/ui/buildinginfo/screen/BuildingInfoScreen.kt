@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -35,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,8 +42,8 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.ganaljigi.kubf.ui.buildinginfo.component.Door
 import com.ganaljigi.kubf.ui.buildinginfo.component.DoorComponent
-import com.ganaljigi.kubf.ui.buildinginfo.component.Feature
-import com.ganaljigi.kubf.ui.buildinginfo.component.FeatureComponent
+import com.ganaljigi.kubf.ui.buildinginfo.component.Facility
+import com.ganaljigi.kubf.ui.buildinginfo.component.FacilityComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.FloorComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.FloorInfo
 import com.ganaljigi.kubf.ui.buildinginfo.component.NoteComponent
@@ -69,7 +69,7 @@ data class BuildingInfo(
 @Composable
 fun BuildingInfoScreen(
     building: BuildingInfo,
-    features: List<Feature>,
+    facilities: List<Facility>,
     doors: List<Door>,
     totalFloor: TotalBuilding,
     onBack: () -> Unit,
@@ -123,6 +123,7 @@ fun BuildingInfoScreen(
                     AsyncImage(
                         model = building.imageUrl,
                         contentDescription = "${building.name} 이미지",
+                        contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .background(color = Color.LightGray)
                             .fillMaxWidth()
@@ -166,8 +167,8 @@ fun BuildingInfoScreen(
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-                FeatureComponent(
-                    features = features
+                FacilityComponent(
+                    facilities = facilities
                 )
                 Spacer(Modifier.height(20.dp))
                 Text(
@@ -245,24 +246,16 @@ fun BuildingInfoScreen(
 private fun PreviewBuilding() {
     val doors = mutableListOf(Door("https://", "경영관", "A", false))
     doors.add(Door("https://", "경영관", "A-2", true))
-    val features = mutableListOf(Feature("카페"))
-    features.add(Feature("편의점"))
-    features.add(Feature("복사실"))
-    features.add(Feature("편의점"))
-    features.add(Feature("복사실"))
-    features.add(Feature("편의점"))
-    features.add(Feature("복사실"))
-    features.add(Feature("편의점"))
-    features.add(Feature("복사실"))
+    val facilities = Facility.entries.toList()
     val urllist = mutableListOf("httpsL")
     val rooms = mutableListOf(Room(urllist, "101", "전산실습실", "강의실", mutableListOf<String>()))
-    val floorInfos = mutableListOf(FloorInfo(1, "https://", features, rooms))
-    floorInfos.add(FloorInfo(2, "https://", features, rooms))
+    val floorInfos = mutableListOf(FloorInfo(1, "https://", facilities, rooms))
+    floorInfos.add(FloorInfo(2, "https://", facilities, rooms))
     //floorInfos.add(FloorInfo(3,"https://",features, rooms))
     val totalBuilding = TotalBuilding(2, floorInfos)
     val building = BuildingInfo("경영관", 2, "경영대학", "http://", Notes("2층 구름다리로", ""))
     BuildingInfoScreen(
-        building, features, doors, totalBuilding,
+        building, facilities, doors, totalBuilding,
         onBack = {},
         onSearch = {},
         onDoorClick = {})
