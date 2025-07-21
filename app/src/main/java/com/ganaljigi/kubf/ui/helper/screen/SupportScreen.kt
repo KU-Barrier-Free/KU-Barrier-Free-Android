@@ -1,10 +1,9 @@
 package com.ganaljigi.kubf.ui.helper.screen
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -22,12 +21,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.theme.MainGreen
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 
 @Composable
 fun SupportScreen(
     onBackClick: () -> Unit
 ) {
     var tabIndex by remember { mutableStateOf(0) }
+
+    val urls =  listOf (
+        "https://www.konkuk.ac.kr/csd/15230/subview.do",
+        "https://www.konkuk.ac.kr/csd/15231/subview.do",
+        "https://www.konkuk.ac.kr/csd/15232/subview.do",
+        "https://www.konkuk.ac.kr/csd/15233/subview.do"
+    )
+
+    val  tabs = listOf("교수/학습", "기자재", "장학 제도", "시설 현황")
 
     Column (modifier = Modifier.fillMaxSize()) {
         WebViewTopAppBar(
@@ -49,54 +60,34 @@ fun SupportScreen(
             },
             modifier = Modifier.height(40.dp)
         ) {
-            Tab(
-                selected = tabIndex == 0,
-                onClick = { tabIndex = 0 },
-                text = { Text(
-                    text = "교수/학습",
-                    style = KUBFAndroidTheme.typography.medium14
-                ) }
-            )
-            Tab(
-                selected = tabIndex == 1,
-                onClick = { tabIndex = 1 },
-                text = { Text(
-                    text = "기자재",
-                    style = KUBFAndroidTheme.typography.medium14
-                ) }
-            )
-            Tab(
-                selected = tabIndex == 2,
-                onClick = { tabIndex = 2 },
-                text = { Text(
-                    text = "장학 제도",
-                    style = KUBFAndroidTheme.typography.medium14
-                ) }
-            )
-            Tab(
-                selected = tabIndex == 3,
-                onClick = { tabIndex = 3 },
-                text = { Text(
-                    text = "시설 현황",
-                    style = KUBFAndroidTheme.typography.medium14
-                ) }
-            )
-
+            tabs.forEachIndexed { index, title ->
+                Tab(
+                    selected = tabIndex == index,
+                    onClick = { tabIndex = index },
+                    text = {
+                        Text(
+                            text = "교수/학습",
+                            style = KUBFAndroidTheme.typography.medium14
+                        )
+                    }
+                )
+            }
         }
 
-        val url = when (tabIndex) {
-            0 -> "https://www.konkuk.ac.kr/csd/15230/subview.do"
-            1 -> "https://www.konkuk.ac.kr/csd/15231/subview.do"
-            2 -> "https://www.konkuk.ac.kr/csd/15232/subview.do"
-            3 -> "https://www.konkuk.ac.kr/csd/15233/subview.do"
-            else -> ""
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .weight(1f)
+        ) {
+            urls.forEachIndexed { index, url ->
+                if (tabIndex == index) {
+                    NoticeWebView(
+                        url = url,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            }
         }
-
-        NoticeWebView(
-            url = url,
-            modifier = Modifier
-                .fillMaxSize()
-                .weight(1f)
-        )
     }
 }
+
+//TODO: 탭 바꿀때 깜빡이는 현상 없애기

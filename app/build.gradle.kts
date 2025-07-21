@@ -79,4 +79,7 @@ dependencies {
     // Map
     implementation(libs.google.maps)
     implementation(libs.maps.compose)
+
+    //JSoup
+    implementation(libs.jsoup)
 }

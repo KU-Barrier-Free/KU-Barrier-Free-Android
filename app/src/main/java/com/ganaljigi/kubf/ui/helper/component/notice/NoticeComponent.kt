@@ -66,7 +66,8 @@ fun NoticeItem(
     title: String,
     date: String,
     number: Int,
-    index: Int
+    index: Int,
+    onClick: () -> Unit
 ) {
     val backgroundColor
     = if (index%2==0) Color(0xFFF8FFFA) else Color.White
