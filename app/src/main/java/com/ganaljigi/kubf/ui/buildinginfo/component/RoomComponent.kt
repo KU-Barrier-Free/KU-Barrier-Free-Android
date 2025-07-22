@@ -66,7 +66,7 @@ fun RoomComponent(
                 color = Color(0xFFFFFFFF)
             )
             .padding(16.dp)
-            .clickable { onClick }
+            .clickable { onClick() }
     ) {
         Box(
             modifier = Modifier.matchParentSize(),

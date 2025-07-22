@@ -56,7 +56,7 @@ fun FloorComponent(
             current.rooms.forEach{room->
                 RoomComponent(
                     room = room,
-                    onClick = {onRoomClick}
+                    onClick = {onRoomClick(room)}
                 )
             }
         }
