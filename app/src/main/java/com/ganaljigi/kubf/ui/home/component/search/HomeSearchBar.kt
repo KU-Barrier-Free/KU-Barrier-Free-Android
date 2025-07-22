@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.home.component
+package com.ganaljigi.kubf.ui.home.component.search
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
