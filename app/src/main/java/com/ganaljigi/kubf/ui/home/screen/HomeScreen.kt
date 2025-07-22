@@ -27,12 +27,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ganaljigi.kubf.ui.common.model.MapToggle
 import com.ganaljigi.kubf.ui.common.model.SearchKeyword
+import com.ganaljigi.kubf.ui.common.model.SearchResult
 import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoChip
 import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoItem
 import com.ganaljigi.kubf.ui.home.component.FindWayButton
@@ -44,6 +48,7 @@ import com.ganaljigi.kubf.ui.home.component.search.HomeSearchBar
 import com.ganaljigi.kubf.ui.home.component.search.HomeSearchContent
 import com.ganaljigi.kubf.ui.home.component.search.HomeSearchTopBar
 import com.ganaljigi.kubf.ui.home.viewmodel.ToggleUiState
+import com.ganaljigi.kubf.ui.theme.MainGreen
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.rememberCameraPositionState
@@ -103,6 +108,7 @@ fun HomeScreen(
             HomeSearchBottomSheet(
                 sheetState = sheetState,
                 onDismissRequest = { showSearchBottomSheet = false },
+                searchResults = emptyList(),
             )
         }
 

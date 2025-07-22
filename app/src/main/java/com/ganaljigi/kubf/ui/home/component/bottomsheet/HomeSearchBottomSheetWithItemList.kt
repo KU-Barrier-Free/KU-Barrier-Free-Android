@@ -1,7 +1,6 @@
 package com.ganaljigi.kubf.ui.home.component.bottomsheet
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,8 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -69,7 +66,10 @@ fun HomeSearchBottomSheetWithItemList(
                 onFromClick = onFromClick,
                 onToClick = onToClick
             )
-            HorizontalDivider(color = Gray1)
+            HorizontalDivider(
+                modifier = Modifier.fillMaxWidth(),
+                color = Gray1
+            )
         }
     }
 }
@@ -116,7 +116,8 @@ private fun HomeSearchBottomSheetItem(
                 modifier = Modifier
                     .background(
                         color = LightGreen,
-                        shape = RoundedCornerShape(20.dp))
+                        shape = RoundedCornerShape(20.dp)
+                    )
                     .noRippleClickable { onFromClick(searchResult) }
             ) {
                 Text(
@@ -131,9 +132,10 @@ private fun HomeSearchBottomSheetItem(
                 modifier = Modifier
                     .background(
                         color = MainGreen,
-                        shape = RoundedCornerShape(20.dp))
+                        shape = RoundedCornerShape(20.dp)
+                    )
                     .noRippleClickable { onToClick(searchResult) }
-            )  {
+            ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 13.5.dp),
                     text = "도착",
