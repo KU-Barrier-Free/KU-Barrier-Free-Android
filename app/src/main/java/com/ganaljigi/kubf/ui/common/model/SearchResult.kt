@@ -1,10 +1,13 @@
 package com.ganaljigi.kubf.ui.common.model
 
+import androidx.annotation.DrawableRes
 import androidx.compose.ui.text.AnnotatedString
+import com.ganalijigi.kubf.R
 
 data class SearchResult(
     val id: Long,
     val name: String,
     val building: String,
     val annotatedName: AnnotatedString,
+    @DrawableRes val icon: Int = R.drawable.ic_toggle_curb, // TODO: Response 형식에 맞춰 수정
 )

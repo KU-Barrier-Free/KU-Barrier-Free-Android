@@ -10,17 +10,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -32,14 +27,12 @@ import com.ganaljigi.kubf.ui.common.model.SearchResult
 import com.ganaljigi.kubf.ui.theme.Gray1
 import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
-import com.ganaljigi.kubf.ui.theme.LightGreen
 import com.ganaljigi.kubf.ui.theme.MainGreen
 import com.ganaljigi.kubf.ui.util.noRippleClickable
 
 @Composable
 fun HomeSearchBottomSheetSingleItem(
     modifier: Modifier = Modifier,
-    searchKeyword: String = "",
     searchResult: SearchResult,
     onFromClick: (SearchResult) -> Unit = {},
     onToClick: (SearchResult) -> Unit = {},
@@ -127,7 +120,7 @@ fun HomeSearchBottomSheetSingleItem(
                             color = MainGreen,
                             shape = RoundedCornerShape(20.dp)
                         )
-                        .noRippleClickable { onToClick(searchResult) }
+                        .noRippleClickable { onShowBuildingClick(searchResult.id) }
                 ) {
                     Text(
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 13.5.dp),
@@ -146,7 +139,6 @@ fun HomeSearchBottomSheetSingleItem(
 @Composable
 private fun HomeSearchBottomSheetWithSingleItemPreview() {
     HomeSearchBottomSheetSingleItem(
-        searchKeyword = "검색어",
         searchResult = SearchResult(
             id = 1L,
             name = "카페 레스티오",
