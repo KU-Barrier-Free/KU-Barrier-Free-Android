@@ -103,5 +103,4 @@ dependencies {
     implementation(libs.play.services.maps)
     implementation(libs.maps.compose)
 
-
 }
