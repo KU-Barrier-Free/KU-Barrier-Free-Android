@@ -1,10 +1,13 @@
 package com.ganaljigi.kubf.ui.buildinginfo.component
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,7 +21,7 @@ import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 
 data class Notes(
     val note:String,
-    val imageUrl:String
+    val imageUrl:List<String>
 )
 
 @Composable
@@ -35,11 +38,18 @@ fun NoteComponent(
                 color = Gray4
             )
             Spacer(Modifier.height(12.dp))
-            AsyncImage(
-                model = note.imageUrl,
-                contentDescription = "특이사항 이미지",
-                modifier = Modifier.clip(RoundedCornerShape(10.dp)).height(84.dp)
-            )
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(note.imageUrl){ url ->
+                    AsyncImage(
+                        model = url,
+                        contentDescription = "특이사항 이미지",
+                        modifier = Modifier.clip(RoundedCornerShape(10.dp)).height(84.dp)
+                    )
+                }
+            }
+
         }
     }
 }
@@ -47,6 +57,6 @@ fun NoteComponent(
 @Preview
 @Composable
 private fun NotePreview() {
-    val note = Notes("2층에서 구름다리로 나가면 건물 내부로 다시 들어올 수 없음","https://")
+    val note = Notes("2층에서 구름다리로 나가면 건물 내부로 다시 들어올 수 없음", mutableListOf("https","https"))
     NoteComponent(note)
 }

@@ -292,7 +292,7 @@ private fun PreviewBuilding() {
     floorInfos.add(FloorInfo(2, "https://", facilities, rooms))
     //floorInfos.add(FloorInfo(3,"https://",features, rooms))
     val totalBuilding = TotalBuilding(2, floorInfos)
-    val building = BuildingInfo("경영관", 2, "경영대학", "http://", Notes("2층 구름다리로", ""))
+    val building = BuildingInfo("경영관", 2, "경영대학", "http://", Notes("2층 구름다리로", mutableListOf("","")))
     BuildingInfoScreen(
         building, facilities, doors, totalBuilding,
         onBack = {},
