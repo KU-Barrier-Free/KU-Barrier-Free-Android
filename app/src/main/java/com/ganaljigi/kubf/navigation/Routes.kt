@@ -13,7 +13,7 @@ sealed interface Routes {
     data object Helper : Routes
 
     @Serializable
-    data object Notice : Routes
+    data object Notice : Routes //만약 추가한다면 Helper->Notice url 주기
 
     @Serializable
     data class BuildingInfo(val number: Int) : Routes

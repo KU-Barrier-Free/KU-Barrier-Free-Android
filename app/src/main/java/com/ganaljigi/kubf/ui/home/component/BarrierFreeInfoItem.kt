@@ -36,8 +36,8 @@ import com.ganaljigi.kubf.ui.util.noRippleClickable
 @Composable
 fun BarrierFreeInfoItem(
     modifier: Modifier = Modifier,
+    visible: Boolean = false,
     onClick: () -> Unit = { },
-    visible: Boolean = false
 ) {
     AnimatedVisibility(
         visible = visible,
