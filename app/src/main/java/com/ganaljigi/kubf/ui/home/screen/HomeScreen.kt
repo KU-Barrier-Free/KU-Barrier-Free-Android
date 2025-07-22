@@ -10,15 +10,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextRange
@@ -30,17 +36,19 @@ import com.ganaljigi.kubf.ui.common.model.SearchKeyword
 import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoChip
 import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoItem
 import com.ganaljigi.kubf.ui.home.component.FindWayButton
-import com.ganaljigi.kubf.ui.home.component.HomeSearchBar
-import com.ganaljigi.kubf.ui.home.component.HomeSearchContent
-import com.ganaljigi.kubf.ui.home.component.HomeSearchTopBar
 import com.ganaljigi.kubf.ui.home.component.HomeToggle
 import com.ganaljigi.kubf.ui.home.component.MapComponent
 import com.ganaljigi.kubf.ui.home.component.NoticeButton
+import com.ganaljigi.kubf.ui.home.component.bottomsheet.HomeSearchBottomSheet
+import com.ganaljigi.kubf.ui.home.component.search.HomeSearchBar
+import com.ganaljigi.kubf.ui.home.component.search.HomeSearchContent
+import com.ganaljigi.kubf.ui.home.component.search.HomeSearchTopBar
 import com.ganaljigi.kubf.ui.home.viewmodel.ToggleUiState
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.rememberCameraPositionState
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     padding: PaddingValues,
@@ -70,8 +78,10 @@ fun HomeScreen(
         position = CameraPosition.fromLatLngZoom(konkukUniversity, 16f)
     }
     var isSearchMode by remember { mutableStateOf(false) }
-    val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
+    var showSearchBottomSheet by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         modifier = Modifier
@@ -86,8 +96,15 @@ fun HomeScreen(
                     }
                 )
             }
-        }
+        },
     ) { innerPadding ->
+
+        if (showSearchBottomSheet) {
+            HomeSearchBottomSheet(
+                sheetState = sheetState,
+                onDismissRequest = { showSearchBottomSheet = false },
+            )
+        }
 
         if (!isSearchMode) {
             MapComponent(
@@ -127,7 +144,7 @@ fun HomeScreen(
                             )
                         },
                         onSearchKeyboardClick = {
-                            // TODO:  검색 기능
+                            showSearchBottomSheet = true
                         },
                         value = searchValue,
                         searchKeywordEntry = SearchKeyword.entries
