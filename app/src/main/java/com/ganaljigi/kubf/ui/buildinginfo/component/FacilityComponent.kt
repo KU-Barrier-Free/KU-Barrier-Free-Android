@@ -52,7 +52,7 @@ fun FacilityComponent(
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
-                    .background(Gray2)
+                    .background(Gray2.copy(alpha = 0.16f))
                     .padding(horizontal = 12.dp, vertical = 6.dp)
             ) {
                 Row(

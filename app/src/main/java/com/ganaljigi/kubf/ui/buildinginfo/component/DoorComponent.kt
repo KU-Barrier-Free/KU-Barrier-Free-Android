@@ -29,7 +29,7 @@ import coil3.compose.AsyncImage
 import com.ganaljigi.kubf.ui.theme.Gray2
 import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.Gray4
-import com.ganaljigi.kubf.ui.theme.Green
+import com.ganaljigi.kubf.ui.theme.MainGreen
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 
 data class Door(
@@ -114,7 +114,7 @@ fun DoorCard(door: Door) {
             Text(
                 text = if (door.wheel) "가능 O" else "불가능 X",
                 style = KUBFAndroidTheme.typography.semiBold14.copy(
-                    color = if (door.wheel) Green else Gray3
+                    color = if (door.wheel) MainGreen else Gray3
                 )
             )
         }

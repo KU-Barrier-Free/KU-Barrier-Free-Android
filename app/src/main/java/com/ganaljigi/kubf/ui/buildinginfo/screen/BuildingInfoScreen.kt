@@ -53,7 +53,7 @@ import com.ganaljigi.kubf.ui.buildinginfo.component.Room
 import com.ganaljigi.kubf.ui.buildinginfo.component.TotalBuilding
 import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.Gray4
-import com.ganaljigi.kubf.ui.theme.Green
+import com.ganaljigi.kubf.ui.theme.MainGreen
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import kotlinx.coroutines.launch
 
@@ -207,7 +207,7 @@ fun BuildingInfoScreen(
                                     Modifier
                                         .tabIndicatorOffset(position[selectedIndex])
                                         .height(2.dp),
-                                    color = Green
+                                    color = MainGreen
                                 )
                             },
                             modifier = Modifier.fillMaxWidth()
@@ -218,7 +218,8 @@ fun BuildingInfoScreen(
                                     onClick = {
                                         selectedIndex = idx
                                         scope.launch {
-                                            listState.animateScrollToItem(1)
+                                            //listState.animateScrollToItem(1)
+                                            listState.scrollToItem(1)
                                         }
                                     },
                                     text = {
@@ -226,7 +227,7 @@ fun BuildingInfoScreen(
                                             text = "${floorInfo.floorNum}층",
                                             textAlign = TextAlign.Center,
                                             style = if (idx == selectedIndex) KUBFAndroidTheme.typography.regular14 else KUBFAndroidTheme.typography.medium14,
-                                            color = if (idx == selectedIndex) Green else Gray4
+                                            color = if (idx == selectedIndex) MainGreen else Gray4
                                         )
                                     }
                                 )
@@ -241,7 +242,7 @@ fun BuildingInfoScreen(
                                     Modifier
                                         .tabIndicatorOffset(position[selectedIndex])
                                         .height(2.dp),
-                                    color = Green
+                                    color = MainGreen
                                 )
                             },
                             modifier = Modifier.fillMaxWidth(),
@@ -261,7 +262,7 @@ fun BuildingInfoScreen(
                                             text = "${floorInfo.floorNum}층",
                                             textAlign = TextAlign.Center,
                                             style = if (idx == selectedIndex) KUBFAndroidTheme.typography.regular14 else KUBFAndroidTheme.typography.medium14,
-                                            color = if (idx == selectedIndex) Green else Gray4
+                                            color = if (idx == selectedIndex) MainGreen else Gray4
                                         )
                                     }
                                 )
