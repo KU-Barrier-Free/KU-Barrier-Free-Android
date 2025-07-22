@@ -44,7 +44,7 @@ data class Room(
 /**
  * 강의실 썸네일 컴포넌트
  * - Room 데이터 받기
- * - 이미지 - 세로크기는 고정하고 비율은 유지 <- 방법 모름
+ * - 이미지 - 세로크기는 고정하고 비율은 유지
  */
 @Composable
 fun RoomComponent(
@@ -88,22 +88,25 @@ fun RoomComponent(
                     color = Black
                 )
                 Spacer(Modifier.width(8.dp))
-                Box(
-                    modifier = Modifier
-                        .height(20.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(
-                            color = Color(0xFFD29027).copy(alpha = 0.1f)
+                if (room.use == "강의실"){
+                    Box(
+                        modifier = Modifier
+                            .height(20.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(
+                                color = Color(0xFFD29027).copy(alpha = 0.1f)
+                            )
+                            .wrapContentWidth(),
+                    ) {
+                        Text(
+                            text = "${room.use}",
+                            color = Color(0xFFD29027),
+                            style = MaterialTheme.typography.labelSmall,
+                            modifier = Modifier.padding(horizontal = 4.dp)
                         )
-                        .wrapContentWidth(),
-                ) {
-                    Text(
-                        text = "${room.use}",
-                        color = Color(0xFFD29027),
-                        style = MaterialTheme.typography.labelSmall,
-                        modifier = Modifier.padding(horizontal = 4.dp)
-                    )
+                    }
                 }
+
             }
             if (hasNote) {
                 Spacer(Modifier.height(14.dp))
@@ -124,10 +127,10 @@ fun RoomComponent(
             }
             if (hasImage) {
                 Spacer(Modifier.height(12.dp))
-                Row { // 리팩터링 할것
+                Row {
                     room.imageUrl.forEach { url ->
                         AsyncImage(
-                            model = room.imageUrl,
+                            model = url,
                             contentDescription = room.number + "이미지",
                             modifier = Modifier
                                 .height(84.dp)
@@ -146,6 +149,6 @@ fun RoomComponent(
 @Composable
 private fun PreviewRoom() {
     var urlL = mutableListOf("http")
-    val room = Room(urlL, "101", "전산실습실", "강의실", mutableListOf("경사로"))
+    val room = Room(urlL, "101", "전산실습실", "강의", mutableListOf("경사로"))
     RoomComponent(room)
 }
