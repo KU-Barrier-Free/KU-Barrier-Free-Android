@@ -69,6 +69,10 @@ internal val Typography = KUBFTypography(
         fontSize = 13.sp,
         lineHeight = 16.sp,
     ),
+    medium9 = PretendardMedium.copy(
+        fontSize = 9.sp,
+        lineHeight = 11.sp,
+    ),
     regular16 = PretendardRegular.copy(
         fontSize = 16.sp,
         lineHeight = 16.sp,
@@ -115,6 +119,7 @@ data class KUBFTypography(
     val medium15: TextStyle, // 18
     val medium14: TextStyle, // 17
     val medium13: TextStyle, // 16
+    val medium9: TextStyle, // 16
 
     // Regular
     val regular16: TextStyle, // 16
