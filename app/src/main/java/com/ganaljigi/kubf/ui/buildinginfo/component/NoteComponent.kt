@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -35,7 +37,8 @@ fun NoteComponent(
             Spacer(Modifier.height(12.dp))
             AsyncImage(
                 model = note.imageUrl,
-                contentDescription = "특이사항 이미지"
+                contentDescription = "특이사항 이미지",
+                modifier = Modifier.clip(RoundedCornerShape(10.dp)).height(84.dp)
             )
         }
     }
