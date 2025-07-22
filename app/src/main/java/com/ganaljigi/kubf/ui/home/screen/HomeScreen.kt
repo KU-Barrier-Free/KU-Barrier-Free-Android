@@ -4,10 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,12 +33,12 @@ import com.ganaljigi.kubf.ui.common.model.MapToggle
 import com.ganaljigi.kubf.ui.common.model.SearchKeyword
 import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoChip
 import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoItem
+import com.ganaljigi.kubf.ui.home.component.FindWayButton
 import com.ganaljigi.kubf.ui.home.component.HomeSearchBar
 import com.ganaljigi.kubf.ui.home.component.HomeToggle
 import com.ganaljigi.kubf.ui.home.component.MapComponent
 import com.ganaljigi.kubf.ui.home.component.NoticeButton
 import com.ganaljigi.kubf.ui.home.viewmodel.ToggleUiState
-import com.ganaljigi.kubf.ui.theme.Gray2
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -107,27 +110,37 @@ fun HomeScreen(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
-                HomeSearchBar(
+                Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                        .focusRequester(focusRequester),
-                    onValueChange = { searchValue = it },
-                    onValueCleared = { searchValue = TextFieldValue("") },
-                    onChipClick = { searchKeyword ->
-                        searchValue = TextFieldValue(
-                            text = searchKeyword.label,
-                            selection = TextRange(searchKeyword.label.length)
-                        )
-                        focusManager.clearFocus()
-                    },
-                    onSearchKeyboardClick = {
-                        // TODO:  검색 기능
-                        focusManager.clearFocus()
-                    },
-                    value = searchValue,
-                    searchKeywordEntry = SearchKeyword.entries
-                )
+                        .height(IntrinsicSize.Min)
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    HomeSearchBar(
+                        modifier = Modifier
+                            .weight(1f)
+                            .focusRequester(focusRequester),
+                        onValueChange = { searchValue = it },
+                        onValueCleared = { searchValue = TextFieldValue("") },
+                        onChipClick = { searchKeyword ->
+                            searchValue = TextFieldValue(
+                                text = searchKeyword.label,
+                                selection = TextRange(searchKeyword.label.length)
+                            )
+                            focusManager.clearFocus()
+                        },
+                        onSearchKeyboardClick = {
+                            // TODO:  검색 기능
+                            focusManager.clearFocus()
+                        },
+                        value = searchValue,
+                        searchKeywordEntry = SearchKeyword.entries
+                    )
+                    FindWayButton(
+                        modifier = Modifier.fillMaxHeight()
+                    ) { // TODO: 길찾기  }
+                    }
+                }
 
                 HomeToggle(
                     modifier = Modifier
