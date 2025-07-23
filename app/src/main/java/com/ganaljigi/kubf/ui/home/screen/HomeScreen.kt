@@ -1,5 +1,6 @@
 package com.ganaljigi.kubf.ui.home.screen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,8 +37,10 @@ import com.ganaljigi.kubf.ui.home.component.FindWayButton
 import com.ganaljigi.kubf.ui.home.component.HomeToggle
 import com.ganaljigi.kubf.ui.home.component.MapComponent
 import com.ganaljigi.kubf.ui.home.component.NoticeButton
+import com.ganaljigi.kubf.ui.home.component.bottomsheet.HomeBuildingInfoBottomSheet
 import com.ganaljigi.kubf.ui.home.component.bottomsheet.HomeSearchBottomSheet
 import com.ganaljigi.kubf.ui.home.component.find.HomeFindLocationComponent
+import com.ganaljigi.kubf.ui.home.component.search.HomeInquiryDialog
 import com.ganaljigi.kubf.ui.home.viewmodel.HomeViewModel
 import com.ganaljigi.kubf.ui.theme.Black
 import com.ganaljigi.kubf.ui.theme.Gray2
@@ -72,6 +75,30 @@ fun HomeScreen(
             sheetState = sheetState,
             onDismissRequest = { viewModel.setShowSearchBottomSheet(false) },
             searchResults = uiState.searchResults,
+            onInquireClick = {
+                Log.d("HomeScreen", "onInquireClick called")
+                viewModel.setShowInquiryDialog(true)
+            },
+        )
+    }
+
+    if (uiState.showBuildingInfoBottomSheet) {
+        HomeBuildingInfoBottomSheet(
+            modifier = Modifier.fillMaxWidth(),
+            sheetState = sheetState,
+            onDismissRequest = { viewModel.setShowBuildingInfoBottomSheet(false) },
+            buildingInfo = uiState.buildingInfo,
+        )
+    }
+
+    if (uiState.showInquiryDialog) {
+        HomeInquiryDialog(
+            inquiryField = uiState.inquiryField,
+            onInquiryFieldChange = { viewModel.updateInquiryField(it) },
+            onSubmit = {
+                viewModel.submitInquiry()
+            },
+            onDismissRequest = { viewModel.setShowInquiryDialog(false) }
         )
     }
 

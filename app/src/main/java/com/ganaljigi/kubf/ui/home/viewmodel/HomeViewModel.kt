@@ -94,7 +94,8 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun updateBuildingInfo(buildingInfo: HomeBuildingInfo?) {
+    fun updateBuildingInfo(buildingInfo: HomeBuildingInfo) {
+        // TODO: 건물 정보 API 호출
         _uiState.update { it.copy(buildingInfo = buildingInfo) }
     }
 

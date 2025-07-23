@@ -1,6 +1,8 @@
 package com.ganaljigi.kubf.ui.home.viewmodel
 
 import androidx.compose.ui.text.input.TextFieldValue
+import com.ganaljigi.kubf.ui.common.model.Convenience
+import com.ganaljigi.kubf.ui.common.model.DoorInfo
 import com.ganaljigi.kubf.ui.common.model.MapMarker
 import com.ganaljigi.kubf.ui.common.model.MapToggle
 import com.ganaljigi.kubf.ui.common.model.SearchResult
@@ -9,7 +11,7 @@ import kotlinx.collections.immutable.persistentListOf
 
 data class HomeUiState(
     val searchWord: TextFieldValue = TextFieldValue(""),
-    val buildingInfo: HomeBuildingInfo? = null,
+    val buildingInfo: HomeBuildingInfo = HomeBuildingInfo(),
     val searchResults: ImmutableList<SearchResult> = persistentListOf(),
     val isBarrierFreeShown: Boolean = false,
     val isFindMode: Boolean = false,
@@ -36,12 +38,13 @@ data class HomeUiState(
 )
 
 data class HomeBuildingInfo(
-    val id: Long,
-    val name: String,
-    val buildingNumber: Int,
-    val latitude: Double,
-    val longitude: Double,
-    // TODO: 편의시설, 출입문 모델 설정
+    val id: Long = 0L,
+    val name: String = "",
+    val buildingNumber: Int = 0,
+    val latitude: Double = 0.0,
+    val longitude: Double = 0.0,
+    val convenienceList: ImmutableList<Convenience> = persistentListOf(),
+    val doorInfoList: ImmutableList<DoorInfo> = persistentListOf(),
 )
 
 data class SpecialMarkerInfo(
