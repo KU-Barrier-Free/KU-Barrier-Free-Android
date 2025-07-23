@@ -1,6 +1,6 @@
 package com.ganaljigi.kubf.ui.home.screen
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -13,25 +13,23 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ganaljigi.kubf.ui.common.model.MapToggle
-import com.ganaljigi.kubf.ui.common.model.SearchKeyword
+import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoChip
 import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoItem
 import com.ganaljigi.kubf.ui.home.component.FindWayButton
@@ -40,10 +38,11 @@ import com.ganaljigi.kubf.ui.home.component.MapComponent
 import com.ganaljigi.kubf.ui.home.component.NoticeButton
 import com.ganaljigi.kubf.ui.home.component.bottomsheet.HomeSearchBottomSheet
 import com.ganaljigi.kubf.ui.home.component.find.HomeFindLocationComponent
-import com.ganaljigi.kubf.ui.home.component.search.HomeSearchBar
 import com.ganaljigi.kubf.ui.home.viewmodel.HomeViewModel
-import com.ganaljigi.kubf.ui.home.viewmodel.ToggleUiState
+import com.ganaljigi.kubf.ui.theme.Black
+import com.ganaljigi.kubf.ui.theme.Gray2
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.ui.util.noRippleClickable
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.rememberCameraPositionState
@@ -55,7 +54,7 @@ fun HomeScreen(
     navigateToHelper: () -> Unit = { },
     navigateToSearch: (String) -> Unit = { },
     navigateToBuildingInfo: (Int) -> Unit = { },
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -72,7 +71,7 @@ fun HomeScreen(
         HomeSearchBottomSheet(
             sheetState = sheetState,
             onDismissRequest = { viewModel.setShowSearchBottomSheet(false) },
-            searchResults = emptyList(),
+            searchResults = uiState.searchResults,
         )
     }
 
@@ -113,30 +112,42 @@ fun HomeScreen(
                         .padding(top = 12.dp, bottom = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    HomeSearchBar(
+                    Row(
                         modifier = Modifier
+                            .shadow(elevation = 3.dp, shape = RoundedCornerShape(10.dp))
+                            .noRippleClickable(
+                                onClick = {
+                                    navigateToSearch("검색")
+                                }
+                            )
+                            .background(color = Color.White, shape = RoundedCornerShape(10.dp))
                             .weight(1f)
-                            .shadow(
-                                elevation = 2.dp,
-                                shape = RoundedCornerShape(10.dp)
+                            .padding(horizontal = 12.dp)
+                            .height(44.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_search_bar_leading),
+                            contentDescription = "검색 아이콘",
+                            tint = Color.Unspecified,
+                        )
+                        Text(
+                            modifier = Modifier.weight(1f),
+                            text = uiState.searchWord.text.ifEmpty { "건물, 편의시설 검색" },
+                            style = KUBFAndroidTheme.typography.medium15.copy(
+                                color = if (uiState.searchWord.text.isEmpty()) Gray2 else Black
+                            ),
+                        )
+                        if (uiState.searchWord.text.isNotEmpty()) {
+                            Icon(
+                                modifier = Modifier.noRippleClickable { viewModel.updateSearchWord() },
+                                painter = painterResource(R.drawable.ic_searchbar_close),
+                                contentDescription = "검색어 비우기",
+                                tint = Color.Unspecified,
                             )
-                            .clickable(onClick = { navigateToSearch("검색") }),
-                        onValueChange = { viewModel.updateSearchWord(it) },
-                        onValueCleared = { viewModel.updateSearchWord() },
-                        onChipClick = { searchKeyword ->
-                            viewModel.updateSearchWord(
-                                TextFieldValue(
-                                    text = searchKeyword.label,
-                                    selection = TextRange(searchKeyword.label.length)
-                                )
-                            )
-                        },
-                        onSearchKeyboardClick = {
-                            viewModel.setShowSearchBottomSheet(true)
-                        },
-                        value = uiState.searchWord,
-                        searchKeywordEntry = SearchKeyword.entries
-                    )
+                        }
+                    }
                     FindWayButton(
                         modifier = Modifier.fillMaxHeight()
                     ) { viewModel.setFindMode(true) }

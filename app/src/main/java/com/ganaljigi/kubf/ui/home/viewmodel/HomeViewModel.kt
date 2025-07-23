@@ -1,13 +1,18 @@
 package com.ganaljigi.kubf.ui.home.viewmodel
 
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.withStyle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ganaljigi.kubf.ui.common.model.MapMarker
 import com.ganaljigi.kubf.ui.common.model.MapToggle
 import com.ganaljigi.kubf.ui.common.model.SearchResult
+import com.ganaljigi.kubf.ui.theme.MainGreen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
@@ -28,14 +33,69 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 
     fun updateSearchWord(newSearchWord: TextFieldValue = TextFieldValue("")) {
         _uiState.update { it.copy(searchWord = newSearchWord) }
+        getSearchResults()
+    }
+
+    fun getSearchResults() {
+        // TODO: 검색 API 호출
+        _uiState.update { // 임시
+            it.copy(
+                searchResults = persistentListOf(
+                    SearchResult(
+                        id = 1,
+                        isBuilding = true,
+                        name = "경영관",
+                        building = "경영관",
+                        annotatedName = buildAnnotatedString { }
+                    ),
+                    SearchResult(
+                        id = 2,
+                        name = "카페 레스티오",
+                        building = "경영관",
+                        annotatedName = buildAnnotatedString {
+                            append("카페 ")
+                            withStyle(
+                                style = SpanStyle(
+                                    color = MainGreen,
+                                ),
+                            ) {
+                                append("레스티")
+                            }
+                            append("오")
+                        }
+                    ),
+                    SearchResult(
+                        id = 3,
+                        name = "카페 레스티오",
+                        building = "공학관",
+                        annotatedName = buildAnnotatedString {
+                            append("카페 ")
+                            withStyle(
+                                style = SpanStyle(
+                                    color = MainGreen,
+                                ),
+                            ) {
+                                append("레스티")
+                            }
+                            append("오")
+                        }
+                    )
+                )
+            )
+        }
     }
 
     fun updateBuildingInfo(buildingInfo: HomeBuildingInfo?) {
         _uiState.update { it.copy(buildingInfo = buildingInfo) }
     }
 
-    fun updateSearchResults(newSearchResults: List<SearchResult>) {
-        _uiState.update { it.copy(searchResults = persistentListOf(*newSearchResults.toTypedArray())) }
+    fun updateSearchResults(newSearchResults: List<SearchResult> = uiState.value.searchResults) {
+        _uiState.update {
+            it.copy(
+                showSearchBottomSheet = true,
+                searchResults = newSearchResults.toImmutableList()
+            )
+        }
     }
 
     fun setBarrierFreeShown(isBarrierFreeShown: Boolean) {

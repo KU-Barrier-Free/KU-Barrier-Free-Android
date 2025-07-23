@@ -2,6 +2,7 @@ package com.ganaljigi.kubf.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -16,6 +17,8 @@ fun MainNavHost(
     padding: PaddingValues,
     navController: NavHostController,
 ) {
+
+    val homeViewModel = hiltViewModel<HomeViewModel>()
 
     NavHost(
         navController = navController,
@@ -32,11 +35,15 @@ fun MainNavHost(
 //            )
         }
 
-        composable<Routes.Home> {
+        composable<Routes.Home> { navBackStackEntry ->
             HomeScreen(
                 padding = padding,
                 navigateToHelper = { navController.navigate(Routes.Helper) },
                 navigateToBuildingInfo = { navController.navigate(Routes.BuildingInfo) },
+                navigateToSearch = { title ->
+                    navController.navigate(Routes.HomeSearch(title))
+                },
+                viewModel = homeViewModel,
             )
         }
 
@@ -47,11 +54,7 @@ fun MainNavHost(
                 padding = padding,
                 title = title,
                 navigateUp = { navController.popBackStack() },
-                getHomeViewModel = {
-                    navBackStackEntry.sharedViewModel<HomeViewModel>(
-                        navController = navController,
-                    )
-                }
+                viewModel = homeViewModel,
             )
         }
 

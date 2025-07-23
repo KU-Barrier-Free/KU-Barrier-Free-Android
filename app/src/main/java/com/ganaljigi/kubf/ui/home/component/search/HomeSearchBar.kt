@@ -34,10 +34,8 @@ fun HomeSearchBar(
     modifier: Modifier = Modifier,
     onValueChange: (TextFieldValue) -> Unit = {},
     onValueCleared: () -> Unit = {},
-    onChipClick: (SearchKeyword) -> Unit,
-    onSearchKeyboardClick: () -> Unit = {},
+    onSearchKeyboardEntered: () -> Unit = {},
     value: TextFieldValue,
-    searchKeywordEntry: List<SearchKeyword>
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
@@ -56,7 +54,7 @@ fun HomeSearchBar(
             value = value,
             onValueChange = onValueChange,
             onValueCleared = onValueCleared,
-            onSearchKeyboardClick = onSearchKeyboardClick,
+            onSearchKeyboardClick = onSearchKeyboardEntered,
             placeHolderText = "건물, 편의시설 검색",
             interactionSource = interactionSource,
             isFocused = isFocused
@@ -106,7 +104,5 @@ private fun HomeSearchBarPreview() {
         onValueChange = {},
         onValueCleared = {value = TextFieldValue("")},
         value = value,
-        searchKeywordEntry = SearchKeyword.entries,
-        onChipClick = {}
     )
 }

@@ -34,7 +34,7 @@ import com.ganaljigi.kubf.ui.util.noRippleClickable
 fun HomeSearchContent(
     modifier: Modifier = Modifier,
     onKeywordClick: (String) -> Unit = {},
-    onItemClick: (Long) -> Unit = {},
+    onItemClick: (SearchResult) -> Unit = {},
     popularKeywords: List<String> = emptyList(),
     searchResults: List<SearchResult> = emptyList(),
 ) {
@@ -84,12 +84,12 @@ fun HomeSearchContent(
                 if (result.isBuilding) {
                     HomeSearchBuildingItem(
                         item = result,
-                        onClick = { id -> onItemClick(id) },
+                        onClick = { onItemClick(it) },
                     )
                 } else {
                     HomeSearchConvItem(
                         item = result,
-                        onClick = { id -> onItemClick(id) },
+                        onClick = { onItemClick(it) },
                     )
                 }
 
@@ -105,12 +105,12 @@ fun HomeSearchContent(
 private fun HomeSearchBuildingItem(
     modifier: Modifier = Modifier,
     item: SearchResult,
-    onClick: (Long) -> Unit = {},
+    onClick: (SearchResult) -> Unit = {},
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .noRippleClickable { onClick(item.id) }
+            .noRippleClickable { onClick(item) }
             .padding(vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -138,12 +138,12 @@ private fun HomeSearchBuildingItem(
 private fun HomeSearchConvItem(
     modifier: Modifier = Modifier,
     item: SearchResult,
-    onClick: (Long) -> Unit = {},
+    onClick: (SearchResult) -> Unit = {},
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .noRippleClickable { onClick(item.id) }
+            .noRippleClickable { onClick(item) }
             .padding(vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -184,7 +184,7 @@ private fun HomeSearchContentPreview() {
                 isBuilding = true,
                 name = "경영관",
                 building = "경영관",
-                annotatedName = buildAnnotatedString {   }
+                annotatedName = buildAnnotatedString { }
             ),
             SearchResult(
                 id = 2,

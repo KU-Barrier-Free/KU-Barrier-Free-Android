@@ -29,6 +29,7 @@ data class HomeUiState(
     val specialMarkers: ImmutableList<MapMarker> = persistentListOf(),
     val specialMarkerInfo: SpecialMarkerInfo? = null,
     val chosenBuildingPin: MapMarker? = null,
+    val popularKeywords: ImmutableList<String> = persistentListOf(),
 //    val showingMarkers: ImmutableList<MapMarker> = persistentListOf(),
 )
 

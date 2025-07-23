@@ -1,5 +1,6 @@
 package com.ganaljigi.kubf.ui.common.component
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -88,7 +89,9 @@ fun KUBFSearchBar(
                 imeAction = ImeAction.Search
             ),
             keyboardActions = KeyboardActions(
-                onSearch = { onSearchKeyboardClick() }
+                onSearch = {
+                    onSearchKeyboardClick()
+                }
             ),
             textStyle = KUBFAndroidTheme.typography.medium15.copy(),
             decorationBox = { innerTextField ->

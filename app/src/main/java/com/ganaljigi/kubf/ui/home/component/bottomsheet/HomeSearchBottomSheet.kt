@@ -47,6 +47,7 @@ fun HomeSearchBottomSheet(
         shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
         scrimColor = Color.Transparent,
         containerColor = Color.White,
+        tonalElevation = 2.dp,
         dragHandle = {
             Box(
                 modifier = Modifier
