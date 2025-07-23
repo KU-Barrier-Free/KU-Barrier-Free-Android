@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,8 +45,7 @@ fun HomeFindLocationComponent(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .padding(top = 12.dp),
+            .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         Row(
@@ -57,6 +57,10 @@ fun HomeFindLocationComponent(
             Row(
                 modifier = Modifier
                     .weight(1f)
+                    .shadow(
+                        elevation = 3.dp,
+                        shape = RoundedCornerShape(10.dp)
+                    )
                     .background(
                         color = Color.White,
                         shape = RoundedCornerShape(10.dp)
@@ -82,7 +86,10 @@ fun HomeFindLocationComponent(
             Box(
                 modifier = Modifier
                     .size(40.dp)
-                    .background(
+                    .shadow(
+                        elevation = 3.dp,
+                        shape = CircleShape
+                    ).background(
                         color = Color.White,
                         shape = CircleShape
                     )
@@ -109,7 +116,10 @@ fun HomeFindLocationComponent(
             Row(
                 modifier = Modifier
                     .weight(1f)
-                    .background(
+                    .shadow(
+                        elevation = 3.dp,
+                        shape = RoundedCornerShape(10.dp)
+                    ).background(
                         color = Color.White,
                         shape = RoundedCornerShape(10.dp)
                     )
@@ -133,7 +143,10 @@ fun HomeFindLocationComponent(
             }
             Box(
                 modifier = Modifier
-                    .size(40.dp)
+                    .shadow(
+                        elevation = 3.dp,
+                        shape = CircleShape
+                    ).size(40.dp)
                     .background(
                         color = Color.White,
                         shape = CircleShape
@@ -147,7 +160,7 @@ fun HomeFindLocationComponent(
                 Icon(
                     modifier = Modifier.align(Alignment.Center),
                     painter = painterResource(R.drawable.ic_home_find_change),
-                    contentDescription = "Close Finding",
+                    contentDescription = "Change Location",
                     tint = Gray4,
                 )
             }

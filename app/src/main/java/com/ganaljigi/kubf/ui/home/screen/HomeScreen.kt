@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -20,6 +21,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
@@ -34,6 +36,7 @@ import com.ganaljigi.kubf.ui.home.component.HomeToggle
 import com.ganaljigi.kubf.ui.home.component.MapComponent
 import com.ganaljigi.kubf.ui.home.component.NoticeButton
 import com.ganaljigi.kubf.ui.home.component.bottomsheet.HomeSearchBottomSheet
+import com.ganaljigi.kubf.ui.home.component.find.HomeFindLocationComponent
 import com.ganaljigi.kubf.ui.home.component.search.HomeSearchBar
 import com.ganaljigi.kubf.ui.home.viewmodel.ToggleUiState
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
@@ -100,15 +103,20 @@ fun HomeScreen(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         if (isFindMode) {
-            Row(
+            HomeFindLocationComponent(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Column(
-//                        modifier = Modifier.
-                ) { }
-            }
+                    .padding(top = 12.dp),
+                fromLocation = "",
+                toLocation = "",
+                onClose = { isFindMode = false },
+                onChange = { isFindMode = false },
+                onFromLocationClick = {
+                    showSearchBottomSheet = true
+                },
+                onToLocationClick = {
+                    showSearchBottomSheet = true
+                }
+            )
         } else {
             Column {
                 Row(
@@ -119,7 +127,11 @@ fun HomeScreen(
                 ) {
                     HomeSearchBar(
                         modifier = Modifier
-                            .weight(1f),
+                            .weight(1f)
+                            .shadow(
+                                elevation = 2.dp,
+                                shape = RoundedCornerShape(10.dp)
+                            ),
                         onValueChange = { searchValue = it },
                         onValueCleared = { searchValue = TextFieldValue("") },
                         onChipClick = { searchKeyword ->
@@ -136,7 +148,7 @@ fun HomeScreen(
                     )
                     FindWayButton(
                         modifier = Modifier.fillMaxHeight()
-                    ) { /* TODO: 길찾기  */ }
+                    ) { isFindMode = true }
                 }
                 HomeToggle(
                     modifier = Modifier
