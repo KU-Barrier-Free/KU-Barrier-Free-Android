@@ -67,7 +67,7 @@ fun HomeFindLocationComponent(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_search_item_leading),
+                    painter = painterResource(R.drawable.ic_find_item_leading_gray),
                     contentDescription = "From Icon",
                     tint = Color.Unspecified,
                 )
@@ -119,7 +119,7 @@ fun HomeFindLocationComponent(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_search_item_leading_green),
+                    painter = painterResource(R.drawable.ic_find_item_leading_green),
                     contentDescription = "From Icon",
                     tint = Color.Unspecified,
                 )

@@ -20,6 +20,7 @@ import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 @Composable
 fun HomeSearchTopBar(
     modifier: Modifier = Modifier,
+    title: String,
     onClick: () -> Unit = {}
 ) {
     Row(
@@ -40,7 +41,7 @@ fun HomeSearchTopBar(
         }
 
         Text(
-            text = "검색",
+            text = title,
             style = KUBFAndroidTheme.typography.medium16,
         )
         IconButton(
@@ -52,5 +53,7 @@ fun HomeSearchTopBar(
 @Preview(showBackground = true)
 @Composable
 private fun SearchTopBarPreview() {
-    HomeSearchTopBar()
+    HomeSearchTopBar(
+        title = "검색",
+    )
 }

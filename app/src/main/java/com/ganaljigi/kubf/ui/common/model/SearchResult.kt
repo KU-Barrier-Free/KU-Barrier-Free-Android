@@ -9,5 +9,6 @@ data class SearchResult(
     val name: String,
     val building: String,
     val annotatedName: AnnotatedString,
+    val isBuilding: Boolean = false,
     @DrawableRes val icon: Int = R.drawable.ic_toggle_curb, // TODO: Response 형식에 맞춰 수정
 )

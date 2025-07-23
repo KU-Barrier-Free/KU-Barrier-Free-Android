@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -80,10 +81,17 @@ fun HomeSearchContent(
                 color = Gray1
             )
             searchResults.forEach { result ->
-                HomeSearchItem(
-                    item = result,
-                    onClick = { id -> onItemClick(id) },
-                )
+                if (result.isBuilding) {
+                    HomeSearchBuildingItem(
+                        item = result,
+                        onClick = { id -> onItemClick(id) },
+                    )
+                } else {
+                    HomeSearchConvItem(
+                        item = result,
+                        onClick = { id -> onItemClick(id) },
+                    )
+                }
 
                 HorizontalDivider(
                     color = Gray1
@@ -94,7 +102,40 @@ fun HomeSearchContent(
 }
 
 @Composable
-private fun HomeSearchItem(
+private fun HomeSearchBuildingItem(
+    modifier: Modifier = Modifier,
+    item: SearchResult,
+    onClick: (Long) -> Unit = {},
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .noRippleClickable { onClick(item.id) }
+            .padding(vertical = 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_building),
+                contentDescription = "건물 아이콘",
+                tint = Color.Unspecified,
+            )
+            Text(
+                text = item.building,
+                style = KUBFAndroidTheme.typography.medium15.copy(
+                    color = MainGreen
+                ),
+            )
+        }
+    }
+}
+
+@Composable
+private fun HomeSearchConvItem(
     modifier: Modifier = Modifier,
     item: SearchResult,
     onClick: (Long) -> Unit = {},
@@ -114,10 +155,11 @@ private fun HomeSearchItem(
             Icon(
                 painter = painterResource(R.drawable.ic_search_item_leading),
                 contentDescription = "검색 아이콘",
+                tint = Color.Unspecified,
             )
             Text(
                 text = item.annotatedName,
-                style = KUBFAndroidTheme.typography.medium16,
+                style = KUBFAndroidTheme.typography.medium15,
             )
         }
         Text(
@@ -139,6 +181,13 @@ private fun HomeSearchContentPreview() {
         searchResults = listOf(
             SearchResult(
                 id = 1,
+                isBuilding = true,
+                name = "경영관",
+                building = "경영관",
+                annotatedName = buildAnnotatedString {   }
+            ),
+            SearchResult(
+                id = 2,
                 name = "카페 레스티오",
                 building = "경영관",
                 annotatedName = buildAnnotatedString {
@@ -154,7 +203,7 @@ private fun HomeSearchContentPreview() {
                 }
             ),
             SearchResult(
-                id = 2,
+                id = 3,
                 name = "카페 레스티오",
                 building = "공학관",
                 annotatedName = buildAnnotatedString {
