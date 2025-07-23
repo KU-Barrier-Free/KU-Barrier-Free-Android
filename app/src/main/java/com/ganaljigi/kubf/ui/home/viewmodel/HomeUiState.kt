@@ -15,6 +15,8 @@ data class HomeUiState(
     val isFindMode: Boolean = false,
     val showSearchBottomSheet: Boolean = false,
     val showBuildingInfoBottomSheet: Boolean = false,
+    val showInquiryDialog: Boolean = false,
+    val inquiryField: TextFieldValue = TextFieldValue(""),
     val toggleUiStates: List<ToggleUiState> = MapToggle.entries.map {
         ToggleUiState(
             isSelected = it == MapToggle.SPECIAL_MARK,

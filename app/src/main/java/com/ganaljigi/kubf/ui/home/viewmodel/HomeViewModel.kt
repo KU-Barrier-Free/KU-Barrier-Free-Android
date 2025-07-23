@@ -33,7 +33,16 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 
     fun updateSearchWord(newSearchWord: TextFieldValue = TextFieldValue("")) {
         _uiState.update { it.copy(searchWord = newSearchWord) }
-        getSearchResults()
+//        getSearchResults()
+    }
+
+    fun updateInquiryField(newInquiryField: TextFieldValue) {
+        _uiState.update { it.copy(inquiryField = newInquiryField) }
+    }
+
+    fun submitInquiry() {
+        // TODO: 문의 API 호출
+        setShowInquiryDialog(false)
     }
 
     fun getSearchResults() {
@@ -112,6 +121,17 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 
     fun setShowBuildingInfoBottomSheet(showBuildingInfoBottomSheet: Boolean) {
         _uiState.update { it.copy(showBuildingInfoBottomSheet = showBuildingInfoBottomSheet) }
+    }
+
+    fun setShowInquiryDialog(showInquiryDialog: Boolean) {
+        val newInquiryField =
+            uiState.value.inquiryField.takeIf { !showInquiryDialog } ?: TextFieldValue("")
+        _uiState.update {
+            it.copy(
+                showInquiryDialog = showInquiryDialog,
+                inquiryField = newInquiryField,
+            )
+        }
     }
 
     fun updateToggleUiStates(toggle: MapToggle) {
