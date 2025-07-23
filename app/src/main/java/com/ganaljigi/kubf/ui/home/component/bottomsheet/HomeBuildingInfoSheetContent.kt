@@ -1,7 +1,5 @@
 package com.ganaljigi.kubf.ui.home.component.bottomsheet
 
-import android.R.attr.label
-import android.R.attr.name
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,13 +17,11 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,38 +40,22 @@ import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-fun HomeBuildingInfoBottomSheet(
+fun HomeBuildingInfoSheetContent(
     modifier: Modifier = Modifier,
-    sheetState: SheetState,
-    onDismissRequest: () -> Unit = {},
     buildingInfo: HomeBuildingInfo,
     onItemClick: (Long) -> Unit = {},
 ) {
-    ModalBottomSheet(
-        onDismissRequest = onDismissRequest,
-        sheetState = sheetState,
-        shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
-        scrimColor = Color.Transparent,
-        containerColor = Color.White,
-        tonalElevation = 2.dp,
-        dragHandle = {
-            Box(
-                modifier = Modifier
-                    .width(100.dp)
-                    .height(28.dp)
-                    .padding(top = 8.dp, bottom = 16.dp)
-                    .background(
-                        color = Gray2,
-                        shape = RoundedCornerShape(4.dp)
-                    )
-            )
-        }
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
     ) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
                 .noRippleClickable { onItemClick(buildingInfo.id) }
         ) {
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -137,6 +117,7 @@ fun HomeBuildingInfoBottomSheet(
                 }
             }
         }
+        Spacer(Modifier.height(13.dp))
     }
 }
 
@@ -144,9 +125,8 @@ fun HomeBuildingInfoBottomSheet(
 @Preview(showBackground = true)
 @Composable
 private fun HomeBuildingInfoBottomSheetPreview() {
-    HomeBuildingInfoBottomSheet(
+    HomeBuildingInfoSheetContent(
         modifier = Modifier.fillMaxWidth(),
-        sheetState = rememberModalBottomSheetState(),
         buildingInfo = HomeBuildingInfo(
             id = 1L,
             name = "경영관",
@@ -158,11 +138,36 @@ private fun HomeBuildingInfoBottomSheetPreview() {
                 Convenience.CAFE,
             ),
             doorInfoList = persistentListOf(
-                DoorInfo(label = "B", imageUrl = "", description = "입구 설명", isWheelchairAccessible = true),
-                DoorInfo(label = "B", imageUrl = "", description = "입구 설명", isWheelchairAccessible = true),
-                DoorInfo(label = "B", imageUrl = "", description = "입구 설명", isWheelchairAccessible = false),
-                DoorInfo(label = "B", imageUrl = "", description = "입구 설명", isWheelchairAccessible = false),
-                DoorInfo(label = "B", imageUrl = "", description = "입구 설명", isWheelchairAccessible = false),
+                DoorInfo(
+                    label = "B",
+                    imageUrl = "",
+                    description = "입구 설명",
+                    isWheelchairAccessible = true
+                ),
+                DoorInfo(
+                    label = "B",
+                    imageUrl = "",
+                    description = "입구 설명",
+                    isWheelchairAccessible = true
+                ),
+                DoorInfo(
+                    label = "B",
+                    imageUrl = "",
+                    description = "입구 설명",
+                    isWheelchairAccessible = false
+                ),
+                DoorInfo(
+                    label = "B",
+                    imageUrl = "",
+                    description = "입구 설명",
+                    isWheelchairAccessible = false
+                ),
+                DoorInfo(
+                    label = "B",
+                    imageUrl = "",
+                    description = "입구 설명",
+                    isWheelchairAccessible = false
+                ),
             )
         ),
         onItemClick = {}

@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.common.model
+package com.ganaljigi.kubf.ui.home.model
 
 import androidx.annotation.DrawableRes
 import androidx.compose.ui.text.AnnotatedString

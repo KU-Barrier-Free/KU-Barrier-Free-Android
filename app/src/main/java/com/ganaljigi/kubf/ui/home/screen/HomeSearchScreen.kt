@@ -20,7 +20,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ganaljigi.kubf.ui.common.model.SearchKeyword
 import com.ganaljigi.kubf.ui.home.component.search.HomeSearchBar
 import com.ganaljigi.kubf.ui.home.component.search.HomeSearchContent
 import com.ganaljigi.kubf.ui.home.component.search.HomeSearchTopBar

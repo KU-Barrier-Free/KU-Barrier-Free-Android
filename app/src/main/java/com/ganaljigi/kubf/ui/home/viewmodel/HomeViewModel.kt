@@ -1,14 +1,18 @@
 package com.ganaljigi.kubf.ui.home.viewmodel
 
+import android.util.Log
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.withStyle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ganaljigi.kubf.ui.common.model.MapMarker
-import com.ganaljigi.kubf.ui.common.model.MapToggle
-import com.ganaljigi.kubf.ui.common.model.SearchResult
+import com.ganaljigi.kubf.ui.common.model.Convenience
+import com.ganaljigi.kubf.ui.common.model.DoorInfo
+import com.ganaljigi.kubf.ui.home.model.BuildingMarker
+import com.ganaljigi.kubf.ui.home.model.MapToggle
+import com.ganaljigi.kubf.ui.home.model.SearchResult
+import com.ganaljigi.kubf.ui.home.model.ToggleMarker
 import com.ganaljigi.kubf.ui.theme.MainGreen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
@@ -102,8 +106,91 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     fun updateSearchResults(newSearchResults: List<SearchResult> = uiState.value.searchResults) {
         _uiState.update {
             it.copy(
+                selectedBuildingMarker = null,
+                showBuildingInfoBottomSheet = false,
                 showSearchBottomSheet = true,
                 searchResults = newSearchResults.toImmutableList()
+            )
+        }
+    }
+
+    fun updateShowingToggleMarkers() {
+        val newShowingToggleMarkers = uiState.value.toggleUiStates
+            .filter { it.isSelected }
+            .map { toggleUiState ->
+                when (toggleUiState.toggle) {
+                    MapToggle.CURB -> uiState.value.curbMarkers
+                    MapToggle.SLOPE -> uiState.value.slopeMarkers
+                    MapToggle.STAIRS -> uiState.value.stairsMarkers
+                    MapToggle.SPECIAL_MARK -> uiState.value.specialMarkers
+                }
+            }.flatten().toImmutableList()
+        _uiState.update { it.copy(showingToggleMarkers = newShowingToggleMarkers) }
+    }
+
+    fun getBuildingInfo(selectedBuildingMarker: BuildingMarker) {
+        // TODO: 건물 정보 API 호출
+        updateBuildingInfo(
+            if (selectedBuildingMarker.id == 1L) {
+                HomeBuildingInfo(
+                    id = 1L,
+                    name = "경영관",
+                    buildingNumber = 1,
+                    latitude = selectedBuildingMarker.latitude,
+                    longitude = selectedBuildingMarker.longitude,
+                    convenienceList = Convenience.entries.toImmutableList(),
+                    doorInfoList = persistentListOf(
+                        DoorInfo(
+                            label = "B",
+                            imageUrl = "",
+                            description = "입구 설명",
+                            isWheelchairAccessible = true
+                        ),
+                        DoorInfo(
+                            label = "B",
+                            imageUrl = "",
+                            description = "입구 설명",
+                            isWheelchairAccessible = true
+                        ),
+                    )
+                )
+            } else {
+                HomeBuildingInfo(
+                    id = 2L,
+                    name = "새천년관",
+                    buildingNumber = 2,
+                    latitude = selectedBuildingMarker.latitude,
+                    longitude = selectedBuildingMarker.longitude,
+                    convenienceList = Convenience.entries.take(4).toImmutableList(),
+                    doorInfoList = persistentListOf(
+                        DoorInfo(
+                            label = "B",
+                            imageUrl = "",
+                            description = "입구 설명",
+                            isWheelchairAccessible = true
+                        ),
+                        DoorInfo(
+                            label = "B",
+                            imageUrl = "",
+                            description = "입구 설명",
+                            isWheelchairAccessible = true
+                        ),
+                    )
+                )
+            }
+        )
+        updateSelectedBuildingMarker(selectedBuildingMarker)
+    }
+
+    private fun updateSelectedBuildingMarker(selectedBuildingMarker: BuildingMarker) {
+        _uiState.update {
+            Log.d("HomeViewModel", "Selected Building Marker: ${selectedBuildingMarker.name}")
+            Log.d("HomeViewModel", "Selected Building Marker: ${uiState.value.buildingMarkers}")
+            it.copy(
+                selectedBuildingMarker = selectedBuildingMarker,
+                showBuildingInfoBottomSheet = true,
+                showSearchBottomSheet = false,
+                searchResults = persistentListOf(),
             )
         }
     }
@@ -149,69 +236,84 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun fetchInitData() {
+        // TODO: 초기 데이터 API 호출
+
+        val curbMarkers = persistentListOf(
+            ToggleMarker(
+                id = 1L,
+                latitude = 37.543644,
+                longitude = 127.076553,
+                mapToggle = MapToggle.CURB,
+            ),
+            ToggleMarker(
+                id = 2L,
+                latitude = 37.543352,
+                longitude = 127.076816,
+                mapToggle = MapToggle.CURB,
+            )
+        )
+        val slopeMarkers = persistentListOf(
+            ToggleMarker(
+                id = 1L,
+                latitude = 37.543333,
+                longitude = 127.076627,
+                mapToggle = MapToggle.SLOPE,
+            ),
+            ToggleMarker(
+                id = 2L,
+                latitude = 37.543944,
+                longitude = 127.077185,
+                mapToggle = MapToggle.SLOPE,
+            )
+        )
+        val stairsMarkers = persistentListOf(
+            ToggleMarker(
+                id = 1L,
+                latitude = 37.543259,
+                longitude = 127.075662,
+                mapToggle = MapToggle.STAIRS,
+            ),
+            ToggleMarker(
+                id = 2L,
+                latitude = 37.543611,
+                longitude = 127.075206,
+                mapToggle = MapToggle.STAIRS,
+            )
+        )
+        val specialMarkers = persistentListOf(
+            ToggleMarker(
+                id = 1L,
+                latitude = 37.543141,
+                longitude = 127.076135,
+                mapToggle = MapToggle.SPECIAL_MARK,
+            ),
+            ToggleMarker(
+                id = 2L,
+                latitude = 37.543010,
+                longitude = 127.078079,
+                mapToggle = MapToggle.SPECIAL_MARK,
+            )
+        )
         _uiState.value = HomeUiState(
             buildingMarkers = persistentListOf(
-                MapMarker(
+                BuildingMarker(
                     id = 1L,
                     name = "경영관",
                     latitude = 37.544338,
                     longitude = 127.076273,
                 ),
-                MapMarker(
+                BuildingMarker(
                     id = 2L,
                     name = "새천년관",
                     latitude = 37.543496,
                     longitude = 127.077326,
-                )
-            ),
-            curbMarkers = persistentListOf(
-                MapMarker(
-                    id = 1L,
-                    latitude = 37.543644,
-                    longitude = 127.076553,
                 ),
-                MapMarker(
-                    id = 2L,
-                    latitude = 37.543352,
-                    longitude = 127.076816,
-                )
             ),
-            slopeMarkers = persistentListOf(
-                MapMarker(
-                    id = 1L,
-                    latitude = 37.543333,
-                    longitude = 127.076627,
-                ),
-                MapMarker(
-                    id = 2L,
-                    latitude = 37.543944,
-                    longitude = 127.077185,
-                )
-            ),
-            stairsMarkers = persistentListOf(
-                MapMarker(
-                    id = 1L,
-                    latitude = 37.543259,
-                    longitude = 127.075662,
-                ),
-                MapMarker(
-                    id = 2L,
-                    latitude = 37.543611,
-                    longitude = 127.075206,
-                )
-            ),
-            specialMarkers = persistentListOf(
-                MapMarker(
-                    id = 1L,
-                    latitude = 37.543141,
-                    longitude = 127.076135,
-                ),
-                MapMarker(
-                    id = 2L,
-                    latitude = 37.543010,
-                    longitude = 127.078079,
-                )
-            ),
+            curbMarkers = curbMarkers,
+            slopeMarkers = slopeMarkers,
+            stairsMarkers = stairsMarkers,
+            specialMarkers = specialMarkers,
+            showingToggleMarkers = specialMarkers
         )
     }
 }

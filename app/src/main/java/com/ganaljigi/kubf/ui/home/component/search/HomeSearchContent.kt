@@ -22,7 +22,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ganalijigi.kubf.R
-import com.ganaljigi.kubf.ui.common.model.SearchResult
+import com.ganaljigi.kubf.ui.home.model.SearchResult
 import com.ganaljigi.kubf.ui.theme.Gray1
 import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.Gray4

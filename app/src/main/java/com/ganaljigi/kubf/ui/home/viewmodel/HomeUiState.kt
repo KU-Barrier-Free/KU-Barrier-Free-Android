@@ -3,13 +3,21 @@ package com.ganaljigi.kubf.ui.home.viewmodel
 import androidx.compose.ui.text.input.TextFieldValue
 import com.ganaljigi.kubf.ui.common.model.Convenience
 import com.ganaljigi.kubf.ui.common.model.DoorInfo
-import com.ganaljigi.kubf.ui.common.model.MapMarker
-import com.ganaljigi.kubf.ui.common.model.MapToggle
-import com.ganaljigi.kubf.ui.common.model.SearchResult
+import com.ganaljigi.kubf.ui.home.model.BuildingMarker
+import com.ganaljigi.kubf.ui.home.model.DoorMarker
+import com.ganaljigi.kubf.ui.home.model.MapToggle
+import com.ganaljigi.kubf.ui.home.model.SearchResult
+import com.ganaljigi.kubf.ui.home.model.ToggleMarker
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.CameraPositionState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 data class HomeUiState(
+    val cameraPositionState: CameraPositionState = CameraPositionState(
+        position = CameraPosition.fromLatLngZoom(LatLng(37.5407, 127.0785), 16f)
+    ),
     val searchWord: TextFieldValue = TextFieldValue(""),
     val buildingInfo: HomeBuildingInfo = HomeBuildingInfo(),
     val searchResults: ImmutableList<SearchResult> = persistentListOf(),
@@ -25,16 +33,17 @@ data class HomeUiState(
             toggle = it
         )
     },
-    val buildingMarkers: ImmutableList<MapMarker> = persistentListOf(),
-    val doorMarkers: ImmutableList<MapMarker> = persistentListOf(),
-    val curbMarkers: ImmutableList<MapMarker> = persistentListOf(),
-    val slopeMarkers: ImmutableList<MapMarker> = persistentListOf(),
-    val stairsMarkers: ImmutableList<MapMarker> = persistentListOf(),
-    val specialMarkers: ImmutableList<MapMarker> = persistentListOf(),
+    val buildingMarkers: ImmutableList<BuildingMarker> = persistentListOf(),
+    val selectedBuildingMarker: BuildingMarker? = null,
+    val doorMarkers: ImmutableList<DoorMarker> = persistentListOf(),
+    val curbMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
+    val slopeMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
+    val stairsMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
+    val specialMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
+    val showingToggleMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
     val specialMarkerInfo: SpecialMarkerInfo? = null,
-    val chosenBuildingPin: MapMarker? = null,
+    val chosenBuildingPin: ToggleMarker? = null,
     val popularKeywords: ImmutableList<String> = persistentListOf(),
-//    val showingMarkers: ImmutableList<MapMarker> = persistentListOf(),
 )
 
 data class HomeBuildingInfo(
