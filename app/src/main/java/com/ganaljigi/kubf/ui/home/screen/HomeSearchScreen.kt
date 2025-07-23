@@ -18,10 +18,13 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import com.ganaljigi.kubf.ui.common.model.SearchKeyword
 import com.ganaljigi.kubf.ui.home.component.search.HomeSearchBar
 import com.ganaljigi.kubf.ui.home.component.search.HomeSearchContent
 import com.ganaljigi.kubf.ui.home.component.search.HomeSearchTopBar
+import com.ganaljigi.kubf.ui.home.viewmodel.HomeViewModel
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 
 @Composable
@@ -29,6 +32,7 @@ fun HomeSearchScreen(
     padding: PaddingValues,
     title: String,
     navigateUp: () -> Unit = {},
+    viewModel: @Composable (NavBackStackEntry) -> HomeViewModel = { hiltViewModel() },
 ) {
     var searchValue by remember {
         mutableStateOf(

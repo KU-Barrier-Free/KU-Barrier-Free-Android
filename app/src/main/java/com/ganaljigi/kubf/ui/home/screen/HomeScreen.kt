@@ -1,5 +1,6 @@
 package com.ganaljigi.kubf.ui.home.screen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -52,6 +53,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 fun HomeScreen(
     padding: PaddingValues,
     navigateToHelper: () -> Unit = { },
+    navigateToSearch: (String) -> Unit = { },
     navigateToBuildingInfo: (Int) -> Unit = { },
     viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -117,7 +119,8 @@ fun HomeScreen(
                             .shadow(
                                 elevation = 2.dp,
                                 shape = RoundedCornerShape(10.dp)
-                            ),
+                            )
+                            .clickable(onClick = { navigateToSearch("검색") }),
                         onValueChange = { viewModel.updateSearchWord(it) },
                         onValueCleared = { viewModel.updateSearchWord() },
                         onChipClick = { searchKeyword ->

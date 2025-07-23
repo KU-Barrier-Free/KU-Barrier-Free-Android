@@ -10,6 +10,9 @@ sealed interface Routes {
     data object Home : Routes
 
     @Serializable
+    data class HomeSearch(val title: String) : Routes
+
+    @Serializable
     data object Helper : Routes
 
     @Serializable
