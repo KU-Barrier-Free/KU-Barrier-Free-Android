@@ -27,6 +27,8 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ganaljigi.kubf.ui.common.model.MapToggle
 import com.ganaljigi.kubf.ui.common.model.SearchKeyword
 import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoChip
@@ -38,6 +40,7 @@ import com.ganaljigi.kubf.ui.home.component.NoticeButton
 import com.ganaljigi.kubf.ui.home.component.bottomsheet.HomeSearchBottomSheet
 import com.ganaljigi.kubf.ui.home.component.find.HomeFindLocationComponent
 import com.ganaljigi.kubf.ui.home.component.search.HomeSearchBar
+import com.ganaljigi.kubf.ui.home.viewmodel.HomeViewModel
 import com.ganaljigi.kubf.ui.home.viewmodel.ToggleUiState
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.google.android.gms.maps.model.CameraPosition
@@ -50,40 +53,23 @@ fun HomeScreen(
     padding: PaddingValues,
     navigateToHelper: () -> Unit = { },
     navigateToBuildingInfo: (Int) -> Unit = { },
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
-    var searchValue by remember {
-        mutableStateOf(
-            TextFieldValue(text = "")
-        )
-    }
-    var toggleUiState by remember {
-        mutableStateOf(
-            MapToggle.entries.map {
-                ToggleUiState(
-                    isSelected = it == MapToggle.SPECIAL_MARK,
-                    toggle = it
-                )
-            }
-        )
-    }
-    var isBarrierFreeShown by remember {
-        mutableStateOf(false)
-    }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     val konkukUniversity = LatLng(37.5407, 127.0785)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(konkukUniversity, 16f)
     }
-    var showSearchBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
-    var isFindMode by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
 
-    if (showSearchBottomSheet) {
+    if (uiState.showSearchBottomSheet) {
         HomeSearchBottomSheet(
             sheetState = sheetState,
-            onDismissRequest = { showSearchBottomSheet = false },
+            onDismissRequest = { viewModel.setShowSearchBottomSheet(false) },
             searchResults = emptyList(),
         )
     }
@@ -102,19 +88,19 @@ fun HomeScreen(
             .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        if (isFindMode) {
+        if (uiState.isFindMode) {
             HomeFindLocationComponent(
                 modifier = Modifier
                     .padding(top = 12.dp),
                 fromLocation = "",
                 toLocation = "",
-                onClose = { isFindMode = false },
-                onChange = { isFindMode = false },
+                onClose = { viewModel.setFindMode(false) },
+                onChange = { viewModel.setFindMode(false) },
                 onFromLocationClick = {
-                    showSearchBottomSheet = true
+                    viewModel.setShowSearchBottomSheet(true)
                 },
                 onToLocationClick = {
-                    showSearchBottomSheet = true
+                    viewModel.setShowSearchBottomSheet(true)
                 }
             )
         } else {
@@ -132,32 +118,32 @@ fun HomeScreen(
                                 elevation = 2.dp,
                                 shape = RoundedCornerShape(10.dp)
                             ),
-                        onValueChange = { searchValue = it },
-                        onValueCleared = { searchValue = TextFieldValue("") },
+                        onValueChange = { viewModel.updateSearchWord(it) },
+                        onValueCleared = { viewModel.updateSearchWord() },
                         onChipClick = { searchKeyword ->
-                            searchValue = TextFieldValue(
-                                text = searchKeyword.label,
-                                selection = TextRange(searchKeyword.label.length)
+                            viewModel.updateSearchWord(
+                                TextFieldValue(
+                                    text = searchKeyword.label,
+                                    selection = TextRange(searchKeyword.label.length)
+                                )
                             )
                         },
                         onSearchKeyboardClick = {
-                            showSearchBottomSheet = true
+                            viewModel.setShowSearchBottomSheet(true)
                         },
-                        value = searchValue,
+                        value = uiState.searchWord,
                         searchKeywordEntry = SearchKeyword.entries
                     )
                     FindWayButton(
                         modifier = Modifier.fillMaxHeight()
-                    ) { isFindMode = true }
+                    ) { viewModel.setFindMode(true) }
                 }
                 HomeToggle(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    toggleUiStates = toggleUiState,
+                    toggleUiStates = uiState.toggleUiStates,
                     onToggleClick = { toggle ->
-                        toggleUiState = toggleUiState.toMutableList()
-                            .map { if (it.toggle == toggle) it.copy(isSelected = !it.isSelected) else it }
-                            .toList()
+                        viewModel.updateToggleUiStates(toggle)
                         focusManager.clearFocus()
                     }
                 )
@@ -165,7 +151,7 @@ fun HomeScreen(
         }
 
         // 기본 모드일 경우에만 보임
-        if (!isFindMode) {
+        if (!uiState.isFindMode) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -174,13 +160,13 @@ fun HomeScreen(
                 verticalAlignment = Alignment.Bottom
             ) {
                 BarrierFreeInfoItem(
-                    visible = isBarrierFreeShown,
+                    visible = uiState.isBarrierFreeShown,
                 ) {
-                    isBarrierFreeShown = !isBarrierFreeShown
+                    viewModel.setBarrierFreeShown(uiState.isBarrierFreeShown.not())
                 }
-                if (!isBarrierFreeShown) {
+                if (!uiState.isBarrierFreeShown) {
                     BarrierFreeInfoChip {
-                        isBarrierFreeShown = !isBarrierFreeShown
+                        viewModel.setBarrierFreeShown(true)
                     }
 
                     NoticeButton {

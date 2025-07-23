@@ -1,5 +1,6 @@
 package com.ganaljigi.kubf.ui.home.viewmodel
 
+import androidx.compose.ui.text.input.TextFieldValue
 import com.ganaljigi.kubf.ui.common.model.MapMarker
 import com.ganaljigi.kubf.ui.common.model.MapToggle
 import com.ganaljigi.kubf.ui.common.model.SearchResult
@@ -7,7 +8,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 data class HomeUiState(
-    val searchWord: String = "",
+    val searchWord: TextFieldValue = TextFieldValue(""),
     val buildingInfo: HomeBuildingInfo? = null,
     val searchResults: ImmutableList<SearchResult> = persistentListOf(),
     val isBarrierFreeShown: Boolean = false,
