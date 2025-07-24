@@ -1,5 +1,6 @@
 package com.ganaljigi.kubf.ui.home.component.map
 
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -114,7 +115,7 @@ fun MapComponent(
 private fun ToggleMarker(
     toggleMarker: ToggleMarker,
     @DrawableRes toggleIconRes: Int,
-    onClick: (ToggleMarker) -> Unit = { },
+    onClick: () -> Unit = { },
     onSpecialInfoClick: (String) -> Unit = { },
     selectedSpecialMarker: ToggleMarker?,
     specialMarkerInfo: SpecialMarkerInfo? = null,
@@ -136,8 +137,15 @@ private fun ToggleMarker(
                 toggleMarker.longitude
             )
         ),
-        onClick = { onClick(toggleMarker); false },
-        keys = arrayOf({ painter.state }, { selectedSpecialMarker })
+        onClick = {
+            if (toggleMarker == selectedSpecialMarker && specialMarkerInfo != null) {
+                onSpecialInfoClick(specialMarkerInfo.imageUrl)
+            } else {
+                onClick()
+            }
+            false
+        },
+        keys = arrayOf({ painter.state }, { selectedSpecialMarker }, { specialMarkerInfo })
     ) {
         if (toggleMarker == selectedSpecialMarker && specialMarkerInfo != null) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -145,7 +153,10 @@ private fun ToggleMarker(
                     painter = painter,
                     specialMarkerInfo = specialMarkerInfo,
                     modifier = Modifier
-                        .noRippleClickable { onSpecialInfoClick(specialMarkerInfo.imageUrl) }
+                        .noRippleClickable {
+                            Log.d("MapComponent", "Special marker clicked: ${specialMarkerInfo.id}")
+                            onSpecialInfoClick(specialMarkerInfo.imageUrl)
+                        }
                 )
                 Box(
                     modifier = Modifier

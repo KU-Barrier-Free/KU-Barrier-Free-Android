@@ -47,8 +47,8 @@ fun FindWayButton(
             )
             .clickable(
                 onClick = onClick,
-                indication = ripple(false, 80.dp),
-                interactionSource = null,
+//                indication = ripple(false, 80.dp),
+//                interactionSource = null,
             )
             .padding(horizontal = 10.dp, vertical = 4.5.dp),
     ) {

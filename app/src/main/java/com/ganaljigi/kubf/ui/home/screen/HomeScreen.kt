@@ -1,5 +1,9 @@
 package com.ganaljigi.kubf.ui.home.screen
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,14 +30,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.compose.AsyncImage
 import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoChip
 import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoItem
@@ -130,6 +139,21 @@ fun HomeScreen(
             )
         }
 
+        if (uiState.showSpecialImageDialog) {
+            Dialog(
+                onDismissRequest = { viewModel.setShowSpecialImageDialog(false) },
+            ) {
+                AsyncImage(
+                    modifier = Modifier
+                        .size(272.dp)
+                        .clip(RoundedCornerShape(10.dp)),
+                    model = uiState.specialImageUrl,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                )
+            }
+        }
+
         MapComponent(
             modifier = Modifier
                 .fillMaxSize(),
@@ -143,7 +167,7 @@ fun HomeScreen(
                 viewModel.getBuildingInfo(marker)
             },
             onSpecialMarkerClick = { viewModel.getSpecialMarkerInfo(it) },
-            onSpecialInfoClick = { TODO() },
+            onSpecialInfoClick = { viewModel.setShowSpecialImageDialog(true, it) },
             setDefaultMode = { viewModel.setDefaultMode() },
             selectedSpecialMarker = uiState.selectedSpecialMarker,
             specialMarkerInfo = uiState.specialMarkerInfo,
@@ -231,26 +255,39 @@ fun HomeScreen(
                     )
                 }
             }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 20.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom
-            ) {
-                BarrierFreeInfoItem(
+            Row {
+                AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.BARRIER_FREE_SHOWN,
+                    enter = expandVertically(),
+                    exit = slideOutVertically(
+                        targetOffsetY = { it }
+                    ) + fadeOut()
                 ) {
-                    viewModel.setHomeUiMode(HomeUiMode.DEFAULT)
+                    BarrierFreeInfoItem(
+                        onClick = {
+                            viewModel.setHomeUiMode(HomeUiMode.DEFAULT)
+                        }
+                    )
                 }
-                if (uiState.homeUiMode == HomeUiMode.DEFAULT) {
-                    BarrierFreeInfoChip {
-                        viewModel.setHomeUiMode(HomeUiMode.BARRIER_FREE_SHOWN)
-                    }
+                AnimatedVisibility(
+                    visible = uiState.homeUiMode == HomeUiMode.DEFAULT,
+                    enter = expandVertically(),
+                    exit = slideOutVertically() + fadeOut()
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 20.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.Bottom
+                    ) {
+                        BarrierFreeInfoChip {
+                            viewModel.setHomeUiMode(HomeUiMode.BARRIER_FREE_SHOWN)
+                        }
 
-                    NoticeButton {
-                        navigateToHelper()
+                        NoticeButton {
+                            navigateToHelper()
+                        }
                     }
                 }
             }

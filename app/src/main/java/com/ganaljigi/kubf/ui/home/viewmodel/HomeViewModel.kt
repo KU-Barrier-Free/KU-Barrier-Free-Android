@@ -1,6 +1,5 @@
 package com.ganaljigi.kubf.ui.home.viewmodel
 
-import android.util.Log
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
@@ -214,8 +213,18 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun setShowSpecialImageDialog(showSpecialImageDialog: Boolean) {
-        _uiState.update { it.copy(showSpecialImageDialog = showSpecialImageDialog) }
+    fun setShowSpecialImageDialog(
+        showSpecialImageDialog: Boolean,
+        imageUrl: String = "",
+    ) {
+        _uiState.update {
+            it.copy(
+                specialImageUrl = imageUrl,
+                showSpecialImageDialog = showSpecialImageDialog,
+                selectedSpecialMarker =
+                    if (showSpecialImageDialog) it.selectedSpecialMarker else null,
+            )
+        }
     }
 
     fun updateToggleUiStates(toggle: MapToggle) {
