@@ -45,6 +45,7 @@ import com.ganaljigi.kubf.ui.home.component.find.HomeFindTopLocationComponent
 import com.ganaljigi.kubf.ui.home.component.map.MapComponent
 import com.ganaljigi.kubf.ui.home.component.search.HomeInquiryDialog
 import com.ganaljigi.kubf.ui.home.viewmodel.HomeBottomSheetType
+import com.ganaljigi.kubf.ui.home.viewmodel.HomeUiMode
 import com.ganaljigi.kubf.ui.home.viewmodel.HomeViewModel
 import com.ganaljigi.kubf.ui.theme.Black
 import com.ganaljigi.kubf.ui.theme.Gray2
@@ -83,12 +84,12 @@ fun HomeScreen(
                 }
 
                 else -> {
+                    viewModel.setBottomSheetType(HomeBottomSheetType.NONE)
                     bottomSheetState.hide()
                 }
             }
         }
     }
-
 
     BottomSheetScaffold(
         modifier = Modifier.padding(padding),
@@ -155,14 +156,14 @@ fun HomeScreen(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            if (uiState.isFindMode) {
+            if (uiState.homeUiMode == HomeUiMode.FIND_MODE) {
                 HomeFindTopLocationComponent(
                     modifier = Modifier
                         .padding(top = 12.dp),
                     fromLocation = "",
                     toLocation = "",
-                    onClose = { viewModel.setFindMode(false) },
-                    onChange = { viewModel.setFindMode(false) },
+                    onClose = { viewModel.setHomeUiMode(HomeUiMode.DEFAULT) },
+                    onChange = { viewModel.setHomeUiMode(HomeUiMode.DEFAULT) },
                     onFromLocationClick = {
 //                        viewModel.setBottomSheetType(true)
                     },
@@ -217,7 +218,7 @@ fun HomeScreen(
                         }
                         FindWayButton(
                             modifier = Modifier.fillMaxHeight()
-                        ) { viewModel.setFindMode(true) }
+                        ) { viewModel.setHomeUiMode(HomeUiMode.FIND_MODE) }
                     }
                     HomeToggle(
                         modifier = Modifier
@@ -231,28 +232,25 @@ fun HomeScreen(
                 }
             }
 
-            // 기본 모드일 경우에만 보임
-            if (!uiState.isFindMode) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 20.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Bottom
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 20.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                BarrierFreeInfoItem(
+                    visible = uiState.homeUiMode == HomeUiMode.BARRIER_FREE_SHOWN,
                 ) {
-                    BarrierFreeInfoItem(
-                        visible = uiState.isBarrierFreeShown,
-                    ) {
-                        viewModel.setBarrierFreeShown(uiState.isBarrierFreeShown.not())
+                    viewModel.setHomeUiMode(HomeUiMode.DEFAULT)
+                }
+                if (uiState.homeUiMode == HomeUiMode.DEFAULT) {
+                    BarrierFreeInfoChip {
+                        viewModel.setHomeUiMode(HomeUiMode.BARRIER_FREE_SHOWN)
                     }
-                    if (!uiState.isBarrierFreeShown) {
-                        BarrierFreeInfoChip {
-                            viewModel.setBarrierFreeShown(true)
-                        }
 
-                        NoticeButton {
-                            navigateToHelper()
-                        }
+                    NoticeButton {
+                        navigateToHelper()
                     }
                 }
             }

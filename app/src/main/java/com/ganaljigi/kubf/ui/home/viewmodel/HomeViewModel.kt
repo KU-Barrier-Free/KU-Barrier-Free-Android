@@ -195,12 +195,8 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun setBarrierFreeShown(isBarrierFreeShown: Boolean) {
-        _uiState.update { it.copy(isBarrierFreeShown = isBarrierFreeShown) }
-    }
-
-    fun setFindMode(isFindMode: Boolean) {
-        _uiState.update { it.copy(isFindMode = isFindMode) }
+    fun setHomeUiMode(homeUiMode: HomeUiMode) {
+        _uiState.update { it.copy(homeUiMode = homeUiMode) }
     }
 
     fun setBottomSheetType(bottomSheetType: HomeBottomSheetType) {
@@ -242,7 +238,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                     }
                 }.flatten().toImmutableList()
             it.copy(
-                isBarrierFreeShown = false,
+                homeUiMode = HomeUiMode.DEFAULT,
                 toggleUiStates = updatedToggles,
                 showingToggleMarkers = newShowingToggleMarkers,
             )
@@ -359,7 +355,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     fun setDefaultMode() {
         _uiState.update {
             it.copy(
-                isBarrierFreeShown = false,
+                homeUiMode = HomeUiMode.DEFAULT,
                 bottomSheetType = HomeBottomSheetType.NONE,
                 showInquiryDialog = false,
                 selectedBuildingMarker = null,

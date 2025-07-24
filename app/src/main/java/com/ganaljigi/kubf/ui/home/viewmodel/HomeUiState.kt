@@ -21,8 +21,7 @@ data class HomeUiState(
     val searchWord: TextFieldValue = TextFieldValue(""),
     val buildingInfo: HomeBuildingInfo = HomeBuildingInfo(),
     val searchResults: ImmutableList<SearchResult> = persistentListOf(),
-    val isBarrierFreeShown: Boolean = false,
-    val isFindMode: Boolean = false,
+    val homeUiMode: HomeUiMode = HomeUiMode.DEFAULT,
     val bottomSheetType: HomeBottomSheetType = HomeBottomSheetType.NONE,
     val showInquiryDialog: Boolean = false,
     val showSpecialImageDialog: Boolean = false,
@@ -46,6 +45,12 @@ data class HomeUiState(
     val specialMarkerInfo: SpecialMarkerInfo? = null,
     val popularKeywords: ImmutableList<String> = persistentListOf(),
 )
+
+enum class HomeUiMode {
+    DEFAULT,
+    BARRIER_FREE_SHOWN,
+    FIND_MODE,
+}
 
 enum class HomeBottomSheetType {
     NONE,
