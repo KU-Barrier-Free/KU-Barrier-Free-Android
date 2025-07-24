@@ -114,19 +114,33 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     fun updateSearchResults(
         newSearchResults: List<SearchResult> = uiState.value.searchResults
     ) {
-        _uiState.update {
-            it.copy(
-                searchWord = if (newSearchResults.size == 1) {
-                    TextFieldValue(newSearchResults.first().name)
-                } else {
-                    it.searchWord
-                },
-                selectedBuildingMarker = null,
-                bottomSheetType = HomeBottomSheetType.SEARCH,
-                searchResults = newSearchResults.toImmutableList()
-            )
+        if (newSearchResults.size == 1) {
+            setSingleResult(newSearchResults.first())
+        } else {
+            _uiState.update {
+                it.copy(
+                    selectedBuildingMarker = null,
+                    bottomSheetType = HomeBottomSheetType.SEARCH,
+                    searchResults = newSearchResults.toImmutableList()
+                )
+            }
         }
     }
+
+    private fun setSingleResult(searchResult: SearchResult) {
+        if (searchResult.isBuilding) {
+            getBuildingInfoByResult(searchResult)
+        } else {
+            _uiState.update {
+                it.copy(
+                    selectedBuildingMarker = null,
+                    bottomSheetType = HomeBottomSheetType.SEARCH,
+                    searchResults = persistentListOf(searchResult),
+                )
+            }
+        }
+    }
+
 
     fun onFromClick(searchResult: SearchResult) {
         updateFromLocation(searchResult)
@@ -190,7 +204,40 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun getBuildingInfo(selectedBuildingMarker: BuildingMarker) {
+    private fun getBuildingInfoByResult(searchResult: SearchResult) {
+        // TODO: 건물 정보 API 호출
+        updateBuildingInfo(
+            HomeBuildingInfo(
+                id = 1L,
+                name = "경영관",
+                buildingNumber = 1,
+                latitude = 0.0,
+                longitude = 0.0,
+                convenienceList = Convenience.entries.toImmutableList(),
+                doorInfoList = persistentListOf(
+                    DoorInfo(
+                        label = "B",
+                        imageUrl = "",
+                        description = "입구 설명",
+                        isWheelchairAccessible = true
+                    ),
+                    DoorInfo(
+                        label = "B",
+                        imageUrl = "",
+                        description = "입구 설명",
+                        isWheelchairAccessible = true
+                    ),
+                )
+            )
+        )
+        _uiState.update {
+            it.copy(
+                bottomSheetType = HomeBottomSheetType.BUILDING_INFO,
+            )
+        }
+    }
+
+    fun getBuildingInfoByMarker(selectedBuildingMarker: BuildingMarker) {
         // TODO: 건물 정보 API 호출
         updateBuildingInfo(
             if (selectedBuildingMarker.id == 1L) {
@@ -450,6 +497,9 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                 selectedBuildingMarker = null,
                 selectedSpecialMarker = null,
                 selectedRouteResult = RouteResult(),
+                fromLocation = SearchResult(),
+                toLocation = SearchResult(),
+                searchResults = persistentListOf(),
             )
         }
     }

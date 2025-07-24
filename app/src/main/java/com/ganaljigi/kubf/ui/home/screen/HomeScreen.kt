@@ -63,7 +63,6 @@ import com.ganaljigi.kubf.ui.theme.Gray2
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.util.noRippleClickable
 import kotlinx.coroutines.launch
-import java.lang.System.exit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -179,7 +178,7 @@ fun HomeScreen(
                 .filter { it.id != uiState.selectedBuildingMarker?.id },
             doorMarkers = uiState.doorMarkers,
             onBuildingMarkerClick = { marker ->
-                viewModel.getBuildingInfo(marker)
+                viewModel.getBuildingInfoByMarker(selectedBuildingMarker = marker)
             },
             onSpecialMarkerClick = { viewModel.getSpecialMarkerInfo(it) },
             onSpecialInfoClick = { viewModel.setShowSpecialImageDialog(true, it) },
