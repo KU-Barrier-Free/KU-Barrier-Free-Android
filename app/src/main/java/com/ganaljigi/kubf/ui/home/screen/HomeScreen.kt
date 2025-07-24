@@ -1,16 +1,17 @@
 package com.ganaljigi.kubf.ui.home.screen
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -172,6 +173,9 @@ fun HomeScreen(
             selectedSpecialMarker = uiState.selectedSpecialMarker,
             specialMarkerInfo = uiState.specialMarkerInfo,
         )
+        AnimatedVisibility(
+            visible = true
+        ) { }
 
         Column(
             modifier = Modifier
@@ -180,88 +184,114 @@ fun HomeScreen(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            if (uiState.homeUiMode == HomeUiMode.FIND_MODE) {
-                HomeFindTopLocationComponent(
-                    modifier = Modifier
-                        .padding(top = 12.dp),
-                    fromLocation = "",
-                    toLocation = "",
-                    onClose = { viewModel.setHomeUiMode(HomeUiMode.DEFAULT) },
-                    onChange = { viewModel.setHomeUiMode(HomeUiMode.DEFAULT) },
-                    onFromLocationClick = {
+            Box {
+                androidx.compose.animation.AnimatedVisibility(
+                    visible = uiState.homeUiMode == HomeUiMode.FIND_MODE,
+                    enter = slideInVertically(
+                        initialOffsetY = { -it / 2 }
+                    ),
+                    exit = slideOutVertically(
+                        targetOffsetY = { -it }
+                    ) + fadeOut()
+                ) {
+                    HomeFindTopLocationComponent(
+                        modifier = Modifier
+                            .padding(top = 12.dp),
+                        fromLocation = "",
+                        toLocation = "",
+                        onClose = { viewModel.setHomeUiMode(HomeUiMode.DEFAULT) },
+                        onChange = { viewModel.setHomeUiMode(HomeUiMode.DEFAULT) },
+                        onFromLocationClick = {
 //                        viewModel.setBottomSheetType(true)
-                    },
-                    onToLocationClick = {
+                        },
+                        onToLocationClick = {
 //                        viewModel.setShowSearchBottomSheet(true)
-                    }
-                )
-            } else {
-                Column {
-                    Row(
-                        modifier = Modifier
-                            .height(IntrinsicSize.Min)
-                            .padding(top = 12.dp, bottom = 8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .shadow(elevation = 3.dp, shape = RoundedCornerShape(10.dp))
-                                .noRippleClickable(
-                                    onClick = {
-                                        viewModel.setDefaultMode()
-                                        navigateToSearch("검색")
-                                    }
-                                )
-                                .background(color = Color.White, shape = RoundedCornerShape(10.dp))
-                                .weight(1f)
-                                .padding(horizontal = 12.dp)
-                                .height(44.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_search_bar_leading),
-                                contentDescription = "검색 아이콘",
-                                tint = Color.Unspecified,
-                            )
-                            Text(
-                                modifier = Modifier.weight(1f),
-                                text = uiState.searchWord.text.ifEmpty { "건물, 편의시설 검색" },
-                                style = KUBFAndroidTheme.typography.medium15.copy(
-                                    color = if (uiState.searchWord.text.isEmpty()) Gray2 else Black
-                                ),
-                            )
-                            if (uiState.searchWord.text.isNotEmpty()) {
-                                Icon(
-                                    modifier = Modifier.noRippleClickable { viewModel.updateSearchWord() },
-                                    painter = painterResource(R.drawable.ic_searchbar_close),
-                                    contentDescription = "검색어 비우기",
-                                    tint = Color.Unspecified,
-                                )
-                            }
-                        }
-                        FindWayButton(
-                            modifier = Modifier.fillMaxHeight()
-                        ) { viewModel.setHomeUiMode(HomeUiMode.FIND_MODE) }
-                    }
-                    HomeToggle(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        toggleUiStates = uiState.toggleUiStates,
-                        onToggleClick = { toggle ->
-                            viewModel.updateToggleUiStates(toggle)
-                            focusManager.clearFocus()
                         }
                     )
                 }
+//                if (uiState.homeUiMode == HomeUiMode.DEFAULT) {
+                androidx.compose.animation.AnimatedVisibility(
+                    visible = uiState.homeUiMode != HomeUiMode.DEFAULT,
+                    enter = slideInVertically(
+                        initialOffsetY = { -it / 2 }
+                    ),
+                    exit = slideOutVertically(
+                        targetOffsetY = { -it }
+                    ) + fadeOut()
+                ) {
+                    Column {
+                        Row(
+                            modifier = Modifier
+                                .height(IntrinsicSize.Min)
+                                .padding(top = 12.dp, bottom = 8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .shadow(elevation = 3.dp, shape = RoundedCornerShape(10.dp))
+                                    .noRippleClickable(
+                                        onClick = {
+                                            viewModel.setDefaultMode()
+                                            navigateToSearch("검색")
+                                        }
+                                    )
+                                    .background(
+                                        color = Color.White,
+                                        shape = RoundedCornerShape(10.dp)
+                                    )
+                                    .weight(1f)
+                                    .padding(horizontal = 12.dp)
+                                    .height(44.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_search_bar_leading),
+                                    contentDescription = "검색 아이콘",
+                                    tint = Color.Unspecified,
+                                )
+                                Text(
+                                    modifier = Modifier.weight(1f),
+                                    text = uiState.searchWord.text.ifEmpty { "건물, 편의시설 검색" },
+                                    style = KUBFAndroidTheme.typography.medium15.copy(
+                                        color = if (uiState.searchWord.text.isEmpty()) Gray2 else Black
+                                    ),
+                                )
+                                if (uiState.searchWord.text.isNotEmpty()) {
+                                    Icon(
+                                        modifier = Modifier.noRippleClickable { viewModel.updateSearchWord() },
+                                        painter = painterResource(R.drawable.ic_searchbar_close),
+                                        contentDescription = "검색어 비우기",
+                                        tint = Color.Unspecified,
+                                    )
+                                }
+                            }
+                            FindWayButton(
+                                modifier = Modifier.size(44.dp)
+                            ) { viewModel.setHomeUiMode(HomeUiMode.FIND_MODE) }
+                        }
+                        HomeToggle(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            toggleUiStates = uiState.toggleUiStates,
+                            onToggleClick = { toggle ->
+                                viewModel.updateToggleUiStates(toggle)
+                                focusManager.clearFocus()
+                            }
+                        )
+                    }
+                }
             }
+
             Row {
                 AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.BARRIER_FREE_SHOWN,
-                    enter = expandVertically(),
+                    enter = slideInVertically(
+                        initialOffsetY = { it / 2 }
+                    ),
                     exit = slideOutVertically(
                         targetOffsetY = { it }
-                    ) + fadeOut()
+                    )
                 ) {
                     BarrierFreeInfoItem(
                         onClick = {
@@ -271,8 +301,12 @@ fun HomeScreen(
                 }
                 AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.DEFAULT,
-                    enter = expandVertically(),
-                    exit = slideOutVertically() + fadeOut()
+                    enter = slideInVertically(
+                        initialOffsetY = { it / 2 }
+                    ),
+                    exit = slideOutVertically(
+                        targetOffsetY = { it }
+                    )
                 ) {
                     Row(
                         modifier = Modifier
