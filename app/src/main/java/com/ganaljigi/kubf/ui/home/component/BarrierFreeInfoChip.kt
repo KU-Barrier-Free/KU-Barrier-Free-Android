@@ -36,16 +36,12 @@ fun BarrierFreeInfoChip(
         Box(
             modifier = modifier
                 .matchParentSize()
-                .background(Color.White.copy(alpha = 0.1f), shape = RoundedCornerShape(8.dp))
+                .background(Color.White.copy(alpha = 0.6f), shape = RoundedCornerShape(8.dp))
                 .blur(8.dp, BlurredEdgeTreatment.Unbounded)
         )
         Row(
             modifier = modifier
                 .noRippleClickable(onClick = onClick)
-                .background(
-                    color = Color.White.copy(alpha = 0.1f),
-                    shape = RoundedCornerShape(8.dp)
-                )
                 .border(
                     color = Gray1,
                     width = 1.dp,

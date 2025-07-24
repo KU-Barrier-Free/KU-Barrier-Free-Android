@@ -28,6 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ganalijigi.kubf.R
+import com.ganaljigi.kubf.ui.home.model.SearchResult
 import com.ganaljigi.kubf.ui.theme.Gray2
 import com.ganaljigi.kubf.ui.theme.Gray4
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
@@ -35,8 +36,8 @@ import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 @Composable
 fun HomeFindTopLocationComponent(
     modifier: Modifier = Modifier,
-    fromLocation: String = "",
-    toLocation: String = "",
+    fromLocationResult: SearchResult,
+    toLocationResult: SearchResult,
     onClose: () -> Unit = {},
     onChange: () -> Unit = {},
     onFromLocationClick: () -> Unit = {},
@@ -76,9 +77,9 @@ fun HomeFindTopLocationComponent(
                     tint = Color.Unspecified,
                 )
                 Text(
-                    text = fromLocation.ifEmpty { "출발지 입력" },
+                    text = fromLocationResult.name.ifEmpty { "출발지 입력" },
                     style = KUBFAndroidTheme.typography.medium15.copy(
-                        color = if (fromLocation.isEmpty()) Gray2 else Color.Black
+                        color = if (fromLocationResult.name.isEmpty()) Gray2 else Color.Black
                     )
                 )
 
@@ -89,7 +90,8 @@ fun HomeFindTopLocationComponent(
                     .shadow(
                         elevation = 3.dp,
                         shape = CircleShape
-                    ).background(
+                    )
+                    .background(
                         color = Color.White,
                         shape = CircleShape
                     )
@@ -119,7 +121,8 @@ fun HomeFindTopLocationComponent(
                     .shadow(
                         elevation = 3.dp,
                         shape = RoundedCornerShape(10.dp)
-                    ).background(
+                    )
+                    .background(
                         color = Color.White,
                         shape = RoundedCornerShape(10.dp)
                     )
@@ -134,9 +137,9 @@ fun HomeFindTopLocationComponent(
                     tint = Color.Unspecified,
                 )
                 Text(
-                    text = toLocation.ifEmpty { "도착지 입력" },
+                    text = toLocationResult.name.ifEmpty { "도착지 입력" },
                     style = KUBFAndroidTheme.typography.medium15.copy(
-                        color = if (toLocation.isEmpty()) Gray2 else Color.Black
+                        color = if (toLocationResult.name.isEmpty()) Gray2 else Color.Black
                     )
                 )
 
@@ -146,7 +149,8 @@ fun HomeFindTopLocationComponent(
                     .shadow(
                         elevation = 3.dp,
                         shape = CircleShape
-                    ).size(40.dp)
+                    )
+                    .size(40.dp)
                     .background(
                         color = Color.White,
                         shape = CircleShape
@@ -172,14 +176,14 @@ fun HomeFindTopLocationComponent(
 @Preview
 @Composable
 private fun HomeFindLocationComponentPreview() {
-    var startLocation by remember { mutableStateOf("카페 레스티오 경영관") }
-    var endLocation by remember { mutableStateOf("") }
+    val fromLocation = SearchResult()
+    val toLocation = SearchResult()
 
     KUBFAndroidTheme {
         HomeFindTopLocationComponent(
             modifier = Modifier,
-            fromLocation = startLocation,
-            toLocation = endLocation,
+            fromLocationResult = fromLocation,
+            toLocationResult = toLocation,
         )
     }
 }

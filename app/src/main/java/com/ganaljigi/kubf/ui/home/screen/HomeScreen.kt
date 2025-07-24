@@ -1,7 +1,6 @@
 package com.ganaljigi.kubf.ui.home.screen
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -57,6 +56,7 @@ import com.ganaljigi.kubf.ui.home.component.search.HomeInquiryDialog
 import com.ganaljigi.kubf.ui.home.viewmodel.HomeBottomSheetType
 import com.ganaljigi.kubf.ui.home.viewmodel.HomeUiMode
 import com.ganaljigi.kubf.ui.home.viewmodel.HomeViewModel
+import com.ganaljigi.kubf.ui.common.model.SearchMode
 import com.ganaljigi.kubf.ui.theme.Black
 import com.ganaljigi.kubf.ui.theme.Gray2
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
@@ -68,7 +68,7 @@ import kotlinx.coroutines.launch
 fun HomeScreen(
     padding: PaddingValues,
     navigateToHelper: () -> Unit = { },
-    navigateToSearch: (String) -> Unit = { },
+    navigateToSearch: (SearchMode) -> Unit = { },
     navigateToBuildingInfo: (Int) -> Unit = { },
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
@@ -197,21 +197,21 @@ fun HomeScreen(
                     HomeFindTopLocationComponent(
                         modifier = Modifier
                             .padding(top = 12.dp),
-                        fromLocation = "",
-                        toLocation = "",
+                        fromLocationResult = uiState.fromLocation,
+                        toLocationResult = uiState.toLocation,
                         onClose = { viewModel.setHomeUiMode(HomeUiMode.DEFAULT) },
-                        onChange = { viewModel.setHomeUiMode(HomeUiMode.DEFAULT) },
+                        onChange = { viewModel.changeFromToLocation() },
                         onFromLocationClick = {
-//                        viewModel.setBottomSheetType(true)
+                            navigateToSearch(SearchMode.FIND_FROM_LOCATION)
                         },
                         onToLocationClick = {
-//                        viewModel.setShowSearchBottomSheet(true)
+                            navigateToSearch(SearchMode.FIND_TO_LOCATION)
                         }
                     )
                 }
 //                if (uiState.homeUiMode == HomeUiMode.DEFAULT) {
                 androidx.compose.animation.AnimatedVisibility(
-                    visible = uiState.homeUiMode != HomeUiMode.DEFAULT,
+                    visible = uiState.homeUiMode != HomeUiMode.FIND_MODE,
                     enter = slideInVertically(
                         initialOffsetY = { -it / 2 }
                     ),
@@ -232,7 +232,7 @@ fun HomeScreen(
                                     .noRippleClickable(
                                         onClick = {
                                             viewModel.setDefaultMode()
-                                            navigateToSearch("검색")
+                                            navigateToSearch(SearchMode.SEARCH)
                                         }
                                     )
                                     .background(

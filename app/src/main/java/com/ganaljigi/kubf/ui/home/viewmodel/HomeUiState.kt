@@ -44,7 +44,10 @@ data class HomeUiState(
     val selectedSpecialMarker: ToggleMarker? = null,
     val specialMarkerInfo: SpecialMarkerInfo? = null,
     val popularKeywords: ImmutableList<String> = persistentListOf(),
+    val fromLocation: SearchResult = SearchResult(),
+    val toLocation: SearchResult = SearchResult()
 )
+
 
 enum class HomeUiMode {
     DEFAULT,

@@ -10,7 +10,6 @@ import androidx.navigation.toRoute
 import com.ganaljigi.kubf.ui.home.screen.HomeScreen
 import com.ganaljigi.kubf.ui.home.screen.HomeSearchScreen
 import com.ganaljigi.kubf.ui.home.viewmodel.HomeViewModel
-import com.ganaljigi.kubf.ui.util.sharedViewModel
 
 @Composable
 fun MainNavHost(
@@ -48,11 +47,11 @@ fun MainNavHost(
         }
 
         composable<Routes.HomeSearch> { navBackStackEntry ->
-            val title = navBackStackEntry.toRoute<Routes.HomeSearch>().title
+            val searchMode = navBackStackEntry.toRoute<Routes.HomeSearch>().title
 
             HomeSearchScreen(
                 padding = padding,
-                title = title,
+                searchMode = searchMode,
                 navigateUp = { navController.popBackStack() },
                 viewModel = homeViewModel,
             )

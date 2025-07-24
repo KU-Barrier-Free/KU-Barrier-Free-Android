@@ -118,6 +118,33 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun updateFromLocation(fromLocation: SearchResult) {
+        _uiState.update { it.copy(fromLocation = fromLocation) }
+        if (fromLocation.name.isEmpty() && uiState.value.toLocation.name.isEmpty()) {
+            getRouteBetweenLocations()
+        }
+    }
+
+    fun updateToLocation(toLocation: SearchResult) {
+        _uiState.update { it.copy(toLocation = toLocation) }
+        if (toLocation.name.isEmpty() && uiState.value.fromLocation.name.isEmpty()) {
+            getRouteBetweenLocations()
+        }
+    }
+
+    fun changeFromToLocation() {
+        _uiState.update {
+            it.copy(
+                fromLocation = it.toLocation,
+                toLocation = it.fromLocation,
+            )
+        }
+    }
+
+    private fun getRouteBetweenLocations() {
+        // TODO: 경로 API 호출
+    }
+
     fun getBuildingInfo(selectedBuildingMarker: BuildingMarker) {
         // TODO: 건물 정보 API 호출
         updateBuildingInfo(
