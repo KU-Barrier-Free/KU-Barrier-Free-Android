@@ -38,7 +38,7 @@ fun MainNavHost(
             HomeScreen(
                 padding = padding,
                 navigateToHelper = { navController.navigate(Routes.Helper) },
-                navigateToBuildingInfo = { navController.navigate(Routes.BuildingInfo) },
+                navigateToBuildingInfo = { navController.navigate(Routes.BuildingInfo(it.toInt())) },
                 navigateToSearch = { title ->
                     navController.navigate(Routes.HomeSearch(title))
                 },

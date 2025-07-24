@@ -71,7 +71,7 @@ fun HomeScreen(
     padding: PaddingValues,
     navigateToHelper: () -> Unit = { },
     navigateToSearch: (SearchMode) -> Unit = { },
-    navigateToBuildingInfo: (Int) -> Unit = { },
+    navigateToBuildingInfo: (Long) -> Unit = { },
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -123,6 +123,9 @@ fun HomeScreen(
                     HomeBuildingInfoSheetContent(
                         modifier = Modifier.fillMaxWidth(),
                         buildingInfo = uiState.buildingInfo,
+                        onItemClick = { buildingId ->
+                            navigateToBuildingInfo(buildingId)
+                        },
                     )
                 }
 
