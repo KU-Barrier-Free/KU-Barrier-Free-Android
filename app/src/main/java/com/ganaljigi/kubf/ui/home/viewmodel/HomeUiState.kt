@@ -6,6 +6,7 @@ import com.ganaljigi.kubf.ui.common.model.DoorInfo
 import com.ganaljigi.kubf.ui.home.model.BuildingMarker
 import com.ganaljigi.kubf.ui.home.model.DoorMarker
 import com.ganaljigi.kubf.ui.home.model.MapToggle
+import com.ganaljigi.kubf.ui.home.model.RouteResult
 import com.ganaljigi.kubf.ui.home.model.SearchResult
 import com.ganaljigi.kubf.ui.home.model.ToggleMarker
 import com.google.android.gms.maps.model.CameraPosition
@@ -45,7 +46,9 @@ data class HomeUiState(
     val specialMarkerInfo: SpecialMarkerInfo? = null,
     val popularKeywords: ImmutableList<String> = persistentListOf(),
     val fromLocation: SearchResult = SearchResult(),
-    val toLocation: SearchResult = SearchResult()
+    val toLocation: SearchResult = SearchResult(),
+    val routeResults: ImmutableList<RouteResult> = persistentListOf(),
+    val selectedRouteResult: RouteResult = RouteResult(),
 )
 
 
@@ -53,6 +56,7 @@ enum class HomeUiMode {
     DEFAULT,
     BARRIER_FREE_SHOWN,
     FIND_MODE,
+    ROUTE_MODE,
 }
 
 enum class HomeBottomSheetType {

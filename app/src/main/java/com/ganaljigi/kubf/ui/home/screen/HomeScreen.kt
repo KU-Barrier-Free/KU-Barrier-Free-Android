@@ -43,6 +43,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.ganalijigi.kubf.R
+import com.ganaljigi.kubf.ui.common.model.SearchMode
 import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoChip
 import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoItem
 import com.ganaljigi.kubf.ui.home.component.FindWayButton
@@ -51,17 +52,18 @@ import com.ganaljigi.kubf.ui.home.component.NoticeButton
 import com.ganaljigi.kubf.ui.home.component.bottomsheet.HomeBuildingInfoSheetContent
 import com.ganaljigi.kubf.ui.home.component.bottomsheet.HomeSearchBottomSheet
 import com.ganaljigi.kubf.ui.home.component.find.HomeFindTopLocationComponent
+import com.ganaljigi.kubf.ui.home.component.find.HomeRouteInfo
 import com.ganaljigi.kubf.ui.home.component.map.MapComponent
 import com.ganaljigi.kubf.ui.home.component.search.HomeInquiryDialog
 import com.ganaljigi.kubf.ui.home.viewmodel.HomeBottomSheetType
 import com.ganaljigi.kubf.ui.home.viewmodel.HomeUiMode
 import com.ganaljigi.kubf.ui.home.viewmodel.HomeViewModel
-import com.ganaljigi.kubf.ui.common.model.SearchMode
 import com.ganaljigi.kubf.ui.theme.Black
 import com.ganaljigi.kubf.ui.theme.Gray2
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.util.noRippleClickable
 import kotlinx.coroutines.launch
+import java.lang.System.exit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -186,7 +188,7 @@ fun HomeScreen(
         ) {
             Box {
                 androidx.compose.animation.AnimatedVisibility(
-                    visible = uiState.homeUiMode == HomeUiMode.FIND_MODE,
+                    visible = uiState.homeUiMode == HomeUiMode.FIND_MODE || uiState.homeUiMode == HomeUiMode.ROUTE_MODE,
                     enter = slideInVertically(
                         initialOffsetY = { -it / 2 }
                     ),
@@ -211,7 +213,8 @@ fun HomeScreen(
                 }
 //                if (uiState.homeUiMode == HomeUiMode.DEFAULT) {
                 androidx.compose.animation.AnimatedVisibility(
-                    visible = uiState.homeUiMode != HomeUiMode.FIND_MODE,
+                    visible = uiState.homeUiMode == HomeUiMode.DEFAULT
+                            || uiState.homeUiMode == HomeUiMode.BARRIER_FREE_SHOWN,
                     enter = slideInVertically(
                         initialOffsetY = { -it / 2 }
                     ),
@@ -283,8 +286,8 @@ fun HomeScreen(
                 }
             }
 
-            Row {
-                AnimatedVisibility(
+            Box {
+                androidx.compose.animation.AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.BARRIER_FREE_SHOWN,
                     enter = slideInVertically(
                         initialOffsetY = { it / 2 }
@@ -299,7 +302,7 @@ fun HomeScreen(
                         }
                     )
                 }
-                AnimatedVisibility(
+                androidx.compose.animation.AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.DEFAULT,
                     enter = slideInVertically(
                         initialOffsetY = { it / 2 }
@@ -323,6 +326,22 @@ fun HomeScreen(
                             navigateToHelper()
                         }
                     }
+                }
+                androidx.compose.animation.AnimatedVisibility(
+                    visible = uiState.homeUiMode == HomeUiMode.ROUTE_MODE,
+                    enter = slideInVertically(
+                        initialOffsetY = { it / 2 }
+                    ),
+                    exit = slideOutVertically(
+                        targetOffsetY = { it }
+                    )
+                ) {
+                    HomeRouteInfo(
+                        modifier = Modifier
+                            .padding(16.dp),
+                        selectedRoute = uiState.selectedRouteResult,
+                        routeResults = uiState.routeResults
+                    )
                 }
             }
         }

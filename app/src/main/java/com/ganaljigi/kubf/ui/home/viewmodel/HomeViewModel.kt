@@ -1,5 +1,6 @@
 package com.ganaljigi.kubf.ui.home.viewmodel
 
+import android.util.Log
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
@@ -8,8 +9,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ganaljigi.kubf.ui.common.model.Convenience
 import com.ganaljigi.kubf.ui.common.model.DoorInfo
+import com.ganaljigi.kubf.ui.common.model.RouteMode
 import com.ganaljigi.kubf.ui.home.model.BuildingMarker
 import com.ganaljigi.kubf.ui.home.model.MapToggle
+import com.ganaljigi.kubf.ui.home.model.RouteResult
 import com.ganaljigi.kubf.ui.home.model.SearchResult
 import com.ganaljigi.kubf.ui.home.model.ToggleMarker
 import com.ganaljigi.kubf.ui.theme.MainGreen
@@ -119,15 +122,25 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     }
 
     fun updateFromLocation(fromLocation: SearchResult) {
-        _uiState.update { it.copy(fromLocation = fromLocation) }
-        if (fromLocation.name.isEmpty() && uiState.value.toLocation.name.isEmpty()) {
+        _uiState.update {
+            it.copy(
+                searchWord = TextFieldValue(""),
+                fromLocation = fromLocation
+            )
+        }
+        if (fromLocation.name.isNotEmpty() && uiState.value.toLocation.name.isNotEmpty()) {
             getRouteBetweenLocations()
         }
     }
 
     fun updateToLocation(toLocation: SearchResult) {
-        _uiState.update { it.copy(toLocation = toLocation) }
-        if (toLocation.name.isEmpty() && uiState.value.fromLocation.name.isEmpty()) {
+        _uiState.update {
+            it.copy(
+                searchWord = TextFieldValue(""),
+                toLocation = toLocation
+            )
+        }
+        if (toLocation.name.isNotEmpty() && uiState.value.fromLocation.name.isNotEmpty()) {
             getRouteBetweenLocations()
         }
     }
@@ -143,6 +156,19 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 
     private fun getRouteBetweenLocations() {
         // TODO: 경로 API 호출
+        Log.d(
+            "HomeViewModel",
+            "getRouteBetweenLocations: from=${uiState.value.fromLocation.name}, to=${uiState.value.toLocation.name}"
+        )
+        _uiState.update {
+            it.copy(
+                homeUiMode = HomeUiMode.ROUTE_MODE,
+                routeResults = persistentListOf(
+                    RouteResult(routeMode = RouteMode.SHORTEST, time = 7, distance = 428),
+                    RouteResult(routeMode = RouteMode.BARRIER_FREE, time = 14, distance = 1136),
+                )
+            )
+        }
     }
 
     fun getBuildingInfo(selectedBuildingMarker: BuildingMarker) {
@@ -396,6 +422,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                 showInquiryDialog = false,
                 selectedBuildingMarker = null,
                 selectedSpecialMarker = null,
+                selectedRouteResult = RouteResult(),
             )
         }
     }
