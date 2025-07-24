@@ -50,6 +50,17 @@ fun HomeBuildingInfoSheetContent(
             .fillMaxWidth()
             .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
     ) {
+        Box(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .width(100.dp)
+                .height(28.dp)
+                .padding(top = 8.dp, bottom = 16.dp)
+                .background(
+                    color = Gray2,
+                    shape = RoundedCornerShape(4.dp)
+                )
+        )
         Column(
             modifier = modifier
                 .fillMaxWidth()

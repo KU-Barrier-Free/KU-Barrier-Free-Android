@@ -33,7 +33,7 @@ import com.ganaljigi.kubf.ui.theme.Gray4
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 
 @Composable
-fun HomeFindLocationComponent(
+fun HomeFindTopLocationComponent(
     modifier: Modifier = Modifier,
     fromLocation: String = "",
     toLocation: String = "",
@@ -176,7 +176,7 @@ private fun HomeFindLocationComponentPreview() {
     var endLocation by remember { mutableStateOf("") }
 
     KUBFAndroidTheme {
-        HomeFindLocationComponent(
+        HomeFindTopLocationComponent(
             modifier = Modifier,
             fromLocation = startLocation,
             toLocation = endLocation,

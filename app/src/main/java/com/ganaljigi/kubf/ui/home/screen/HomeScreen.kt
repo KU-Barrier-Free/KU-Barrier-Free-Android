@@ -1,9 +1,7 @@
 package com.ganaljigi.kubf.ui.home.screen
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -41,11 +38,11 @@ import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoChip
 import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoItem
 import com.ganaljigi.kubf.ui.home.component.FindWayButton
 import com.ganaljigi.kubf.ui.home.component.HomeToggle
-import com.ganaljigi.kubf.ui.home.component.MapComponent
 import com.ganaljigi.kubf.ui.home.component.NoticeButton
 import com.ganaljigi.kubf.ui.home.component.bottomsheet.HomeBuildingInfoSheetContent
 import com.ganaljigi.kubf.ui.home.component.bottomsheet.HomeSearchBottomSheet
-import com.ganaljigi.kubf.ui.home.component.find.HomeFindLocationComponent
+import com.ganaljigi.kubf.ui.home.component.find.HomeFindTopLocationComponent
+import com.ganaljigi.kubf.ui.home.component.map.MapComponent
 import com.ganaljigi.kubf.ui.home.component.search.HomeInquiryDialog
 import com.ganaljigi.kubf.ui.home.viewmodel.HomeBottomSheetType
 import com.ganaljigi.kubf.ui.home.viewmodel.HomeViewModel
@@ -53,7 +50,6 @@ import com.ganaljigi.kubf.ui.theme.Black
 import com.ganaljigi.kubf.ui.theme.Gray2
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.util.noRippleClickable
-import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -98,18 +94,7 @@ fun HomeScreen(
         modifier = Modifier.padding(padding),
         scaffoldState = scaffoldState,
         sheetTonalElevation = 4.dp,
-        sheetDragHandle = {
-            Box(
-                modifier = Modifier
-                    .width(100.dp)
-                    .height(28.dp)
-                    .padding(top = 8.dp, bottom = 16.dp)
-                    .background(
-                        color = Gray2,
-                        shape = RoundedCornerShape(4.dp)
-                    )
-            )
-        },
+        sheetDragHandle = { },
         sheetContent = {
             when (uiState.bottomSheetType) {
                 HomeBottomSheetType.SEARCH -> {
@@ -150,11 +135,17 @@ fun HomeScreen(
             cameraPosition = uiState.cameraPositionState,
             selectedBuildingMarker = uiState.selectedBuildingMarker,
             toggleMarkers = uiState.showingToggleMarkers,
-            buildingMarkers = uiState.buildingMarkers,
+            buildingMarkers = uiState.buildingMarkers
+                .filter { it.id != uiState.selectedBuildingMarker?.id },
             doorMarkers = uiState.doorMarkers,
             onBuildingMarkerClick = { marker ->
                 viewModel.getBuildingInfo(marker)
-            }
+            },
+            onSpecialMarkerClick = { viewModel.getSpecialMarkerInfo(it) },
+            onSpecialInfoClick = { TODO() },
+            setDefaultMode = { viewModel.setDefaultMode() },
+            selectedSpecialMarker = uiState.selectedSpecialMarker,
+            specialMarkerInfo = uiState.specialMarkerInfo,
         )
 
         Column(
@@ -165,7 +156,7 @@ fun HomeScreen(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             if (uiState.isFindMode) {
-                HomeFindLocationComponent(
+                HomeFindTopLocationComponent(
                     modifier = Modifier
                         .padding(top = 12.dp),
                     fromLocation = "",
@@ -173,10 +164,10 @@ fun HomeScreen(
                     onClose = { viewModel.setFindMode(false) },
                     onChange = { viewModel.setFindMode(false) },
                     onFromLocationClick = {
-                        viewModel.setShowSearchBottomSheet(true)
+//                        viewModel.setBottomSheetType(true)
                     },
                     onToLocationClick = {
-                        viewModel.setShowSearchBottomSheet(true)
+//                        viewModel.setShowSearchBottomSheet(true)
                     }
                 )
             } else {
@@ -192,6 +183,7 @@ fun HomeScreen(
                                 .shadow(elevation = 3.dp, shape = RoundedCornerShape(10.dp))
                                 .noRippleClickable(
                                     onClick = {
+                                        viewModel.setDefaultMode()
                                         navigateToSearch("검색")
                                     }
                                 )

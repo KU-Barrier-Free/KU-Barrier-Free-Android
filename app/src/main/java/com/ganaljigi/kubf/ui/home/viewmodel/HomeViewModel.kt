@@ -98,6 +98,12 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun getSpecialMarkerInfo(selectedSpecialMarker: ToggleMarker) {
+        // TODO: 특이사항 정보 API 호출
+        updateSelectedSpecialMarker(selectedSpecialMarker)
+        updateSpecialMarkerInfo(selectedSpecialMarker)
+    }
+
     fun updateBuildingInfo(buildingInfo: HomeBuildingInfo) {
         // TODO: 건물 정보 API 호출
         _uiState.update { it.copy(buildingInfo = buildingInfo) }
@@ -111,20 +117,6 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                 searchResults = newSearchResults.toImmutableList()
             )
         }
-    }
-
-    fun updateShowingToggleMarkers() {
-        val newShowingToggleMarkers = uiState.value.toggleUiStates
-            .filter { it.isSelected }
-            .map { toggleUiState ->
-                when (toggleUiState.toggle) {
-                    MapToggle.CURB -> uiState.value.curbMarkers
-                    MapToggle.SLOPE -> uiState.value.slopeMarkers
-                    MapToggle.STAIRS -> uiState.value.stairsMarkers
-                    MapToggle.SPECIAL_MARK -> uiState.value.specialMarkers
-                }
-            }.flatten().toImmutableList()
-        _uiState.update { it.copy(showingToggleMarkers = newShowingToggleMarkers) }
     }
 
     fun getBuildingInfo(selectedBuildingMarker: BuildingMarker) {
@@ -183,11 +175,21 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 
     private fun updateSelectedBuildingMarker(selectedBuildingMarker: BuildingMarker) {
         _uiState.update {
-            Log.d("HomeViewModel", "Selected Building Marker: ${selectedBuildingMarker.name}")
-            Log.d("HomeViewModel", "Selected Building Marker: ${uiState.value.buildingMarkers}")
             it.copy(
                 selectedBuildingMarker = selectedBuildingMarker,
+                selectedSpecialMarker = null,
                 bottomSheetType = HomeBottomSheetType.BUILDING_INFO,
+                searchResults = persistentListOf(),
+            )
+        }
+    }
+
+    private fun updateSelectedSpecialMarker(selectedSpecialMarker: ToggleMarker) {
+        _uiState.update {
+            it.copy(
+                selectedBuildingMarker = null,
+                selectedSpecialMarker = selectedSpecialMarker,
+                bottomSheetType = HomeBottomSheetType.NONE,
                 searchResults = persistentListOf(),
             )
         }
@@ -225,7 +227,46 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                     toggleUiState
                 }
             }
-            it.copy(toggleUiStates = updatedToggles)
+            val newShowingToggleMarkers = it.toggleUiStates
+                .filter { toggleUiState -> toggleUiState.isSelected }
+                .map { toggleUiState ->
+                    when (toggleUiState.toggle) {
+                        MapToggle.CURB -> uiState.value.curbMarkers
+                        MapToggle.SLOPE -> uiState.value.slopeMarkers
+                        MapToggle.STAIRS -> uiState.value.stairsMarkers
+                        MapToggle.SPECIAL_MARK -> uiState.value.specialMarkers
+                    }
+                }.flatten().toImmutableList()
+            it.copy(
+                isBarrierFreeShown = false,
+                toggleUiStates = updatedToggles,
+                showingToggleMarkers = newShowingToggleMarkers,
+            )
+        }
+
+        val newShowingToggleMarkers = uiState.value.toggleUiStates
+            .filter { it.isSelected }
+            .map { toggleUiState ->
+                when (toggleUiState.toggle) {
+                    MapToggle.CURB -> uiState.value.curbMarkers
+                    MapToggle.SLOPE -> uiState.value.slopeMarkers
+                    MapToggle.STAIRS -> uiState.value.stairsMarkers
+                    MapToggle.SPECIAL_MARK -> uiState.value.specialMarkers
+                }
+            }.flatten().toImmutableList()
+        _uiState.update { it.copy(showingToggleMarkers = newShowingToggleMarkers) }
+    }
+
+    fun updateSpecialMarkerInfo(toggleMarker: ToggleMarker) {
+        _uiState.update {
+            it.copy(
+                specialMarkerInfo = SpecialMarkerInfo(
+                    id = toggleMarker.id,
+                    markerId = toggleMarker.id,
+                    imageUrl = "https://cdn.pixabay.com/photo/2015/07/08/01/22/korean-jindo-835301_1280.jpg",
+                    description = "사진 기준 왼쪽에 경사로가 있어서\n장애 학우들도 이용 가능합니다."
+                )
+            )
         }
     }
 
@@ -248,13 +289,13 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         )
         val slopeMarkers = persistentListOf(
             ToggleMarker(
-                id = 1L,
+                id = 3L,
                 latitude = 37.543333,
                 longitude = 127.076627,
                 mapToggle = MapToggle.SLOPE,
             ),
             ToggleMarker(
-                id = 2L,
+                id = 4L,
                 latitude = 37.543944,
                 longitude = 127.077185,
                 mapToggle = MapToggle.SLOPE,
@@ -262,13 +303,13 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         )
         val stairsMarkers = persistentListOf(
             ToggleMarker(
-                id = 1L,
+                id = 5L,
                 latitude = 37.543259,
                 longitude = 127.075662,
                 mapToggle = MapToggle.STAIRS,
             ),
             ToggleMarker(
-                id = 2L,
+                id = 6L,
                 latitude = 37.543611,
                 longitude = 127.075206,
                 mapToggle = MapToggle.STAIRS,
@@ -276,13 +317,13 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         )
         val specialMarkers = persistentListOf(
             ToggleMarker(
-                id = 1L,
+                id = 7L,
                 latitude = 37.543141,
                 longitude = 127.076135,
                 mapToggle = MapToggle.SPECIAL_MARK,
             ),
             ToggleMarker(
-                id = 2L,
+                id = 8L,
                 latitude = 37.543010,
                 longitude = 127.078079,
                 mapToggle = MapToggle.SPECIAL_MARK,
@@ -291,13 +332,13 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         _uiState.value = HomeUiState(
             buildingMarkers = persistentListOf(
                 BuildingMarker(
-                    id = 1L,
+                    id = 9L,
                     name = "경영관",
                     latitude = 37.544338,
                     longitude = 127.076273,
                 ),
                 BuildingMarker(
-                    id = 2L,
+                    id = 10L,
                     name = "새천년관",
                     latitude = 37.543496,
                     longitude = 127.077326,
@@ -309,5 +350,17 @@ class HomeViewModel @Inject constructor() : ViewModel() {
             specialMarkers = specialMarkers,
             showingToggleMarkers = specialMarkers
         )
+    }
+
+    fun setDefaultMode() {
+        _uiState.update {
+            it.copy(
+                isBarrierFreeShown = false,
+                bottomSheetType = HomeBottomSheetType.NONE,
+                showInquiryDialog = false,
+                selectedBuildingMarker = null,
+                selectedSpecialMarker = null,
+            )
+        }
     }
 }
