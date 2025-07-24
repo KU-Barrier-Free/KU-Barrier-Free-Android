@@ -111,14 +111,33 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         _uiState.update { it.copy(buildingInfo = buildingInfo) }
     }
 
-    fun updateSearchResults(newSearchResults: List<SearchResult> = uiState.value.searchResults) {
+    fun updateSearchResults(
+        newSearchResults: List<SearchResult> = uiState.value.searchResults
+    ) {
         _uiState.update {
             it.copy(
+                searchWord = if (newSearchResults.size == 1) {
+                    TextFieldValue(newSearchResults.first().name)
+                } else {
+                    it.searchWord
+                },
                 selectedBuildingMarker = null,
                 bottomSheetType = HomeBottomSheetType.SEARCH,
                 searchResults = newSearchResults.toImmutableList()
             )
         }
+    }
+
+    fun onFromClick(searchResult: SearchResult) {
+        updateFromLocation(searchResult)
+        setHomeUiMode(HomeUiMode.FIND_MODE)
+        setBottomSheetType(HomeBottomSheetType.NONE)
+    }
+
+    fun onToClick(searchResult: SearchResult) {
+        updateToLocation(searchResult)
+        setHomeUiMode(HomeUiMode.FIND_MODE)
+        setBottomSheetType(HomeBottomSheetType.NONE)
     }
 
     fun updateFromLocation(fromLocation: SearchResult) {
@@ -412,6 +431,14 @@ class HomeViewModel @Inject constructor() : ViewModel() {
             specialMarkers = specialMarkers,
             showingToggleMarkers = specialMarkers
         )
+    }
+
+    fun selectRoute(routeResult: RouteResult) {
+        _uiState.update {
+            it.copy(
+                selectedRouteResult = routeResult,
+            )
+        }
     }
 
     fun setDefaultMode() {

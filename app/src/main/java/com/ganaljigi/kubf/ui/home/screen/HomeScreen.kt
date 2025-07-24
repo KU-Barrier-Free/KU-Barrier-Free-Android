@@ -116,6 +116,15 @@ fun HomeScreen(
                         onInquireClick = {
                             viewModel.setShowInquiryDialog(true)
                         },
+                        onFromClick = { searchResult ->
+                            viewModel.onFromClick(searchResult)
+                        },
+                        onToClick = { searchResult ->
+                            viewModel.onToClick(searchResult)
+                        },
+                        onItemClick = { buildingId ->
+                            navigateToBuildingInfo(buildingId)
+                        },
                     )
                 }
 
@@ -204,7 +213,7 @@ fun HomeScreen(
                             .padding(top = 12.dp),
                         fromLocationResult = uiState.fromLocation,
                         toLocationResult = uiState.toLocation,
-                        onClose = { viewModel.setHomeUiMode(HomeUiMode.DEFAULT) },
+                        onClose = { viewModel.setDefaultMode() },
                         onChange = { viewModel.changeFromToLocation() },
                         onFromLocationClick = {
                             navigateToSearch(SearchMode.FIND_FROM_LOCATION)
@@ -343,7 +352,10 @@ fun HomeScreen(
                         modifier = Modifier
                             .padding(16.dp),
                         selectedRoute = uiState.selectedRouteResult,
-                        routeResults = uiState.routeResults
+                        routeResults = uiState.routeResults,
+                        onRouteSelected = { routeResult ->
+                            viewModel.selectRoute(routeResult)
+                        },
                     )
                 }
             }

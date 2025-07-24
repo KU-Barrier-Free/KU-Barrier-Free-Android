@@ -115,7 +115,7 @@ private fun HomeSearchBottomSheetItem(
             Box(
                 modifier = Modifier
                     .background(
-                        color = LightGreen,
+                        color = MainGreen.copy(alpha = 0.08f),
                         shape = RoundedCornerShape(20.dp)
                     )
                     .noRippleClickable { onFromClick(searchResult) }
