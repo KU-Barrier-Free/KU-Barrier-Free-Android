@@ -23,8 +23,7 @@ data class HomeUiState(
     val searchResults: ImmutableList<SearchResult> = persistentListOf(),
     val isBarrierFreeShown: Boolean = false,
     val isFindMode: Boolean = false,
-    val showSearchBottomSheet: Boolean = false,
-    val showBuildingInfoBottomSheet: Boolean = false,
+    val bottomSheetType: HomeBottomSheetType = HomeBottomSheetType.NONE,
     val showInquiryDialog: Boolean = false,
     val inquiryField: TextFieldValue = TextFieldValue(""),
     val toggleUiStates: List<ToggleUiState> = MapToggle.entries.map {
@@ -45,6 +44,12 @@ data class HomeUiState(
     val chosenBuildingPin: ToggleMarker? = null,
     val popularKeywords: ImmutableList<String> = persistentListOf(),
 )
+
+enum class HomeBottomSheetType {
+    NONE,
+    SEARCH,
+    BUILDING_INFO,
+}
 
 data class HomeBuildingInfo(
     val id: Long = 0L,

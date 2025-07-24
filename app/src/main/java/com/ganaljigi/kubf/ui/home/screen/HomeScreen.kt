@@ -47,6 +47,7 @@ import com.ganaljigi.kubf.ui.home.component.bottomsheet.HomeBuildingInfoSheetCon
 import com.ganaljigi.kubf.ui.home.component.bottomsheet.HomeSearchBottomSheet
 import com.ganaljigi.kubf.ui.home.component.find.HomeFindLocationComponent
 import com.ganaljigi.kubf.ui.home.component.search.HomeInquiryDialog
+import com.ganaljigi.kubf.ui.home.viewmodel.HomeBottomSheetType
 import com.ganaljigi.kubf.ui.home.viewmodel.HomeViewModel
 import com.ganaljigi.kubf.ui.theme.Black
 import com.ganaljigi.kubf.ui.theme.Gray2
@@ -76,14 +77,18 @@ fun HomeScreen(
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
 
-    LaunchedEffect(uiState.showBuildingInfoBottomSheet, uiState.showSearchBottomSheet) {
+    LaunchedEffect(uiState.bottomSheetType) {
         scope.launch {
-            if (uiState.showBuildingInfoBottomSheet) {
-                bottomSheetState.expand()
-            } else if (uiState.showSearchBottomSheet) {
-                bottomSheetState.expand()
-            } else {
-                bottomSheetState.hide()
+            when (uiState.bottomSheetType) {
+                HomeBottomSheetType.SEARCH, HomeBottomSheetType.BUILDING_INFO -> {
+                    if (bottomSheetState.isVisible.not()) {
+                        bottomSheetState.expand()
+                    }
+                }
+
+                else -> {
+                    bottomSheetState.hide()
+                }
             }
         }
     }
@@ -106,20 +111,24 @@ fun HomeScreen(
             )
         },
         sheetContent = {
-            if (uiState.showSearchBottomSheet) {
-                HomeSearchBottomSheet(
-                    searchResults = uiState.searchResults,
-                    onInquireClick = {
-                        viewModel.setShowInquiryDialog(true)
-                    },
-                )
-            }
+            when (uiState.bottomSheetType) {
+                HomeBottomSheetType.SEARCH -> {
+                    HomeSearchBottomSheet(
+                        searchResults = uiState.searchResults,
+                        onInquireClick = {
+                            viewModel.setShowInquiryDialog(true)
+                        },
+                    )
+                }
 
-            if (uiState.showBuildingInfoBottomSheet) {
-                HomeBuildingInfoSheetContent(
-                    modifier = Modifier.fillMaxWidth(),
-                    buildingInfo = uiState.buildingInfo,
-                )
+                HomeBottomSheetType.BUILDING_INFO -> {
+                    HomeBuildingInfoSheetContent(
+                        modifier = Modifier.fillMaxWidth(),
+                        buildingInfo = uiState.buildingInfo,
+                    )
+                }
+
+                else -> {}
             }
         }
     ) { innerPadding ->

@@ -37,7 +37,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 
     fun updateSearchWord(newSearchWord: TextFieldValue = TextFieldValue("")) {
         _uiState.update { it.copy(searchWord = newSearchWord) }
-//        getSearchResults()
+        getSearchResults()
     }
 
     fun updateInquiryField(newInquiryField: TextFieldValue) {
@@ -107,8 +107,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         _uiState.update {
             it.copy(
                 selectedBuildingMarker = null,
-                showBuildingInfoBottomSheet = false,
-                showSearchBottomSheet = true,
+                bottomSheetType = HomeBottomSheetType.SEARCH,
                 searchResults = newSearchResults.toImmutableList()
             )
         }
@@ -188,8 +187,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
             Log.d("HomeViewModel", "Selected Building Marker: ${uiState.value.buildingMarkers}")
             it.copy(
                 selectedBuildingMarker = selectedBuildingMarker,
-                showBuildingInfoBottomSheet = true,
-                showSearchBottomSheet = false,
+                bottomSheetType = HomeBottomSheetType.BUILDING_INFO,
                 searchResults = persistentListOf(),
             )
         }
@@ -203,12 +201,8 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         _uiState.update { it.copy(isFindMode = isFindMode) }
     }
 
-    fun setShowSearchBottomSheet(showSearchBottomSheet: Boolean) {
-        _uiState.update { it.copy(showSearchBottomSheet = showSearchBottomSheet) }
-    }
-
-    fun setShowBuildingInfoBottomSheet(showBuildingInfoBottomSheet: Boolean) {
-        _uiState.update { it.copy(showBuildingInfoBottomSheet = showBuildingInfoBottomSheet) }
+    fun setBottomSheetType(bottomSheetType: HomeBottomSheetType) {
+        _uiState.update { it.copy(bottomSheetType = bottomSheetType) }
     }
 
     fun setShowInquiryDialog(showInquiryDialog: Boolean) {
