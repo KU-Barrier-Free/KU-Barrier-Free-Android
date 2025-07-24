@@ -25,6 +25,8 @@ data class HomeUiState(
     val isFindMode: Boolean = false,
     val bottomSheetType: HomeBottomSheetType = HomeBottomSheetType.NONE,
     val showInquiryDialog: Boolean = false,
+    val showSpecialImageDialog: Boolean = false,
+    val specialImageUrl: String = "",
     val inquiryField: TextFieldValue = TextFieldValue(""),
     val toggleUiStates: List<ToggleUiState> = MapToggle.entries.map {
         ToggleUiState(

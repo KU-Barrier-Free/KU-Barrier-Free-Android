@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -29,6 +30,7 @@ import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 @Composable
 fun MapSpecialInfo(
     modifier: Modifier = Modifier,
+    painter: Painter,
     specialMarkerInfo: SpecialMarkerInfo,
 ) {
     Column(
@@ -45,7 +47,7 @@ fun MapSpecialInfo(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(R.drawable.img_special_info),
+            painter = painter,
             contentDescription = specialMarkerInfo.description,
             modifier = Modifier
                 .size(80.dp)
@@ -66,6 +68,7 @@ fun MapSpecialInfo(
 @Composable
 private fun MapSpecialInfoPreview() {
     MapSpecialInfo(
+        painter = painterResource(id = R.drawable.ic_special_marker),
         specialMarkerInfo = SpecialMarkerInfo(
             id = 1L,
             markerId = 1L,

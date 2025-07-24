@@ -218,6 +218,10 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun setShowSpecialImageDialog(showSpecialImageDialog: Boolean) {
+        _uiState.update { it.copy(showSpecialImageDialog = showSpecialImageDialog) }
+    }
+
     fun updateToggleUiStates(toggle: MapToggle) {
         _uiState.update {
             val updatedToggles = it.toggleUiStates.map { toggleUiState ->

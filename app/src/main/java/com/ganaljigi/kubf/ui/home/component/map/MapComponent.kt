@@ -16,9 +16,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
+import coil3.request.allowHardware
 import com.ganalijigi.kubf.BuildConfig
 import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.ui.home.model.BuildingMarker
@@ -39,7 +43,6 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MarkerComposable
-import com.google.maps.android.compose.MarkerInfoWindowContent
 import com.google.maps.android.compose.MarkerState
 
 @Composable
@@ -106,45 +109,7 @@ fun MapComponent(
 }
 
 
-@Composable
-fun SpecialMarkerWithInfo(
-    toggleMarker: ToggleMarker,
-    specialMarkerInfo: SpecialMarkerInfo,
-    onClick: (String) -> Unit = { },
-) {
-    MarkerComposable(
-        state = MarkerState(
-            position = LatLng(
-                toggleMarker.latitude,
-                toggleMarker.longitude
-            )
-        ),
-        onClick = {
-            false
-        },
-        zIndex = Float.MAX_VALUE,
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            MapSpecialInfo(
-                specialMarkerInfo = specialMarkerInfo,
-                modifier = Modifier
-                    .noRippleClickable { onClick(specialMarkerInfo.imageUrl) }
-            )
-            Box(
-                modifier = Modifier
-                    .width(2.dp)
-                    .height(16.dp)
-                    .background(Color.White)
-            )
-            Icon(
-                painter = painterResource(R.drawable.ic_special_marker_selected),
-                contentDescription = null,
-                tint = Color.Unspecified,
-            )
-        }
-    }
-}
-
+// https://velog.io/@gudrmsglgl/Compose-Google-Map
 @Composable
 private fun ToggleMarker(
     toggleMarker: ToggleMarker,
@@ -154,6 +119,16 @@ private fun ToggleMarker(
     selectedSpecialMarker: ToggleMarker?,
     specialMarkerInfo: SpecialMarkerInfo? = null,
 ) {
+    val painter = rememberAsyncImagePainter(
+        model = ImageRequest
+            .Builder(LocalContext.current)
+            .data("https://cdn.pixabay.com/photo/2015/07/08/01/22/korean-jindo-835301_1280.jpg")
+            .allowHardware(false)
+            .build(),
+        placeholder = painterResource(R.drawable.img_special_info),
+        error = painterResource(R.drawable.img_special_info),
+    )
+
     MarkerComposable(
         state = MarkerState(
             position = LatLng(
@@ -162,11 +137,12 @@ private fun ToggleMarker(
             )
         ),
         onClick = { onClick(toggleMarker); false },
-        keys = arrayOf({ toggleMarker.id }, { selectedSpecialMarker?.id })
+        keys = arrayOf({ painter.state }, { selectedSpecialMarker })
     ) {
         if (toggleMarker == selectedSpecialMarker && specialMarkerInfo != null) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 MapSpecialInfo(
+                    painter = painter,
                     specialMarkerInfo = specialMarkerInfo,
                     modifier = Modifier
                         .noRippleClickable { onSpecialInfoClick(specialMarkerInfo.imageUrl) }
@@ -211,6 +187,7 @@ private fun BuildingMarker(
             )
         ),
         zIndex = 0f,
+        keys = arrayOf({ buildingMarker.id }, { isSelected })
     ) {
         Column(
             modifier = Modifier.noRippleClickable { onClick(buildingMarker) },
@@ -233,14 +210,6 @@ private fun BuildingMarker(
                     color = if (isSelected) MainGreen else Color(0xFF5A6860),
                 ),
             )
-//            StrokeText(
-//                text = buildingMarker.name,
-//                style = KUBFAndroidTheme.typography.semiBold14.copy(
-//                    color = Color(0xFF5A6860),
-//                ),
-//                strokeColor = Color.White,
-//                strokeWidth = 1.dp,
-//            )
         }
     }
 }
