@@ -26,25 +26,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.ganaljigi.kubf.data.dto.buildingdata.DoorData
 import com.ganaljigi.kubf.ui.theme.Gray2
 import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.Gray4
 import com.ganaljigi.kubf.ui.theme.MainGreen
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 
-data class Door(
-    val imageUrl: String,
-    val label: String,
-    val number: String,
-    val wheel: Boolean
-)
-
 /**
  * - 출입문 컴포넌트 - 문 사진과 휠체어 가능 여부,
  * - 가로로 스크롤 가능
  */
 @Composable
-fun DoorComponent(doors: List<Door>) {
+fun DoorComponent(doors: List<DoorData>) {
 
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -62,7 +56,7 @@ fun DoorComponent(doors: List<Door>) {
  * - 휠체어 여부
  */
 @Composable
-fun DoorCard(door: Door) {
+fun DoorCard(door: DoorData) {
     Box(
         modifier = Modifier
             .width(80.dp)
@@ -124,7 +118,7 @@ fun DoorCard(door: Door) {
 @Preview
 @Composable
 private fun DoorPreview() {
-    val doors = mutableListOf(Door("https://", "창의관", "A", false))
-    doors.add(Door("https://", "창의관", "B", true))
+    val doors = mutableListOf(DoorData("https://", "창의관", "A", false))
+    doors.add(DoorData("https://", "창의관", "B", true))
     DoorComponent(doors)
 }

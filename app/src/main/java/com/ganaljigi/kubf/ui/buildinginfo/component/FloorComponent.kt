@@ -14,23 +14,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-
-data class FloorInfo(
-    val floorNum : Int,
-    val imageUrl: String,
-    val facilities: List<Facility>,
-    val rooms: List<Room>
-)
-
-data class TotalBuilding(
-    val num : Int,
-    val floorList: List<FloorInfo>
-)
+import com.ganaljigi.kubf.data.dto.buildingdata.FloorInfoData
+import com.ganaljigi.kubf.data.dto.buildingdata.RoomData
 
 @Composable
 fun FloorComponent(
-    current: FloorInfo,
-    onRoomClick: (Room) -> Unit
+    current: FloorInfoData,
+    onRoomClick: (RoomData) -> Unit
 ) {
     Column {
         if(current.imageUrl.isNotBlank()){
@@ -53,9 +43,9 @@ fun FloorComponent(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp),
         ){
-            current.rooms.forEach{room->
+            current.roomData.forEach{ room->
                 RoomComponent(
-                    room = room,
+                    roomData = room,
                     onClick = {onRoomClick(room)}
                 )
             }
@@ -68,7 +58,7 @@ fun FloorComponent(
 private fun FloorCompPreview() {
     val facilities = Facility.entries.toList()
     val urllist = mutableListOf("httpsL")
-    val rooms = mutableListOf(Room(urllist,"101", "전산실습실", "강의실", mutableListOf<String>()))
-    val floorInfos = mutableListOf(FloorInfo(1,"https://",facilities, rooms))
-    floorInfos.add(FloorInfo(2,"https://",facilities, rooms))
+    val roomData = mutableListOf(RoomData(urllist,"101", "전산실습실", "강의실", mutableListOf<String>()))
+    val floorInfos = mutableListOf(FloorInfoData(1,"https://",facilities, roomData))
+    floorInfos.add(FloorInfoData(2,"https://",facilities, roomData))
 }

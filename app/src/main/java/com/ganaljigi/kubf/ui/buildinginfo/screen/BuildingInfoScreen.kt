@@ -41,41 +41,33 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.ganaljigi.kubf.ui.buildinginfo.component.Door
+import com.ganaljigi.kubf.data.dto.buildingdata.DoorData
+import com.ganaljigi.kubf.data.dto.buildingdata.Facility
+import com.ganaljigi.kubf.data.dto.buildingdata.FloorInfoData
+import com.ganaljigi.kubf.data.dto.buildingdata.NotesData
+import com.ganaljigi.kubf.data.dto.buildingdata.RoomData
+import com.ganaljigi.kubf.data.dto.buildingdata.TotalBuildingData
+import com.ganaljigi.kubf.data.dto.buildingdata.TotalFloorData
 import com.ganaljigi.kubf.ui.buildinginfo.component.DoorComponent
-import com.ganaljigi.kubf.ui.buildinginfo.component.Facility
 import com.ganaljigi.kubf.ui.buildinginfo.component.FacilityComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.FloorComponent
-import com.ganaljigi.kubf.ui.buildinginfo.component.FloorInfo
 import com.ganaljigi.kubf.ui.buildinginfo.component.NoteComponent
-import com.ganaljigi.kubf.ui.buildinginfo.component.Notes
-import com.ganaljigi.kubf.ui.buildinginfo.component.Room
-import com.ganaljigi.kubf.ui.buildinginfo.component.TotalBuilding
 import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.Gray4
 import com.ganaljigi.kubf.ui.theme.MainGreen
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import kotlinx.coroutines.launch
 
-data class BuildingInfo(
-    val name: String,
-    val number: Int,
-    val department: String,
-    val imageUrl: String,
-    val notes: Notes
-)
-
-
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun BuildingInfoScreen(
-    building: BuildingInfo,
+    building: TotalBuildingData,
     facilities: List<Facility>,
-    doors: List<Door>,
-    totalFloor: TotalBuilding,
+    doors: List<DoorData>,
+    totalFloor: TotalFloorData,
     onBack: () -> Unit,
     onSearch: () -> Unit,
-    onDoorClick: (Door) -> Unit
+    onDoorClick: (DoorData) -> Unit
 ) {
     var selectedIndex by remember { mutableStateOf(0) }
     val floors = totalFloor.floorList
@@ -180,14 +172,14 @@ fun BuildingInfoScreen(
                 Spacer(modifier = Modifier.height(12.dp))
                 DoorComponent(doors = doors)
                 Spacer(Modifier.height(20.dp))
-                if (building.notes.note.isNotBlank()) {
+                if (building.notesData.note.isNotBlank()) {
                     Text(
                         text = "특이사항",
                         style = KUBFAndroidTheme.typography.semiBold16,
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
                     Spacer(modifier = Modifier.height(12.dp))
-                    NoteComponent(note = building.notes)
+                    NoteComponent(note = building.notesData)
                     Spacer(Modifier.height(20.dp))
                 }
                 Spacer(Modifier.height(16.dp))
@@ -283,16 +275,16 @@ fun BuildingInfoScreen(
 @Preview
 @Composable
 private fun PreviewBuilding() {
-    val doors = mutableListOf(Door("https://", "경영관", "A", false))
-    doors.add(Door("https://", "경영관", "A-2", true))
+    val doors = mutableListOf(DoorData("https://", "경영관", "A", false))
+    doors.add(DoorData("https://", "경영관", "A-2", true))
     val facilities = Facility.entries.toList()
     val urllist = mutableListOf("httpsL")
-    val rooms = mutableListOf(Room(urllist, "101", "전산실습실", "강의실", mutableListOf<String>()))
-    val floorInfos = mutableListOf(FloorInfo(1, "https://", facilities, rooms))
-    floorInfos.add(FloorInfo(2, "https://", facilities, rooms))
+    val roomData = mutableListOf(RoomData(urllist, "101", "전산실습실", "강의실", mutableListOf<String>()))
+    val floorInfos = mutableListOf(FloorInfoData(1, "https://", facilities, roomData))
+    floorInfos.add(FloorInfoData(2, "https://", facilities, roomData))
     //floorInfos.add(FloorInfo(3,"https://",features, rooms))
-    val totalBuilding = TotalBuilding(2, floorInfos)
-    val building = BuildingInfo("경영관", 2, "경영대학", "http://", Notes("2층 구름다리로", mutableListOf("","")))
+    val totalBuilding = TotalFloorData(2, floorInfos)
+    val building = TotalBuildingData("경영관", 2, "경영대학", "http://", NotesData("2층 구름다리로", mutableListOf("","")))
     BuildingInfoScreen(
         building, facilities, doors, totalBuilding,
         onBack = {},

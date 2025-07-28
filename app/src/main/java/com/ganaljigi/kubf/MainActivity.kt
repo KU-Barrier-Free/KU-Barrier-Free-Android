@@ -12,8 +12,6 @@ import com.ganaljigi.kubf.navigation.MainNavHost
 import com.ganaljigi.kubf.ui.helper.screen.HelperScreen
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 
-//import com.kakao.sdk.common.util.Utility
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +26,6 @@ class MainActivity : ComponentActivity() {
 //                        navController = navController,
 //                    )
 //                }
-                HelperScreen {  }
             }
         }
     }
