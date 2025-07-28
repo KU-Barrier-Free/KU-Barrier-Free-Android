@@ -3,8 +3,10 @@ package com.ganaljigi.kubf.ui.roominfo
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -40,14 +42,16 @@ fun RoomPic(
                 model = roomPicUrls[page],
                 contentDescription = "강의실 사진",
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
             )
         }
 
         if (roomPicUrls.size > 1) {
             Box(
                 modifier = Modifier
-                    .align(Alignment.BottomEnd)
+                    .align(Alignment.BottomCenter)
                     .padding(12.dp)
                     .background(Color(0xFFFF212121)
                         .copy(alpha = 0.6f),
