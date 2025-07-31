@@ -20,6 +20,9 @@ playServicesLocation = "21.3.0"
 playServicesMaps = "19.2.0"
 accompanistPermissions = "0.37.3"
 kotlinxCollectionsImmutable = "0.4.0"
+okhttp = "5.1.0"
+retrofit = "3.0.0"
+retrofitKotlinSerializationConverter = "1.0.0"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -51,6 +54,11 @@ maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = 
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
 kotlinx-collections-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
+okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttp" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp" }
+okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-kotlin-serialization-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofitKotlinSerializationConverter" }
 
 
 
