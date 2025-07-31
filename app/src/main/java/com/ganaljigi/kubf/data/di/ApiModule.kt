@@ -1,6 +1,9 @@
 package com.ganaljigi.kubf.data.di
 
-import com.ganaljigi.kubf.data.remote.service.KUBFService
+import com.ganaljigi.kubf.data.remote.service.BuildingService
+import com.ganaljigi.kubf.data.remote.service.HelperService
+import com.ganaljigi.kubf.data.remote.service.HomeService
+import com.ganaljigi.kubf.data.remote.service.RouteService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,5 +17,25 @@ import javax.inject.Singleton
 object ApiModule {
     @Provides
     @Singleton
-    fun provideKUBFService(retrofit: Retrofit): KUBFService = retrofit.create()
+    fun provideHomeService(retrofit: Retrofit): HomeService {
+        return retrofit.create()
+    }
+    
+    @Provides
+    @Singleton
+    fun provideBuildingService(retrofit: Retrofit): BuildingService {
+        return retrofit.create()
+    }
+    
+    @Provides
+    @Singleton
+    fun provideRouteService(retrofit: Retrofit): RouteService {
+        return retrofit.create()
+    }
+    
+    @Provides
+    @Singleton
+    fun provideHelperService(retrofit: Retrofit): HelperService {
+        return retrofit.create()
+    }
 }
