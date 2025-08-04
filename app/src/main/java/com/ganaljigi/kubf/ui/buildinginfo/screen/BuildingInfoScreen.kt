@@ -41,16 +41,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.ganaljigi.kubf.ui.buildinginfo.component.Door
 import com.ganaljigi.kubf.ui.buildinginfo.component.DoorComponent
-import com.ganaljigi.kubf.ui.buildinginfo.component.Facility
 import com.ganaljigi.kubf.ui.buildinginfo.component.FacilityComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.FloorComponent
-import com.ganaljigi.kubf.ui.buildinginfo.component.FloorInfo
 import com.ganaljigi.kubf.ui.buildinginfo.component.NoteComponent
-import com.ganaljigi.kubf.ui.buildinginfo.component.Notes
-import com.ganaljigi.kubf.ui.buildinginfo.component.Room
-import com.ganaljigi.kubf.ui.buildinginfo.component.TotalBuilding
+import com.ganaljigi.kubf.ui.buildinginfo.model.Door
+import com.ganaljigi.kubf.ui.buildinginfo.model.Facility
+import com.ganaljigi.kubf.ui.buildinginfo.model.FloorInfo
+import com.ganaljigi.kubf.ui.buildinginfo.model.Notes
+import com.ganaljigi.kubf.ui.buildinginfo.model.Room
+import com.ganaljigi.kubf.ui.buildinginfo.model.TotalFloor
 import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.Gray4
 import com.ganaljigi.kubf.ui.theme.MainGreen
@@ -72,7 +72,7 @@ fun BuildingInfoScreen(
     building: BuildingInfo,
     facilities: List<Facility>,
     doors: List<Door>,
-    totalFloor: TotalBuilding,
+    totalFloor: TotalFloor,
     onBack: () -> Unit,
     onSearch: () -> Unit,
     onDoorClick: (Door) -> Unit
@@ -291,10 +291,10 @@ private fun PreviewBuilding() {
     val floorInfos = mutableListOf(FloorInfo(1, "https://", facilities, rooms))
     floorInfos.add(FloorInfo(2, "https://", facilities, rooms))
     //floorInfos.add(FloorInfo(3,"https://",features, rooms))
-    val totalBuilding = TotalBuilding(2, floorInfos)
+    val totalFloor = TotalFloor(2, floorInfos)
     val building = BuildingInfo("경영관", 2, "경영대학", "http://", Notes("2층 구름다리로", mutableListOf("","")))
     BuildingInfoScreen(
-        building, facilities, doors, totalBuilding,
+        building, facilities, doors, totalFloor,
         onBack = {},
         onSearch = {},
         onDoorClick = {})

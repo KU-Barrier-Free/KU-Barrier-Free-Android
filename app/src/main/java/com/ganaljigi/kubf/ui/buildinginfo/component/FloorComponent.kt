@@ -14,18 +14,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-
-data class FloorInfo(
-    val floorNum : Int,
-    val imageUrl: String,
-    val facilities: List<Facility>,
-    val rooms: List<Room>
-)
-
-data class TotalBuilding(
-    val num : Int,
-    val floorList: List<FloorInfo>
-)
+import com.ganaljigi.kubf.ui.buildinginfo.model.Facility
+import com.ganaljigi.kubf.ui.buildinginfo.model.FloorInfo
+import com.ganaljigi.kubf.ui.buildinginfo.model.Room
 
 @Composable
 fun FloorComponent(
