@@ -19,43 +19,50 @@ import com.ganaljigi.kubf.ui.theme.MainGreen
 
 @Composable
 fun DoorComponent(
-    doorTypes: List<String>,
+    frontDoor: Boolean,
+    backDoor: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val allDoors = listOf("앞문", "뒷문")
+    Column(modifier = modifier.padding(start = 20.dp)) {
+        Divider(modifier = Modifier.padding(vertical = 12.dp))
 
-    Column (
-
-    ) {
-        Divider(modifier = Modifier.padding(vertical = 16.dp))
         Text(
             text = "출입문",
             style = KUBFAndroidTheme.typography.semiBold14
         )
-        Spacer(modifier = Modifier.height(8.dp))
 
-        Column {
-            allDoors.forEach { door ->
-                val exists = doorTypes.contains(door)
-                Row (verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = door,
-                        style = if (exists)
-                            KUBFAndroidTheme.typography.semiBold14.copy(color = MainGreen)
-                        else
-                            KUBFAndroidTheme.typography.medium14.copy(color = Gray3)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = if (exists) "O" else "X",
-                        style = KUBFAndroidTheme.typography.medium14.copy(
-                            color = if (exists) MainGreen else Gray3
-                        )
-                    )
-                }
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-        }
+        Spacer(modifier = Modifier.height(12.dp))
+
+        DoorItem(label = "앞문", exists = frontDoor)
+
+        Spacer(modifier = Modifier.height(20.dp))
+        DoorItem(label = "뒷문", exists = backDoor)
+    }
+}
+
+@Composable
+fun DoorItem(
+    label: String,
+    exists: Boolean
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            style = if (exists)
+                KUBFAndroidTheme.typography.semiBold16.copy(color = MainGreen)
+            else
+                KUBFAndroidTheme.typography.regular14.copy(color = Gray3)
+        )
+        Spacer(modifier = Modifier.width(4.dp))
+        Text(
+            text = if (exists) "O" else "X",
+            style = if (exists)
+                KUBFAndroidTheme.typography.semiBold16.copy(color = MainGreen)
+            else
+                KUBFAndroidTheme.typography.regular14.copy(color = Gray3)
+        )
     }
 }
 
@@ -63,6 +70,6 @@ fun DoorComponent(
 @Composable
 fun DoorComponentPreview() {
     KUBFAndroidTheme {
-        DoorComponent(doorTypes = listOf("앞문"))
+        DoorComponent(frontDoor = true, backDoor = false)
     }
 }
