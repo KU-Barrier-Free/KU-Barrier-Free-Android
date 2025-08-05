@@ -45,6 +45,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.ui.buildinginfo.component.DoorComponent
@@ -56,9 +59,10 @@ import com.ganaljigi.kubf.ui.buildinginfo.model.BuildingInfo
 import com.ganaljigi.kubf.ui.buildinginfo.model.Door
 import com.ganaljigi.kubf.ui.buildinginfo.model.Facility
 import com.ganaljigi.kubf.ui.buildinginfo.model.FloorInfo
-import com.ganaljigi.kubf.ui.buildinginfo.model.Notes
+import com.ganaljigi.kubf.ui.buildinginfo.model.Note
 import com.ganaljigi.kubf.ui.buildinginfo.model.Room
 import com.ganaljigi.kubf.ui.buildinginfo.model.TotalFloor
+import com.ganaljigi.kubf.ui.buildinginfo.viewmodel.BuildingViewModel
 import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.Gray4
 import com.ganaljigi.kubf.ui.theme.MainGreen
@@ -67,17 +71,15 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun BuildingInfoScreen(
-    building: BuildingInfo,
-    facilities: List<Facility>,
-    doors: List<Door>,
-    totalFloor: TotalFloor,
+fun BuildingInfoScreen( // id 값 (int) 만 받기
     onBack: () -> Unit,
     onSearch: () -> Unit,
-    onDoorClick: (Door) -> Unit
+    onDoorClick: (Door) -> Unit,
+    viewModel: BuildingViewModel = hiltViewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var selectedIndex by remember { mutableStateOf(0) }
-    val floors = totalFloor.floorList
+    val floors = uiState.totalFloor.floorList
     val current = floors[selectedIndex]
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
@@ -95,7 +97,7 @@ fun BuildingInfoScreen(
                 },
                 title = {
                     Text(
-                        text = building.name,
+                        text = uiState.buildingInfo.name,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
                         style = KUBFAndroidTheme.typography.medium15.copy(
@@ -131,8 +133,8 @@ fun BuildingInfoScreen(
                         .height(200.dp)
                 ) {
                     AsyncImage(
-                        model = building.imageUrl,
-                        contentDescription = "${building.name} 이미지",
+                        model = uiState.buildingInfo.imageUrl,
+                        contentDescription = "${uiState.buildingInfo.name} 이미지",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .background(color = Color.LightGray)
@@ -147,12 +149,12 @@ fun BuildingInfoScreen(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
                 ) {
                     Text(
-                        text = building.name,
+                        text = uiState.buildingInfo.name,
                         style = KUBFAndroidTheme.typography.bold18
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        text = "건물번호: ${building.number}",
+                        text = "건물번호: ${uiState.buildingInfo.number}",
                         style = KUBFAndroidTheme.typography.regular14,
                         color = Gray3
                     )
@@ -165,7 +167,7 @@ fun BuildingInfoScreen(
                 )
                 Spacer(Modifier.height(12.dp))
                 Text(
-                    text = building.department,
+                    text = uiState.buildingInfo.department,
                     style = KUBFAndroidTheme.typography.regular14,
                     color = Gray4,
                     modifier = Modifier.padding(horizontal = 16.dp)
@@ -178,7 +180,7 @@ fun BuildingInfoScreen(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 FacilityComponent(
-                    facilities = facilities
+                    facilities = uiState.buildingInfo.facilities
                 )
                 Spacer(Modifier.height(20.dp))
                 Text(
@@ -187,16 +189,16 @@ fun BuildingInfoScreen(
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-                DoorComponent(doors = doors)
+                DoorComponent(doors = uiState.buildingInfo.doors)
                 Spacer(Modifier.height(20.dp))
-                if (building.notes.note.isNotBlank()) {
+                if (uiState.buildingInfo.notes.isNotEmpty()) { // for문 사용하기
                     Text(
                         text = "특이사항",
                         style = KUBFAndroidTheme.typography.semiBold16,
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
                     Spacer(modifier = Modifier.height(12.dp))
-                    NoteComponent(note = building.notes)
+                    //NoteComponent(note = uiState.buildingInfo.notes)
                     Spacer(Modifier.height(20.dp))
                 }
                 Spacer(Modifier.height(16.dp))
@@ -208,7 +210,7 @@ fun BuildingInfoScreen(
                 Spacer(Modifier.height(12.dp))
             }
             stickyHeader {
-                if (totalFloor.num < 8) {
+                if (uiState.totalFloor.num < 8) {
                     TabRow(
                         selectedTabIndex = selectedIndex,
                         indicator = { position ->
@@ -284,6 +286,11 @@ fun BuildingInfoScreen(
             }
         }
         if (showSearchPopup) {
+            Dialog(
+                onDismissRequest = {}
+            ) {
+
+            }
             Box(
                 modifier = Modifier.fillMaxSize()
             ) {
@@ -330,12 +337,12 @@ private fun PreviewBuilding() {
     floorInfos.add(FloorInfo(2, "https://", facilities, rooms))
     //floorInfos.add(FloorInfo(3,"https://",features, rooms))
     val totalFloor = TotalFloor(2, floorInfos)
-    val building =
-        BuildingInfo("경영관", 2, "경영대학", "http://", Notes("2층 구름다리로", mutableListOf("", "")))
-    BuildingInfoScreen(
-        building, facilities, doors, totalFloor,
-        onBack = {},
-        onSearch = {},
-        onDoorClick = {})
+//    val building =
+//        BuildingInfo("경영관", 2, "경영대학", "http://", Note("2층 구름다리로", mutableListOf("", "")))
+//    BuildingInfoScreen(
+//        building, facilities, doors, totalFloor,
+//        onBack = {},
+//        onSearch = {},
+//        onDoorClick = {})
 
 }
