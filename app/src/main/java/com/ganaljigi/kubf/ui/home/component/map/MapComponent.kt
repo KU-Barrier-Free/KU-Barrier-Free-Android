@@ -73,23 +73,26 @@ fun MapComponent(
         googleMapOptionsFactory = { MapParam.mapOptions }
     ) {
         toggleMarkers.forEach { mapMarker ->
-            ToggleMarker(
-                toggleMarker = mapMarker,
-                toggleIconRes = when (mapMarker.mapToggle) {
-                    MapToggle.CURB -> R.drawable.ic_curb_marker
-                    MapToggle.SLOPE -> R.drawable.ic_slope_marker
-                    MapToggle.STAIRS -> R.drawable.ic_stairs_marker
-                    MapToggle.SPECIAL_MARK -> R.drawable.ic_special_marker
-                },
-                onClick = if (mapMarker.mapToggle == MapToggle.SPECIAL_MARK) {
-                    { onSpecialMarkerClick(mapMarker) }
-                } else {
-                    { false }
-                },
-                onSpecialInfoClick = onSpecialInfoClick,
-                selectedSpecialMarker = selectedSpecialMarker,
-                specialMarkerInfo = specialMarkerInfo,
-            )
+            if (mapMarker.mapToggle == MapToggle.SPECIAL_MARK) {
+                ToggleSpecialMarker(
+                    toggleMarker = mapMarker,
+                    toggleIconRes = R.drawable.ic_special_marker,
+                    onClick = { onSpecialMarkerClick(mapMarker) },
+                    onSpecialInfoClick = onSpecialInfoClick,
+                    selectedSpecialMarker = selectedSpecialMarker,
+                    specialMarkerInfo = specialMarkerInfo,
+                )
+            } else {
+                ToggleMarker(
+                    toggleMarker = mapMarker,
+                    toggleIconRes = when (mapMarker.mapToggle) {
+                        MapToggle.CURB -> R.drawable.ic_curb_marker
+                        MapToggle.SLOPE -> R.drawable.ic_slope_marker
+                        MapToggle.STAIRS -> R.drawable.ic_stairs_marker
+                        else -> R.drawable.ic_special_marker
+                    },
+                )
+            }
         }
         selectedBuildingMarker?.let { marker ->
             BuildingMarker(
@@ -113,9 +116,33 @@ fun MapComponent(
 }
 
 
-// https://velog.io/@gudrmsglgl/Compose-Google-Map
 @Composable
 private fun ToggleMarker(
+    toggleMarker: ToggleMarker,
+    @DrawableRes toggleIconRes: Int,
+) {
+    MarkerComposable(
+        state = MarkerState(
+            position = LatLng(
+                toggleMarker.latitude,
+                toggleMarker.longitude
+            )
+        ),
+    ) {
+        Icon(
+            painter = painterResource(toggleIconRes),
+            contentDescription = null,
+            tint = Color.Unspecified,
+            modifier = Modifier
+                .size(24.dp)
+                .shadow(1.dp)
+        )
+    }
+}
+
+// https://velog.io/@gudrmsglgl/Compose-Google-Map
+@Composable
+private fun ToggleSpecialMarker(
     toggleMarker: ToggleMarker,
     @DrawableRes toggleIconRes: Int,
     onClick: () -> Unit = { },

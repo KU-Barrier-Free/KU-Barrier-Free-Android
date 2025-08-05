@@ -53,6 +53,7 @@ import com.ganaljigi.kubf.ui.home.component.bottomsheet.HomeBuildingInfoSheetCon
 import com.ganaljigi.kubf.ui.home.component.bottomsheet.HomeSearchBottomSheet
 import com.ganaljigi.kubf.ui.home.component.find.HomeFindTopLocationComponent
 import com.ganaljigi.kubf.ui.home.component.find.HomeRouteInfo
+import com.ganaljigi.kubf.ui.home.component.map.HomeSpecialMarkDialog
 import com.ganaljigi.kubf.ui.home.component.map.MapComponent
 import com.ganaljigi.kubf.ui.home.component.search.HomeInquiryDialog
 import com.ganaljigi.kubf.ui.home.viewmodel.HomeBottomSheetType
@@ -154,24 +155,10 @@ fun HomeScreen(
         }
 
         if (uiState.showSpecialImageDialog) {
-            Dialog(
+            HomeSpecialMarkDialog(
                 onDismissRequest = { viewModel.setShowSpecialImageDialog(false) },
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    uiState.specialImageUrl.forEach { imageUrl ->
-                        AsyncImage(
-                            modifier = Modifier
-                                .size(272.dp)
-                                .clip(RoundedCornerShape(10.dp)),
-                            model = imageUrl,
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                        )
-                    }
-                }
-            }
+                imageUrls = uiState.specialImageUrl,
+            )
         }
 
         MapComponent(
