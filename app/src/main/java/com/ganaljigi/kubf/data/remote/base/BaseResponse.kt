@@ -8,13 +8,13 @@ data class BaseResponse<T>(
     @SerialName("success") val success: Boolean,
     @SerialName("code") val code: Int,
     @SerialName("message") val message: String,
-    @SerialName("data") val data: T
+    @SerialName("result") val result: T
 )
 
 fun <T> BaseResponse<T>.handleBaseResponse(): Result<T> =
     when (this.code) {
         200, 1000 -> {
-            Result.success(this.data)
+            Result.success(this.result)
         }
 
         else -> {
