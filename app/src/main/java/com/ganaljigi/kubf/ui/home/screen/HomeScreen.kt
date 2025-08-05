@@ -157,14 +157,20 @@ fun HomeScreen(
             Dialog(
                 onDismissRequest = { viewModel.setShowSpecialImageDialog(false) },
             ) {
-                AsyncImage(
-                    modifier = Modifier
-                        .size(272.dp)
-                        .clip(RoundedCornerShape(10.dp)),
-                    model = uiState.specialImageUrl,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    uiState.specialImageUrl.forEach { imageUrl ->
+                        AsyncImage(
+                            modifier = Modifier
+                                .size(272.dp)
+                                .clip(RoundedCornerShape(10.dp)),
+                            model = imageUrl,
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                        )
+                    }
+                }
             }
         }
 

@@ -13,6 +13,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -56,7 +59,7 @@ fun MapComponent(
     doorMarkers: List<DoorMarker> = emptyList(),
     onBuildingMarkerClick: (BuildingMarker) -> Unit = { },
     onSpecialMarkerClick: (ToggleMarker) -> Unit = { },
-    onSpecialInfoClick: (String) -> Unit = { },
+    onSpecialInfoClick: (List<String>) -> Unit = { },
     selectedSpecialMarker: ToggleMarker? = null,
     specialMarkerInfo: SpecialMarkerInfo?,
     setDefaultMode: () -> Unit = { },
@@ -116,69 +119,91 @@ private fun ToggleMarker(
     toggleMarker: ToggleMarker,
     @DrawableRes toggleIconRes: Int,
     onClick: () -> Unit = { },
-    onSpecialInfoClick: (String) -> Unit = { },
+    onSpecialInfoClick: (List<String>) -> Unit = { },
     selectedSpecialMarker: ToggleMarker?,
     specialMarkerInfo: SpecialMarkerInfo? = null,
 ) {
-    val painter = rememberAsyncImagePainter(
-        model = ImageRequest
-            .Builder(LocalContext.current)
-            .data("https://cdn.pixabay.com/photo/2015/07/08/01/22/korean-jindo-835301_1280.jpg")
-            .allowHardware(false)
-            .build(),
-        placeholder = painterResource(R.drawable.img_special_info),
-        error = painterResource(R.drawable.img_special_info),
-    )
-
-    MarkerComposable(
-        state = MarkerState(
-            position = LatLng(
-                toggleMarker.latitude,
-                toggleMarker.longitude
+    val recomposeMarker = remember { mutableStateListOf(false, false) }
+    val painters = specialMarkerInfo?.let { info ->
+        info.imageUrls.take(2).mapIndexed { index, it ->
+            rememberAsyncImagePainter(
+                model = ImageRequest
+                    .Builder(LocalContext.current)
+                    .data(it)
+                    .allowHardware(false)
+                    .build(),
+                placeholder = painterResource(R.drawable.img_special_info),
+                error = painterResource(R.drawable.img_special_info),
+                onSuccess = { result ->
+                    Log.d("MapComponent", "Image loaded successfully: ${result.result}")
+                    recomposeMarker[index] = true
+                },
             )
-        ),
-        onClick = {
+        }
+    } ?: emptyList()
+
+    val painter1 = if (painters.isNotEmpty()) painters[0] else null
+    val painter2 = if (painters.size == 2) painters[1] else null
+
+
+    key(recomposeMarker[0], recomposeMarker[1]) {
+        MarkerComposable(
+            state = MarkerState(
+                position = LatLng(
+                    toggleMarker.latitude,
+                    toggleMarker.longitude
+                )
+            ),
+            onClick = {
+                if (toggleMarker == selectedSpecialMarker && specialMarkerInfo != null) {
+                    onSpecialInfoClick(specialMarkerInfo.imageUrls)
+                } else {
+                    onClick()
+                }
+                false
+            },
+            keys = arrayOf(
+                { painter1?.state },
+                { painter2?.state },
+                { selectedSpecialMarker },
+                { specialMarkerInfo })
+        ) {
             if (toggleMarker == selectedSpecialMarker && specialMarkerInfo != null) {
-                onSpecialInfoClick(specialMarkerInfo.imageUrl)
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    MapSpecialInfo(
+                        painters = painters,
+                        description = specialMarkerInfo.description,
+                        modifier = Modifier
+                            .noRippleClickable {
+                                Log.d(
+                                    "MapComponent",
+                                    "Special marker clicked: ${specialMarkerInfo.description}"
+                                )
+                                onSpecialInfoClick(specialMarkerInfo.imageUrls)
+                            }
+                    )
+                    Box(
+                        modifier = Modifier
+                            .width(2.dp)
+                            .height(16.dp)
+                            .background(Color.White)
+                    )
+                    Icon(
+                        painter = painterResource(R.drawable.ic_special_marker_selected),
+                        contentDescription = null,
+                        tint = Color.Unspecified,
+                    )
+                }
             } else {
-                onClick()
-            }
-            false
-        },
-        keys = arrayOf({ painter.state }, { selectedSpecialMarker }, { specialMarkerInfo })
-    ) {
-        if (toggleMarker == selectedSpecialMarker && specialMarkerInfo != null) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                MapSpecialInfo(
-                    painter = painter,
-                    specialMarkerInfo = specialMarkerInfo,
-                    modifier = Modifier
-                        .noRippleClickable {
-                            Log.d("MapComponent", "Special marker clicked: ${specialMarkerInfo.id}")
-                            onSpecialInfoClick(specialMarkerInfo.imageUrl)
-                        }
-                )
-                Box(
-                    modifier = Modifier
-                        .width(2.dp)
-                        .height(16.dp)
-                        .background(Color.White)
-                )
                 Icon(
-                    painter = painterResource(R.drawable.ic_special_marker_selected),
+                    painter = painterResource(toggleIconRes),
                     contentDescription = null,
                     tint = Color.Unspecified,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .shadow(1.dp)
                 )
             }
-        } else {
-            Icon(
-                painter = painterResource(toggleIconRes),
-                contentDescription = null,
-                tint = Color.Unspecified,
-                modifier = Modifier
-                    .size(24.dp)
-                    .shadow(1.dp)
-            )
         }
     }
 }

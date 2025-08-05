@@ -8,7 +8,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ganaljigi.kubf.data.remote.repository.HomeRepository
-import com.ganaljigi.kubf.mapper.toUiState
 import com.ganaljigi.kubf.ui.common.model.Convenience
 import com.ganaljigi.kubf.ui.common.model.DoorInfo
 import com.ganaljigi.kubf.ui.common.model.RouteMode
@@ -22,10 +21,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -338,11 +334,11 @@ class HomeViewModel @Inject constructor(
 
     fun setShowSpecialImageDialog(
         showSpecialImageDialog: Boolean,
-        imageUrl: String = "",
+        imageUrl: List<String> = emptyList(),
     ) {
         _uiState.update {
             it.copy(
-                specialImageUrl = imageUrl,
+                specialImageUrl = imageUrl.toImmutableList(),
                 showSpecialImageDialog = showSpecialImageDialog,
                 selectedSpecialMarker =
                     if (showSpecialImageDialog) it.selectedSpecialMarker else null,
@@ -393,9 +389,10 @@ class HomeViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 specialMarkerInfo = SpecialMarkerInfo(
-                    id = toggleMarker.id,
-                    markerId = toggleMarker.id,
-                    imageUrl = "https://cdn.pixabay.com/photo/2015/07/08/01/22/korean-jindo-835301_1280.jpg",
+                    imageUrls = listOf(
+                        "https://cdn.pixabay.com/photo/2015/07/08/01/22/korean-jindo-835301_1280.jpg",
+                        "https://cdn.pixabay.com/photo/2015/07/08/01/22/korean-jindo-835301_1280.jpg"
+                    ),
                     description = "사진 기준 왼쪽에 경사로가 있어서\n장애 학우들도 이용 가능합니다."
                 )
             )
@@ -406,7 +403,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             homeRepository.getHomeData().fold(
                 onSuccess = { response ->
-                    _uiState.value = response.toUiState()
+//                    _uiState.value = response.toUiState()
                 },
                 onFailure = { error ->
                     Log.e("HomeViewModel", "fetchInitData: Error fetching home data", error)

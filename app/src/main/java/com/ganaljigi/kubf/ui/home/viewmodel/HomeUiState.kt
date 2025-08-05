@@ -26,7 +26,7 @@ data class HomeUiState(
     val bottomSheetType: HomeBottomSheetType = HomeBottomSheetType.NONE,
     val showInquiryDialog: Boolean = false,
     val showSpecialImageDialog: Boolean = false,
-    val specialImageUrl: String = "",
+    val specialImageUrl: ImmutableList<String> = persistentListOf(),
     val inquiryField: TextFieldValue = TextFieldValue(""),
     val toggleUiStates: List<ToggleUiState> = MapToggle.entries.map {
         ToggleUiState(
@@ -76,9 +76,7 @@ data class HomeBuildingInfo(
 )
 
 data class SpecialMarkerInfo(
-    val id: Long,
-    val markerId: Long,
-    val imageUrl: String,
+    val imageUrls: List<String>,
     val description: String,
 )
 
