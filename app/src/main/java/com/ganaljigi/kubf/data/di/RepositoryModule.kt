@@ -1,6 +1,8 @@
 package com.ganaljigi.kubf.data.di
 
+import com.ganaljigi.kubf.data.remote.repository.BuildingRepository
 import com.ganaljigi.kubf.data.remote.repository.HomeRepository
+import com.ganaljigi.kubf.data.remote.repositoryimpl.BuildingRepositoryImpl
 import com.ganaljigi.kubf.data.remote.repositoryimpl.HomeRepositoryImpl
 import dagger.Binds
 import dagger.Module
@@ -15,4 +17,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindHomeRepository(homeRepositoryImpl: HomeRepositoryImpl): HomeRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindBuildingRepository(buildingRepositoryImpl: BuildingRepositoryImpl): BuildingRepository
 }
