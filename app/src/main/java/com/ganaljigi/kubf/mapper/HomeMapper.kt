@@ -1,10 +1,12 @@
 package com.ganaljigi.kubf.mapper
 
 import com.ganaljigi.kubf.data.remote.response.HomeResponseDto
+import com.ganaljigi.kubf.data.remote.response.HomeSignificantResponseDto
 import com.ganaljigi.kubf.ui.home.model.BuildingMarker
 import com.ganaljigi.kubf.ui.home.model.MapToggle
 import com.ganaljigi.kubf.ui.home.model.ToggleMarker
 import com.ganaljigi.kubf.ui.home.viewmodel.HomeUiState
+import com.ganaljigi.kubf.ui.home.viewmodel.SpecialMarkerInfo
 import kotlinx.collections.immutable.toImmutableList
 
 fun HomeResponseDto.toUiState() = HomeUiState(
@@ -14,6 +16,11 @@ fun HomeResponseDto.toUiState() = HomeUiState(
     stairsMarkers = this.stairs.toToggleMarkers(MapToggle.STAIRS),
     specialMarkers = this.significants.toToggleMarkers(MapToggle.SPECIAL_MARK)
         .toImmutableList(),
+)
+
+fun HomeSignificantResponseDto.toSpecialMarkerInfo() = SpecialMarkerInfo(
+    description = this.description,
+    imageUrls = this.imageUrls,
 )
 
 

@@ -8,6 +8,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ganaljigi.kubf.data.remote.repository.HomeRepository
+import com.ganaljigi.kubf.mapper.toSpecialMarkerInfo
 import com.ganaljigi.kubf.ui.common.model.Convenience
 import com.ganaljigi.kubf.ui.common.model.DoorInfo
 import com.ganaljigi.kubf.ui.common.model.RouteMode
@@ -386,6 +387,31 @@ class HomeViewModel @Inject constructor(
     }
 
     fun updateSpecialMarkerInfo(toggleMarker: ToggleMarker) {
+        viewModelScope.launch {
+            homeRepository.getSpecialInfo(toggleMarker.id).fold(
+                onSuccess = { response ->
+                    _uiState.update {
+                        it.copy(
+                            specialMarkerInfo = response.toSpecialMarkerInfo(),
+//                                SpecialMarkerInfo(
+//                                imageUrls = listOf(
+//                                    "https://cdn.pixabay.com/photo/2015/07/08/01/22/korean-jindo-835301_1280.jpg",
+//                                    "https://cdn.pixabay.com/photo/2015/07/08/01/22/korean-jindo-835301_1280.jpg"
+//                                ),
+//                                description = response.toSpecialMarkerInfo().description
+                        )
+                    }
+                },
+                onFailure = { error ->
+                    Log.e(
+                        "HomeViewModel",
+                        "updateSpecialMarkerInfo: Error fetching special info",
+                        error
+                    )
+                }
+            )
+        }
+
         _uiState.update {
             it.copy(
                 specialMarkerInfo = SpecialMarkerInfo(
