@@ -41,19 +41,19 @@ fun RoomPic(
             AsyncImage(
                 model = roomPicUrls[page],
                 contentDescription = "강의실 사진",
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp)
+                    //.height(200.dp)
             )
         }
-
+        //TODO: 패딩 조정
         if (roomPicUrls.size > 1) {
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(12.dp)
-                    .background(Color(0xFFFF212121)
+                    .background(Color(0xFF212121)
                         .copy(alpha = 0.6f),
                         shape = RoundedCornerShape(20.dp)
                         )

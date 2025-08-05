@@ -27,7 +27,7 @@ fun DeskAndChairComponent(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.padding(start = 20.dp)) {
-        Divider(modifier = Modifier.padding(vertical = 12.dp))
+        Divider(modifier = Modifier.padding(vertical = 12.dp)) //TODO: horizonal divider로 수정
 
         Text(
             text = "책상 · 의자 종류",
@@ -36,7 +36,7 @@ fun DeskAndChairComponent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // 위쪽 그룹
+        // 위쪽 그룹 //TODO: form 또는 LazyColumn으로 고치면 좋음
         DeskAndChairItem("일체형", allInOne)
         Spacer(modifier = Modifier.height(12.dp))
         DeskAndChairItem("영화관", cinemaSeat)

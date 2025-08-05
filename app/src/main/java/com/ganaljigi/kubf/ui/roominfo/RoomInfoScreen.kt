@@ -9,38 +9,21 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ganaljigi.kubf.ui.roominfo.viewmodel.RoomInfoViewModel
 
 @Composable
 fun RoomInfoScreen(
-    buildingName: String,
-    roomPicUrls: List<String>,
-    frontDoor: Boolean,
-    backDoor: Boolean,
-    roomNumber: String,
-    roomName: String?,
-    lecture: Boolean,
-    capacity: Int,
-    area: Double,
-    floorSpace: Double,
-    roomType: String,
-    department: String,
-    departmentNumber: String,
-
-    allInOne: Boolean,
-    cinemaSeat: Boolean,
-    oneSeat: Boolean,
-    twoSeat: Boolean,
-    multiSeat: Boolean,
-    panel: Boolean,
-    backOfChair: Boolean,
-    wheelChair: Boolean,
-    wheelchairTable: Boolean,
-    computerTable: Boolean,
-
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    viewModel: RoomInfoViewModel = hiltViewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
 
     Column(
@@ -50,81 +33,82 @@ fun RoomInfoScreen(
             .verticalScroll(scrollState)
     ) {
         RoomInfoTopAppBar(
-            buildingName = buildingName,
+            buildingName = uiState.buildingName,
             onBackClick = onBackClick
         )
 
         RoomPic(
-            roomPicUrls = roomPicUrls
+            roomPicUrls = uiState.roomPicUrls
         )
 
         RoomInfoDefaultComponent(
-            roomNumber = roomNumber,
-            roomName = roomName,
-            lecture = lecture,
-            capacity = capacity,
-            area = area,
-            floorSpace = floorSpace,
-            roomType = roomType,
-            department = department,
-            departmentNumber = departmentNumber
+            roomNumber = uiState.roomNumber,
+            roomName = uiState.roomName,
+            lecture = uiState.lecture,
+            capacity = uiState.capacity,
+            area = uiState.area,
+            floorSpace = uiState.floorSpace,
+            roomType = uiState.roomType,
+            department = uiState.department,
+            departmentNumber = uiState.departmentNumber
         )
 
         DeskAndChairComponent(
-            allInOne = allInOne,
-            cinemaSeat = cinemaSeat,
-            oneSeat = oneSeat,
-            twoSeat = twoSeat,
-            multiSeat = multiSeat,
-            panel = panel,
-            backOfChair = backOfChair,
-            wheelChair = wheelChair,
-            wheelchairTable = wheelchairTable,
-            computerTable = computerTable,
+            allInOne = uiState.allInOne,
+            cinemaSeat = uiState.cinemaSeat,
+            oneSeat = uiState.oneSeat,
+            twoSeat = uiState.twoSeat,
+            multiSeat = uiState.multiSeat,
+            panel = uiState.panel,
+            backOfChair = uiState.backOfChair,
+            wheelChair = uiState.wheelChair,
+            wheelchairTable = uiState.wheelchairTable,
+            computerTable = uiState.computerTable,
             modifier = Modifier.fillMaxWidth()
         )
 
         DoorComponent(
-            frontDoor = frontDoor,
-            backDoor = backDoor,
+            frontDoor = uiState.frontDoor,
+            backDoor = uiState.backDoor,
             modifier = Modifier
                 .fillMaxWidth()
         )
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun RoomInfoScreenPreview() {
-    RoomInfoScreen(
-        buildingName = "경영관",
-        roomPicUrls = listOf(
-            "https://i.pinimg.com/1200x/10/dc/2e/10dc2ece8b542854d0e276a1114d6190.jpg",
-            "https://i.pinimg.com/1200x/d9/5e/3f/d95e3f592893bd3df9e62df37c831638.jpg"
-        ),
-        frontDoor = true,
-        backDoor = false,
-        roomNumber = "102호",
-        roomName = "전산실습실",
-        lecture = true,
-        capacity = 34,
-        area = 60.6,
-        floorSpace = 18.3,
-        roomType = "평탄식",
-        department = "정보인프라팀",
-        departmentNumber = "010-0000-0000",
-
-        allInOne = false,
-        cinemaSeat = false,
-        oneSeat = true,
-        twoSeat = false,
-        multiSeat = false,
-        panel = true,
-        backOfChair = true,
-        wheelChair = true,
-        wheelchairTable = false,
-        computerTable = false,
-
-        onBackClick = {}
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun RoomInfoScreenPreview(
+// viewModel: RoomInfoViewModel = hiltViewModel()) {
+//    RoomInfoScreen(
+//        buildingName = "경영관",
+//        roomPicUrls = listOf(
+//            "https://i.pinimg.com/1200x/10/dc/2e/10dc2ece8b542854d0e276a1114d6190.jpg",
+//            "https://i.pinimg.com/1200x/d9/5e/3f/d95e3f592893bd3df9e62df37c831638.jpg"
+//        ),
+//        frontDoor = true,
+//        backDoor = false,
+//        roomNumber = "102호",
+//        roomName = "전산실습실",
+//        lecture = true,
+//        capacity = 34,
+//        area = 60.6,
+//        floorSpace = 18.3,
+//        roomType = "평탄식",
+//        department = "정보인프라팀",
+//        departmentNumber = "010-0000-0000",
+//
+//        allInOne = false,
+//        cinemaSeat = false,
+//        oneSeat = true,
+//        twoSeat = false,
+//        multiSeat = false,
+//        panel = true,
+//        backOfChair = true,
+//        wheelChair = true,
+//        wheelchairTable = false,
+//        computerTable = false,
+//
+//        onBackClick = {}
+//    )
+//}
