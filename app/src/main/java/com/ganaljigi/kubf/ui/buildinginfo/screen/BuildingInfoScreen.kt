@@ -2,19 +2,22 @@ package com.ganaljigi.kubf.ui.buildinginfo.screen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,15 +39,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.ui.buildinginfo.component.DoorComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.FacilityComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.FloorComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.NoteComponent
+import com.ganaljigi.kubf.ui.buildinginfo.component.SearchPopup
+import com.ganaljigi.kubf.ui.buildinginfo.model.BuildingInfo
 import com.ganaljigi.kubf.ui.buildinginfo.model.Door
 import com.ganaljigi.kubf.ui.buildinginfo.model.Facility
 import com.ganaljigi.kubf.ui.buildinginfo.model.FloorInfo
@@ -56,15 +64,6 @@ import com.ganaljigi.kubf.ui.theme.Gray4
 import com.ganaljigi.kubf.ui.theme.MainGreen
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import kotlinx.coroutines.launch
-
-data class BuildingInfo(
-    val name: String,
-    val number: Int,
-    val department: String,
-    val imageUrl: String,
-    val notes: Notes
-)
-
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -82,6 +81,10 @@ fun BuildingInfoScreen(
     val current = floors[selectedIndex]
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
+
+    var showSearchPopup by remember { mutableStateOf(false) }
+    var searchValue by remember { mutableStateOf(TextFieldValue()) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -101,8 +104,14 @@ fun BuildingInfoScreen(
                     )
                 },
                 actions = {
-                    IconButton(onClick = onSearch) {
-                        Icon(Icons.Filled.Search, contentDescription = "검색")
+                    IconButton(onClick = {
+                        showSearchPopup = true
+                        onSearch()
+                    }) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_search_bar_leading),
+                            contentDescription = "검색"
+                        )
                     }
                 }
             )
@@ -198,82 +207,111 @@ fun BuildingInfoScreen(
                 )
                 Spacer(Modifier.height(12.dp))
             }
-                stickyHeader {
-                    if (totalFloor.num < 8){
-                        TabRow(
-                            selectedTabIndex = selectedIndex,
-                            indicator = { position ->
-                                TabRowDefaults.Indicator(
-                                    Modifier
-                                        .tabIndicatorOffset(position[selectedIndex])
-                                        .height(2.dp),
-                                    color = MainGreen
-                                )
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            floors.forEachIndexed { idx, floorInfo ->
-                                Tab(
-                                    selected = idx == selectedIndex,
-                                    onClick = {
-                                        selectedIndex = idx
-                                        scope.launch {
-                                            //listState.animateScrollToItem(1)
-                                            listState.scrollToItem(1)
-                                        }
-                                    },
-                                    text = {
-                                        Text(
-                                            text = "${floorInfo.floorNum}층",
-                                            textAlign = TextAlign.Center,
-                                            style = if (idx == selectedIndex) KUBFAndroidTheme.typography.regular14 else KUBFAndroidTheme.typography.medium14,
-                                            color = if (idx == selectedIndex) MainGreen else Gray4
-                                        )
+            stickyHeader {
+                if (totalFloor.num < 8) {
+                    TabRow(
+                        selectedTabIndex = selectedIndex,
+                        indicator = { position ->
+                            TabRowDefaults.Indicator(
+                                Modifier
+                                    .tabIndicatorOffset(position[selectedIndex])
+                                    .height(2.dp),
+                                color = MainGreen
+                            )
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        floors.forEachIndexed { idx, floorInfo ->
+                            Tab(
+                                selected = idx == selectedIndex,
+                                onClick = {
+                                    selectedIndex = idx
+                                    scope.launch {
+                                        //listState.animateScrollToItem(1)
+                                        listState.scrollToItem(1)
                                     }
-                                )
-                            }
+                                },
+                                text = {
+                                    Text(
+                                        text = "${floorInfo.floorNum}층",
+                                        textAlign = TextAlign.Center,
+                                        style = if (idx == selectedIndex) KUBFAndroidTheme.typography.regular14 else KUBFAndroidTheme.typography.medium14,
+                                        color = if (idx == selectedIndex) MainGreen else Gray4
+                                    )
+                                }
+                            )
                         }
                     }
-                    else{
-                        ScrollableTabRow(
-                            selectedTabIndex = selectedIndex,
-                            indicator = { position ->
-                                TabRowDefaults.Indicator(
-                                    Modifier
-                                        .tabIndicatorOffset(position[selectedIndex])
-                                        .height(2.dp),
-                                    color = MainGreen
-                                )
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                            edgePadding = 0.dp
-                        ) {
-                            floors.forEachIndexed { idx, floorInfo ->
-                                Tab(
-                                    selected = idx == selectedIndex,
-                                    onClick = {
-                                        selectedIndex = idx
-                                        scope.launch {
-                                            listState.animateScrollToItem(1)
-                                        }
-                                    },
-                                    text = {
-                                        Text(
-                                            text = "${floorInfo.floorNum}층",
-                                            textAlign = TextAlign.Center,
-                                            style = if (idx == selectedIndex) KUBFAndroidTheme.typography.regular14 else KUBFAndroidTheme.typography.medium14,
-                                            color = if (idx == selectedIndex) MainGreen else Gray4
-                                        )
+                } else {
+                    ScrollableTabRow(
+                        selectedTabIndex = selectedIndex,
+                        indicator = { position ->
+                            TabRowDefaults.Indicator(
+                                Modifier
+                                    .tabIndicatorOffset(position[selectedIndex])
+                                    .height(2.dp),
+                                color = MainGreen
+                            )
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        edgePadding = 0.dp
+                    ) {
+                        floors.forEachIndexed { idx, floorInfo ->
+                            Tab(
+                                selected = idx == selectedIndex,
+                                onClick = {
+                                    selectedIndex = idx
+                                    scope.launch {
+                                        listState.animateScrollToItem(1)
                                     }
-                                )
-                            }
+                                },
+                                text = {
+                                    Text(
+                                        text = "${floorInfo.floorNum}층",
+                                        textAlign = TextAlign.Center,
+                                        style = if (idx == selectedIndex) KUBFAndroidTheme.typography.regular14 else KUBFAndroidTheme.typography.medium14,
+                                        color = if (idx == selectedIndex) MainGreen else Gray4
+                                    )
+                                }
+                            )
                         }
                     }
                 }
-                item {
-                    Spacer(Modifier.height(16.dp))
-                    FloorComponent(current) { }
+            }
+            item {
+                Spacer(Modifier.height(16.dp))
+                FloorComponent(current) { }
+            }
+        }
+        if (showSearchPopup) {
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(0.4f))
+                        .clickable { showSearchPopup = false })
+                Box(
+                    modifier = Modifier
+                        .size(width = 328.dp, height = 302.dp)
+                        .align(Alignment.Center)
+                        .offset(y = (-60).dp)
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }) {},
+                    contentAlignment = Alignment.Center
+                ) {
+                    SearchPopup(
+                        modifier = Modifier,
+                        value = searchValue,
+                        onValueChange = { searchValue = it },
+                        onClose = {
+                            showSearchPopup = false
+                        }
+                    )
                 }
+            }
 
 
         }
@@ -292,7 +330,8 @@ private fun PreviewBuilding() {
     floorInfos.add(FloorInfo(2, "https://", facilities, rooms))
     //floorInfos.add(FloorInfo(3,"https://",features, rooms))
     val totalFloor = TotalFloor(2, floorInfos)
-    val building = BuildingInfo("경영관", 2, "경영대학", "http://", Notes("2층 구름다리로", mutableListOf("","")))
+    val building =
+        BuildingInfo("경영관", 2, "경영대학", "http://", Notes("2층 구름다리로", mutableListOf("", "")))
     BuildingInfoScreen(
         building, facilities, doors, totalFloor,
         onBack = {},

@@ -12,10 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,9 +24,14 @@ import com.ganaljigi.kubf.ui.common.component.KUBFSearchBar
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 
 @Composable
-fun SearchPopup() {
-    var value by remember { mutableStateOf(TextFieldValue()) }
+fun SearchPopup(
+    modifier: Modifier,
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
+    onClose: () -> Unit
+) {
     val interactionSource = remember { MutableInteractionSource() }
+    val isFocused = interactionSource.collectIsFocusedAsState().value
     Box(
         modifier = Modifier
             .height(302.dp)
@@ -52,10 +54,11 @@ fun SearchPopup() {
             KUBFSearchBar(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 value = value,
-                onValueChange = {value = it},
+                onValueChange = onValueChange,
                 placeHolderText = "건물, 편의시설 검색",
                 interactionSource = interactionSource,
-                isFocused = interactionSource.collectIsFocusedAsState().value
+                isFocused = isFocused,
+                onValueCleared = {onValueChange(TextFieldValue())}
                 )
         }
     }
@@ -64,5 +67,6 @@ fun SearchPopup() {
 @Preview
 @Composable
 private fun SearchPreview() {
-    SearchPopup()
+//    var value by remember { MutableStateOf }
+//    SearchPopup(TextFieldValue("")){}
 }
