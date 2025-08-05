@@ -25,6 +25,18 @@ fun RoomInfoScreen(
     roomType: String,
     department: String,
     departmentNumber: String,
+
+    allInOne: Boolean,
+    cinemaSeat: Boolean,
+    oneSeat: Boolean,
+    twoSeat: Boolean,
+    multiSeat: Boolean,
+    panel: Boolean,
+    backOfChair: Boolean,
+    wheelChair: Boolean,
+    wheelchairTable: Boolean,
+    computerTable: Boolean,
+
     onBackClick: () -> Unit
 ) {
     Column(
@@ -51,6 +63,20 @@ fun RoomInfoScreen(
             roomType = roomType,
             department = department,
             departmentNumber = departmentNumber
+        )
+
+        DeskAndChairComponent(
+            allInOne = allInOne,
+            cinemaSeat = cinemaSeat,
+            oneSeat = oneSeat,
+            twoSeat = twoSeat,
+            multiSeat = multiSeat,
+            panel = panel,
+            backOfChair = backOfChair,
+            wheelChair = wheelChair,
+            wheelchairTable = wheelchairTable,
+            computerTable = computerTable,
+            modifier = Modifier.fillMaxWidth()
         )
 
         DoorComponent(
@@ -82,6 +108,18 @@ fun RoomInfoScreenPreview() {
         roomType = "평탄식",
         department = "정보인프라팀",
         departmentNumber = "010-0000-0000",
+
+        allInOne = false,
+        cinemaSeat = false,
+        oneSeat = true,
+        twoSeat = false,
+        multiSeat = false,
+        panel = true,
+        backOfChair = true,
+        wheelChair = true,
+        wheelchairTable = false,
+        computerTable = false,
+
         onBackClick = {}
     )
 }
