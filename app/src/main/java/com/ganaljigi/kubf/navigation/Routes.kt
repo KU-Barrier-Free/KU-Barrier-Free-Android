@@ -1,5 +1,6 @@
 package com.ganaljigi.kubf.navigation
 
+import com.ganaljigi.kubf.ui.common.model.SearchMode
 import kotlinx.serialization.Serializable
 
 sealed interface Routes {
@@ -8,6 +9,9 @@ sealed interface Routes {
 
     @Serializable
     data object Home : Routes
+
+    @Serializable
+    data class HomeSearch(val title: SearchMode) : Routes
 
     @Serializable
     data object Helper : Routes

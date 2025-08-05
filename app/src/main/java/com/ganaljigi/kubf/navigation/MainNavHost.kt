@@ -2,11 +2,14 @@ package com.ganaljigi.kubf.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.ganaljigi.kubf.ui.helper.screen.HelperNoticeScreen
+import com.ganaljigi.kubf.ui.home.screen.HomeScreen
+import com.ganaljigi.kubf.ui.home.screen.HomeSearchScreen
+import com.ganaljigi.kubf.ui.home.viewmodel.HomeViewModel
 
 @Composable
 fun MainNavHost(
@@ -14,9 +17,11 @@ fun MainNavHost(
     navController: NavHostController,
 ) {
 
+    val homeViewModel = hiltViewModel<HomeViewModel>()
+
     NavHost(
         navController = navController,
-        startDestination = Routes.Splash,
+        startDestination = Routes.Home,
     ) {
         composable<Routes.Splash> {
 //            SplashScreen(
@@ -29,12 +34,27 @@ fun MainNavHost(
 //            )
         }
 
-        composable<Routes.Home> {
-//            HomeScreen(
-//                padding = padding,
-//                navigateToHelper = { navController.navigate(Routes.Helper) },
-//                navigateToBuildingInfo = { navController.navigate(Routes.BuildingInfo) },
-//            )
+        composable<Routes.Home> { navBackStackEntry ->
+            HomeScreen(
+                padding = padding,
+                navigateToHelper = { navController.navigate(Routes.Helper) },
+                navigateToBuildingInfo = { navController.navigate(Routes.BuildingInfo(it.toInt())) },
+                navigateToSearch = { title ->
+                    navController.navigate(Routes.HomeSearch(title))
+                },
+                viewModel = homeViewModel,
+            )
+        }
+
+        composable<Routes.HomeSearch> { navBackStackEntry ->
+            val searchMode = navBackStackEntry.toRoute<Routes.HomeSearch>().title
+
+            HomeSearchScreen(
+                padding = padding,
+                searchMode = searchMode,
+                navigateUp = { navController.popBackStack() },
+                viewModel = homeViewModel,
+            )
         }
 
         composable<Routes.Helper> {

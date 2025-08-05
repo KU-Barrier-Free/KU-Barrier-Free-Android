@@ -1,3 +1,7 @@
+import org.gradle.kotlin.dsl.implementation
+import java.util.Properties
+import kotlin.apply
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -6,6 +10,17 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
 }
+
+val localProperties = Properties().apply {
+    val localPropertiesFile = project.rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        load(localPropertiesFile.inputStream())
+    } else {
+        throw IllegalStateException("local.properties file not found")
+    }
+}
+
+val mapsApiKey: String? = localProperties.getProperty("GOOGLE_MAPS_API_KEY")
 
 android {
     namespace = "com.ganalijigi.kubf"
@@ -19,6 +34,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = mapsApiKey.toString()
+        buildConfigField("String", "GOOGLE_MAPS_ID", localProperties["GOOGLE_MAPS_ID"].toString())
+        buildConfigField("String", "BASE_URL", localProperties["BASE_URL"].toString())
     }
 
     buildTypes {
@@ -39,6 +58,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -77,10 +97,23 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
-    // Map
-    implementation(libs.google.maps)
+    // Permissions
+    implementation(libs.accompanist.permissions)
+
+    // Google Map
+    implementation(libs.play.services.location)
+    implementation(libs.play.services.maps)
     implementation(libs.maps.compose)
 
-    //JSoup
-    implementation(libs.jsoup)
+    // Immutable
+    implementation(libs.kotlinx.collections.immutable)
+
+    // Network
+    // Network
+    implementation(platform(libs.okhttp.bom))
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.kotlin.serialization.converter)
+    implementation(libs.kotlinx.serialization.json)
 }
