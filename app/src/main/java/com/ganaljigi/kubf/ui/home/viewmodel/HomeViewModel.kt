@@ -7,6 +7,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.withStyle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ganaljigi.kubf.data.remote.repository.HomeRepository
+import com.ganaljigi.kubf.mapper.toUiState
 import com.ganaljigi.kubf.ui.common.model.Convenience
 import com.ganaljigi.kubf.ui.common.model.DoorInfo
 import com.ganaljigi.kubf.ui.common.model.RouteMode
@@ -21,21 +23,23 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor() : ViewModel() {
+class HomeViewModel @Inject constructor(
+    private val homeRepository: HomeRepository,
+) : ViewModel() {
     private val _uiState: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState())
-    val uiState = _uiState
-        .onStart { fetchInitData() }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = HomeUiState()
-        )
+    val uiState = _uiState.asStateFlow()
+
+    init {
+        fetchInitData()
+    }
 
     fun updateSearchWord(newSearchWord: TextFieldValue = TextFieldValue("")) {
         _uiState.update { it.copy(searchWord = newSearchWord) }
@@ -399,7 +403,16 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun fetchInitData() {
-        // TODO: 초기 데이터 API 호출
+        viewModelScope.launch {
+            homeRepository.getHomeData().fold(
+                onSuccess = { response ->
+                    _uiState.value = response.toUiState()
+                },
+                onFailure = { error ->
+                    Log.e("HomeViewModel", "fetchInitData: Error fetching home data", error)
+                }
+            )
+        }
 
         val curbMarkers = persistentListOf(
             ToggleMarker(
