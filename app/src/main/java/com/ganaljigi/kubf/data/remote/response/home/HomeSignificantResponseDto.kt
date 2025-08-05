@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.data.remote.response
+package com.ganaljigi.kubf.data.remote.response.home
 
 
 import kotlinx.serialization.SerialName

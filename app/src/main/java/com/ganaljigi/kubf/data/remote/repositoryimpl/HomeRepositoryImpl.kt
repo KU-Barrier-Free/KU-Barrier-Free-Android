@@ -2,8 +2,8 @@ package com.ganaljigi.kubf.data.remote.repositoryimpl
 
 import com.ganaljigi.kubf.data.remote.base.handleBaseResponse
 import com.ganaljigi.kubf.data.remote.repository.HomeRepository
-import com.ganaljigi.kubf.data.remote.response.HomeResponseDto
-import com.ganaljigi.kubf.data.remote.response.HomeSignificantResponseDto
+import com.ganaljigi.kubf.data.remote.response.home.HomeResponseDto
+import com.ganaljigi.kubf.data.remote.response.home.HomeSignificantResponseDto
 import com.ganaljigi.kubf.data.remote.service.HomeService
 import javax.inject.Inject
 

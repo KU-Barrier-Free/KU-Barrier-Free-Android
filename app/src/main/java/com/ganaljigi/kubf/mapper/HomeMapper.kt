@@ -1,7 +1,7 @@
 package com.ganaljigi.kubf.mapper
 
-import com.ganaljigi.kubf.data.remote.response.HomeResponseDto
-import com.ganaljigi.kubf.data.remote.response.HomeSignificantResponseDto
+import com.ganaljigi.kubf.data.remote.response.home.HomeResponseDto
+import com.ganaljigi.kubf.data.remote.response.home.HomeSignificantResponseDto
 import com.ganaljigi.kubf.ui.home.model.BuildingMarker
 import com.ganaljigi.kubf.ui.home.model.MapToggle
 import com.ganaljigi.kubf.ui.home.model.ToggleMarker
