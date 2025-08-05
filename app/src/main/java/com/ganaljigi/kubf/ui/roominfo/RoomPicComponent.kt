@@ -3,6 +3,7 @@ package com.ganaljigi.kubf.ui.roominfo
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -52,16 +53,25 @@ fun RoomPic(
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(12.dp)
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
                     .background(Color(0xFF212121)
                         .copy(alpha = 0.6f),
                         shape = RoundedCornerShape(20.dp)
                         )
             ) {
-                Text(
-                    text = "${pagerState.currentPage + 1}/${roomPicUrls.size}",
-                    style = KUBFAndroidTheme.typography.semiBold13.copy(color = Color.White)
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    Text(
+                        text = "${pagerState.currentPage + 1}",
+                        style = KUBFAndroidTheme.typography.semiBold13.copy(color = Color.White)
+                    )
+                    Text(
+                        text = "/${roomPicUrls.size}",
+                        style = KUBFAndroidTheme.typography.regular13.copy(color = Color.White)
+                    )
+                }
             }
         }
     }

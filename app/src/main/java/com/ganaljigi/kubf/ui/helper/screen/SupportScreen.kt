@@ -29,7 +29,7 @@ import androidx.compose.runtime.*
 fun SupportScreen(
     onBackClick: () -> Unit
 ) {
-    var tabIndex by remember { mutableStateOf(0) }
+    var tabIndex by remember { mutableIntStateOf(0) }
 
     val urls =  listOf (
         "https://www.konkuk.ac.kr/csd/15230/subview.do",
@@ -75,7 +75,7 @@ fun SupportScreen(
         }
 
         Box(modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .weight(1f)
         ) {
             urls.forEachIndexed { index, url ->

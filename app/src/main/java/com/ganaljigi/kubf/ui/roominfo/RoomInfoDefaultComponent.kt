@@ -228,7 +228,7 @@ fun RoomInfoDefaultComponent(
                         Text(
                             text = buildAnnotatedString {
                                 withStyle(SpanStyle(color = MainGreen)) { append("평탄식") }
-                                append("은 바닥이 전부 평평한 호실, ")
+                                append("은 바닥이 전부 평평한 호실, \n")
                                 withStyle(SpanStyle(color = MainGreen)) { append("계단식") }
                                 append("은 바닥에 단차가 있는 호실입니다.")
                             },

@@ -35,7 +35,8 @@ import com.ganaljigi.kubf.ui.helper.viewmodel.Notice
 fun HelperScreen(
     onBackClick: () -> Unit,
     viewModel: HelperViewModel = viewModel(),
-    onNoticeClick: (String) -> Unit
+    onNoticeClick: (String) -> Unit,
+    //onNoticeAllClick: () -> Unit
 ) {
     val notices = viewModel.notices.value
 
@@ -49,7 +50,7 @@ fun HelperScreen(
                 .verticalScroll(rememberScrollState()),
         ) {
             //공지사항
-            NoticeTitle {}
+            NoticeTitle {/*onClick = onNoticeAllClick*/}
             notices.take(3).forEachIndexed { index, notice: Notice ->
                 NoticeItem(
                     title = notice.title,
