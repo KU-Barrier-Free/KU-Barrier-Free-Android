@@ -29,3 +29,10 @@ fun Modifier.conditionalModifier(
         this.then(modifierIfFalse)
     }
 }
+
+fun Int.toDistanceString(): String {
+    return when {
+        this < 1000 -> "${this}m"
+        else -> "%.1fkm".format(this / 1000.0)
+    }
+}

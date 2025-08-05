@@ -36,15 +36,12 @@ fun BarrierFreeInfoChip(
         Box(
             modifier = modifier
                 .matchParentSize()
+                .background(Color.White.copy(alpha = 0.6f), shape = RoundedCornerShape(8.dp))
                 .blur(8.dp, BlurredEdgeTreatment.Unbounded)
         )
         Row(
             modifier = modifier
                 .noRippleClickable(onClick = onClick)
-                .background(
-                    color = Color.White.copy(alpha = 0.1f),
-                    shape = RoundedCornerShape(8.dp)
-                )
                 .border(
                     color = Gray1,
                     width = 1.dp,
@@ -76,13 +73,13 @@ fun BarrierFreeInfoChip(
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = "배리어 프리",
-                style = KUBFAndroidTheme.typography.regular12.copy(
+                style = KUBFAndroidTheme.typography.medium14.copy(
                     color = MainGreen
                 )
             )
             Text(
                 text = "란?",
-                style = KUBFAndroidTheme.typography.regular12.copy(
+                style = KUBFAndroidTheme.typography.regular14.copy(
                     color = Gray4
                 )
             )

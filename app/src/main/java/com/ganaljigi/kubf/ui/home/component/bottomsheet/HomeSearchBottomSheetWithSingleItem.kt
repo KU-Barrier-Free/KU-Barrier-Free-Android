@@ -23,7 +23,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ganaljigi.kubf.ui.common.model.SearchResult
+import com.ganaljigi.kubf.ui.home.model.SearchResult
 import com.ganaljigi.kubf.ui.theme.Gray1
 import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
@@ -80,9 +80,8 @@ fun HomeSearchBottomSheetSingleItem(
                 ) {
                     Box(
                         modifier = Modifier
-                            .border(
-                                color = Gray1,
-                                width = 1.dp,
+                            .background(
+                                color = MainGreen.copy(alpha = 0.08f),
                                 shape = RoundedCornerShape(20.dp)
                             )
                             .noRippleClickable { onFromClick(searchResult) }
@@ -97,9 +96,8 @@ fun HomeSearchBottomSheetSingleItem(
                     }
                     Box(
                         modifier = Modifier
-                            .border(
-                                color = Gray1,
-                                width = 1.dp,
+                            .background(
+                                color = MainGreen,
                                 shape = RoundedCornerShape(20.dp)
                             )
                             .noRippleClickable { onToClick(searchResult) }
@@ -108,7 +106,7 @@ fun HomeSearchBottomSheetSingleItem(
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 13.5.dp),
                             text = "도착",
                             style = KUBFAndroidTheme.typography.regular14.copy(
-                                color = MainGreen
+                                color = Color.White
                             ),
                         )
                     }

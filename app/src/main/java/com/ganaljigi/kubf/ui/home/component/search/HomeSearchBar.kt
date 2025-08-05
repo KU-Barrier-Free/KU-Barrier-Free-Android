@@ -23,7 +23,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ganaljigi.kubf.ui.common.component.KUBFSearchBar
-import com.ganaljigi.kubf.ui.common.model.SearchKeyword
 import com.ganaljigi.kubf.ui.theme.Gray1
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.theme.MainGreen
@@ -34,10 +33,8 @@ fun HomeSearchBar(
     modifier: Modifier = Modifier,
     onValueChange: (TextFieldValue) -> Unit = {},
     onValueCleared: () -> Unit = {},
-    onChipClick: (SearchKeyword) -> Unit,
-    onSearchKeyboardClick: () -> Unit = {},
+    onSearchKeyboardEntered: () -> Unit = {},
     value: TextFieldValue,
-    searchKeywordEntry: List<SearchKeyword>
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
@@ -56,7 +53,7 @@ fun HomeSearchBar(
             value = value,
             onValueChange = onValueChange,
             onValueCleared = onValueCleared,
-            onSearchKeyboardClick = onSearchKeyboardClick,
+            onSearchKeyboardClick = onSearchKeyboardEntered,
             placeHolderText = "건물, 편의시설 검색",
             interactionSource = interactionSource,
             isFocused = isFocused
@@ -106,7 +103,5 @@ private fun HomeSearchBarPreview() {
         onValueChange = {},
         onValueCleared = {value = TextFieldValue("")},
         value = value,
-        searchKeywordEntry = SearchKeyword.entries,
-        onChipClick = {}
     )
 }
