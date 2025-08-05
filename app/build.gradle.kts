@@ -37,6 +37,7 @@ android {
 
         manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = mapsApiKey.toString()
         buildConfigField("String", "GOOGLE_MAPS_ID", localProperties["GOOGLE_MAPS_ID"].toString())
+        buildConfigField("String", "BASE_URL", localProperties["BASE_URL"].toString())
     }
 
     buildTypes {
@@ -103,4 +104,15 @@ dependencies {
     implementation(libs.play.services.maps)
     implementation(libs.maps.compose)
 
+    // Immutable
+    implementation(libs.kotlinx.collections.immutable)
+
+    // Network
+    // Network
+    implementation(platform(libs.okhttp.bom))
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.kotlin.serialization.converter)
+    implementation(libs.kotlinx.serialization.json)
 }

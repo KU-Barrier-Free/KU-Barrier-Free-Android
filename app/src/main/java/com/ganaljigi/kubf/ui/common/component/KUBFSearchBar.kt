@@ -1,11 +1,15 @@
 package com.ganaljigi.kubf.ui.common.component
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -64,7 +68,8 @@ fun KUBFSearchBar(
                     .shadow(1.dp, shape = RoundedCornerShape(10.dp), clip = true)
             )
             .background(color = Color.White, shape = RoundedCornerShape(10.dp))
-            .padding(horizontal = 12.dp),
+            .padding(horizontal = 12.dp)
+            .height(44.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
@@ -76,8 +81,7 @@ fun KUBFSearchBar(
             value = value,
             onValueChange = onValueChange,
             modifier = Modifier
-                .weight(1f)
-                .padding(vertical = 16.dp, horizontal = 8.dp),
+                .weight(1f),
             singleLine = true,
             interactionSource = interactionSource,
             cursorBrush = SolidColor(Gray4), // Cursor color
@@ -85,19 +89,27 @@ fun KUBFSearchBar(
                 imeAction = ImeAction.Search
             ),
             keyboardActions = KeyboardActions(
-                onSearch = { onSearchKeyboardClick() }
+                onSearch = {
+                    onSearchKeyboardClick()
+                }
             ),
             textStyle = KUBFAndroidTheme.typography.medium15.copy(),
             decorationBox = { innerTextField ->
-                if (value.text.isEmpty()) {
-                    Text(
-                        text = placeHolderText,
-                        style = KUBFAndroidTheme.typography.medium15.copy(
-                            color = Gray2,
+                Box(
+                    modifier = Modifier
+                        .height(44.dp)
+                        .padding(vertical = 12.dp, horizontal = 7.dp),
+                ) {
+                    if (value.text.isEmpty()) {
+                        Text(
+                            text = placeHolderText,
+                            style = KUBFAndroidTheme.typography.medium15.copy(
+                                color = Gray2,
+                            )
                         )
-                    )
+                    }
+                    innerTextField()
                 }
-                innerTextField()
             }
         )
         if (value.text.isNotEmpty()) {
