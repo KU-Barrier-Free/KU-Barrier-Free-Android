@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class HomeResponseDto(
     @SerialName("buildings")
-    val buildings: List<HomePin>,
+    val buildings: List<BuildingPin>,
     @SerialName("curbs")
     val curbs: List<HomePin>,
     @SerialName("ramps")
@@ -21,6 +21,17 @@ data class HomeResponseDto(
     data class HomePin(
         @SerialName("id")
         val id: Long,
+        @SerialName("latitude")
+        val latitude: Double,
+        @SerialName("longitude")
+        val longitude: Double
+    )
+    @Serializable
+    data class BuildingPin(
+        @SerialName("id")
+        val id: Long,
+        @SerialName("name")
+        val name: String,
         @SerialName("latitude")
         val latitude: Double,
         @SerialName("longitude")

@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ganaljigi.kubf.data.remote.repository.HomeRepository
 import com.ganaljigi.kubf.mapper.toSpecialMarkerInfo
+import com.ganaljigi.kubf.mapper.toUiState
 import com.ganaljigi.kubf.ui.common.model.Convenience
 import com.ganaljigi.kubf.ui.common.model.DoorInfo
 import com.ganaljigi.kubf.ui.common.model.RouteMode
@@ -109,6 +110,9 @@ class HomeViewModel @Inject constructor(
 
     fun updateBuildingInfo(buildingInfo: HomeBuildingInfo) {
         // TODO: 건물 정보 API 호출
+        viewModelScope.launch {
+
+        }
         _uiState.update { it.copy(buildingInfo = buildingInfo) }
     }
 
@@ -429,7 +433,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             homeRepository.getHomeData().fold(
                 onSuccess = { response ->
-//                    _uiState.value = response.toUiState()
+                    _uiState.value = response.toUiState()
                 },
                 onFailure = { error ->
                     Log.e("HomeViewModel", "fetchInitData: Error fetching home data", error)

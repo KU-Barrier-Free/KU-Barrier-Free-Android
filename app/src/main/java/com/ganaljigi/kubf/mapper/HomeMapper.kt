@@ -2,6 +2,7 @@ package com.ganaljigi.kubf.mapper
 
 import com.ganaljigi.kubf.data.remote.response.home.HomeResponseDto
 import com.ganaljigi.kubf.data.remote.response.home.HomeSignificantResponseDto
+import com.ganaljigi.kubf.mapper.toBuildingMarkers
 import com.ganaljigi.kubf.ui.home.model.BuildingMarker
 import com.ganaljigi.kubf.ui.home.model.MapToggle
 import com.ganaljigi.kubf.ui.home.model.ToggleMarker
@@ -24,9 +25,10 @@ fun HomeSignificantResponseDto.toSpecialMarkerInfo() = SpecialMarkerInfo(
 )
 
 
-fun List<HomeResponseDto.HomePin>.toBuildingMarkers() = this.map {
+fun List<HomeResponseDto.BuildingPin>.toBuildingMarkers() = this.map {
     BuildingMarker(
         id = it.id,
+        name = it.name,
         latitude = it.latitude,
         longitude = it.longitude,
     )
