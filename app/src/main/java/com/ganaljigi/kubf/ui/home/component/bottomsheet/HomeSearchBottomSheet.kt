@@ -94,17 +94,7 @@ private fun HomeSearchBottomSheetWithItemPreview() {
                 id = 2,
                 name = "카페 레스티오",
                 building = "공학관",
-                annotatedName = buildAnnotatedString {
-                    append("카페 ")
-                    withStyle(
-                        style = SpanStyle(
-                            color = MainGreen,
-                        ),
-                    ) {
-                        append("레스티")
-                    }
-                    append("오")
-                }
+                searchKeyword = "레스티"
             )
         )
     )
@@ -120,33 +110,13 @@ private fun HomeSearchBottomSheetWithItemListPreview() {
                 id = 1,
                 name = "카페 레스티오",
                 building = "경영관",
-                annotatedName = buildAnnotatedString {
-                    append("카페 ")
-                    withStyle(
-                        style = SpanStyle(
-                            color = MainGreen,
-                        ),
-                    ) {
-                        append("레스티")
-                    }
-                    append("오")
-                }
+                searchKeyword = "레스티"
             ),
             SearchResult(
                 id = 2,
                 name = "카페 레스티오",
                 building = "공학관",
-                annotatedName = buildAnnotatedString {
-                    append("카페 ")
-                    withStyle(
-                        style = SpanStyle(
-                            color = MainGreen,
-                        ),
-                    ) {
-                        append("레스티")
-                    }
-                    append("오")
-                }
+                searchKeyword = "레스티"
             )
         )
     )

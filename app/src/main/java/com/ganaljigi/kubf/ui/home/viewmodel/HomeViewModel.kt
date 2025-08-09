@@ -55,6 +55,18 @@ class HomeViewModel @Inject constructor(
 
     fun getSearchResults() {
         // TODO: 검색 API 호출
+        val searchWord = uiState.value.searchWord.text
+        viewModelScope.launch {
+            homeRepository.getHomeSearchResult(searchWord).fold(
+                onSuccess = { response ->
+//                    updateSearchResults(response.toUiState(searchWord))
+                },
+                onFailure = { error ->
+                    Log.e("HomeViewModel", "getSearchResults: Error fetching search results", error)
+                }
+            )
+        }
+
         _uiState.update { // 임시
             it.copy(
                 searchResults = persistentListOf(
@@ -63,39 +75,19 @@ class HomeViewModel @Inject constructor(
                         isBuilding = true,
                         name = "경영관",
                         building = "경영관",
-                        annotatedName = buildAnnotatedString { }
+                        searchKeyword = "경영관"
                     ),
                     SearchResult(
                         id = 2,
                         name = "카페 레스티오",
                         building = "경영관",
-                        annotatedName = buildAnnotatedString {
-                            append("카페 ")
-                            withStyle(
-                                style = SpanStyle(
-                                    color = MainGreen,
-                                ),
-                            ) {
-                                append("레스티")
-                            }
-                            append("오")
-                        }
+                        searchKeyword = "경영관"
                     ),
                     SearchResult(
                         id = 3,
                         name = "카페 레스티오",
                         building = "공학관",
-                        annotatedName = buildAnnotatedString {
-                            append("카페 ")
-                            withStyle(
-                                style = SpanStyle(
-                                    color = MainGreen,
-                                ),
-                            ) {
-                                append("레스티")
-                            }
-                            append("오")
-                        }
+                        searchKeyword = "경영관"
                     )
                 )
             )

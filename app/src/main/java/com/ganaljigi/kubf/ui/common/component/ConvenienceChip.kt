@@ -53,6 +53,6 @@ fun ConvenienceChip(
 private fun ConvenienceChipPreview() {
     ConvenienceChip(
         modifier = Modifier.padding(10.dp),
-        convenience = Convenience.CONVENIENCE_STORE,
+        convenience = Convenience.CONVENIENCE,
     )
 }

@@ -1,7 +1,6 @@
 package com.ganaljigi.kubf.ui.home.component.bottomsheet
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,7 +23,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ganaljigi.kubf.ui.home.model.SearchResult
-import com.ganaljigi.kubf.ui.theme.Gray1
 import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.theme.MainGreen
@@ -141,11 +139,7 @@ private fun HomeSearchBottomSheetWithSingleItemPreview() {
             id = 1L,
             name = "카페 레스티오",
             building = "경영관",
-            annotatedName = buildAnnotatedString {
-                withStyle(style = SpanStyle(color = MainGreen)) {
-                    append("건물 이름")
-                }
-            }
+            searchKeyword = "레스티"
         ),
         onFromClick = {},
         onToClick = {},

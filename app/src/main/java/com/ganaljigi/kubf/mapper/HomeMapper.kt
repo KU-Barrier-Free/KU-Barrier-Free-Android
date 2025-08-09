@@ -1,10 +1,14 @@
 package com.ganaljigi.kubf.mapper
 
+import androidx.compose.ui.text.buildAnnotatedString
+import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.data.remote.response.home.HomeResponseDto
+import com.ganaljigi.kubf.data.remote.response.home.HomeSearchResponseDto
 import com.ganaljigi.kubf.data.remote.response.home.HomeSignificantResponseDto
-import com.ganaljigi.kubf.mapper.toBuildingMarkers
+import com.ganaljigi.kubf.ui.common.model.getIconResByName
 import com.ganaljigi.kubf.ui.home.model.BuildingMarker
 import com.ganaljigi.kubf.ui.home.model.MapToggle
+import com.ganaljigi.kubf.ui.home.model.SearchResult
 import com.ganaljigi.kubf.ui.home.model.ToggleMarker
 import com.ganaljigi.kubf.ui.home.viewmodel.HomeUiState
 import com.ganaljigi.kubf.ui.home.viewmodel.SpecialMarkerInfo
@@ -44,3 +48,23 @@ fun List<HomeResponseDto.HomePin>.toToggleMarkers(
         mapToggle = mapToggle
     )
 }.toImmutableList()
+
+fun HomeSearchResponseDto.toUiState(matchKeyword: String): List<SearchResult> =
+    this.buildings.map {
+        SearchResult(
+            id = it.id.toLong(),
+            name = it.name,
+            searchKeyword = matchKeyword,
+            isBuilding = true,
+            icon = R.drawable.ic_building,
+        )
+    } + this.facilities.map {
+        SearchResult(
+            id = it.id.toLong(),
+            name = it.name,
+            building = it.buildingName,
+            searchKeyword = matchKeyword,
+            isBuilding = false,
+            icon = getIconResByName(it.purpose)
+        )
+    }

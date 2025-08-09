@@ -27,7 +27,6 @@ import com.ganaljigi.kubf.ui.home.model.SearchResult
 import com.ganaljigi.kubf.ui.theme.Gray1
 import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
-import com.ganaljigi.kubf.ui.theme.LightGreen
 import com.ganaljigi.kubf.ui.theme.MainGreen
 import com.ganaljigi.kubf.ui.util.noRippleClickable
 
@@ -158,33 +157,13 @@ private fun HomeSearchBottomSheetPreview() {
                 id = 1,
                 name = "카페 레스티오",
                 building = "경영관",
-                annotatedName = buildAnnotatedString {
-                    append("카페 ")
-                    withStyle(
-                        style = SpanStyle(
-                            color = MainGreen,
-                        ),
-                    ) {
-                        append("레스티")
-                    }
-                    append("오")
-                }
+                searchKeyword = "레스티"
             ),
             SearchResult(
                 id = 2,
                 name = "카페 레스티오",
                 building = "공학관",
-                annotatedName = buildAnnotatedString {
-                    append("카페 ")
-                    withStyle(
-                        style = SpanStyle(
-                            color = MainGreen,
-                        ),
-                    ) {
-                        append("레스티")
-                    }
-                    append("오")
-                }
+                searchKeyword = "레스티"
             )
         )
     )
