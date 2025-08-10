@@ -4,11 +4,13 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -53,7 +55,6 @@ fun RoomPic(
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
                     .background(Color(0xFF212121)
                         .copy(alpha = 0.6f),
                         shape = RoundedCornerShape(20.dp)
@@ -61,14 +62,21 @@ fun RoomPic(
             ) {
                 Row(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .padding(horizontal = 8.dp, vertical = 2.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = "${pagerState.currentPage + 1}",
                         style = KUBFAndroidTheme.typography.semiBold13.copy(color = Color.White)
                     )
+                    Spacer(modifier = Modifier.width(1.5.dp))
                     Text(
-                        text = "/${roomPicUrls.size}",
+                        text = "/",
+                        style = KUBFAndroidTheme.typography.regular13.copy(color = Color.White)
+                    )
+                    Spacer(modifier = Modifier.width(1.5.dp))
+                    Text(
+                        text = "${roomPicUrls.size}",
                         style = KUBFAndroidTheme.typography.regular13.copy(color = Color.White)
                     )
                 }
