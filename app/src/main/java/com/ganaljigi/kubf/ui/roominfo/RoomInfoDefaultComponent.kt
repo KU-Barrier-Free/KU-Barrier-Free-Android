@@ -43,6 +43,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.window.Popup
 import com.ganaljigi.kubf.ui.theme.MainGreen
@@ -73,7 +74,10 @@ fun RoomInfoDefaultComponent(
         ) {
             Text(
                 text = "$roomNumber ${roomName ?: ""}",
-                style = KUBFAndroidTheme.typography.semiBold18.copy(fontWeight = FontWeight.Bold),
+                style = KUBFAndroidTheme.typography.regular14.copy(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
+                ),
                 color = Color.Black
             )
             Spacer(modifier = Modifier.width(8.dp))
