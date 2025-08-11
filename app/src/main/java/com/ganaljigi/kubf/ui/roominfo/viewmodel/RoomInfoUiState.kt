@@ -1,6 +1,11 @@
 package com.ganaljigi.kubf.ui.roominfo.viewmodel
 
 data class RoomInfoUiState(
+    //상태 공통
+    val isLoading: Boolean = false,
+    val error: String? = null,
+
+    //기본 정보 (RoomInfoDefault)
     val buildingName: String = "",
     val roomPicUrls: List<String> = emptyList(),
     val roomNumber: String = "",
@@ -13,6 +18,7 @@ data class RoomInfoUiState(
     val department: String = "",
     val departmentNumber: String = "",
 
+    //책상, 의자 정보 (DestAndChair)
     val allInOne: Boolean = false,
     val cinemaSeat: Boolean = false,
     val oneSeat: Boolean = false,
@@ -24,6 +30,7 @@ data class RoomInfoUiState(
     val wheelchairTable: Boolean = false,
     val computerTable: Boolean = false,
 
+    //문 정보 (Door)
     val frontDoor: Boolean = false,
     val backDoor: Boolean = false,
 )
