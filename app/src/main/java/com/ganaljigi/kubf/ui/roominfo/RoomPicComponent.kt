@@ -55,6 +55,7 @@ fun RoomPic(
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
+                    .padding(bottom = 12.dp)
                     .background(Color(0xFF212121)
                         .copy(alpha = 0.6f),
                         shape = RoundedCornerShape(20.dp)
