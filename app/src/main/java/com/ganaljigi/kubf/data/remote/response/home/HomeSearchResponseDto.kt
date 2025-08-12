@@ -14,7 +14,7 @@ data class HomeSearchResponseDto(
     @Serializable
     data class Building(
         @SerialName("id")
-        val id: Int,
+        val id: Long,
         @SerialName("latitude")
         val latitude: Double,
         @SerialName("longitude")
@@ -26,11 +26,11 @@ data class HomeSearchResponseDto(
     @Serializable
     data class Facility(
         @SerialName("buildingId")
-        val buildingId: Int,
+        val buildingId: Long,
         @SerialName("buildingName")
         val buildingName: String,
         @SerialName("id")
-        val id: Int,
+        val id: Long,
         @SerialName("latitude")
         val latitude: Double,
         @SerialName("longitude")

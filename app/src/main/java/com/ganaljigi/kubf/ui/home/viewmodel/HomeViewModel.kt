@@ -59,7 +59,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             homeRepository.getHomeSearchResult(searchWord).fold(
                 onSuccess = { response ->
-//                    updateSearchResults(response.toUiState(searchWord))
+                    updateSearchResults(response.toUiState(searchWord))
                 },
                 onFailure = { error ->
                     Log.e("HomeViewModel", "getSearchResults: Error fetching search results", error)

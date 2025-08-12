@@ -1,5 +1,6 @@
 package com.ganaljigi.kubf.ui.util
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.remember
@@ -45,6 +46,8 @@ fun Int.toDistanceString(): String {
 fun String.toAnnotatedString(matchKeyword: String): AnnotatedString {
     val firstIndex = this.indexOf(matchKeyword, ignoreCase = true)
     val lastIndex = this.lastIndexOf(matchKeyword, ignoreCase = true)
+    if (this.isEmpty() || firstIndex == -1 || lastIndex == -1)
+        return AnnotatedString(this)
 
     return buildAnnotatedString {
         append(this@toAnnotatedString.substring(0 until firstIndex))
