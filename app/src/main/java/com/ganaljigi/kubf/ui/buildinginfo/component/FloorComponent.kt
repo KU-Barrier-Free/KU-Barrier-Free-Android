@@ -59,7 +59,7 @@ fun FloorComponent(
 private fun FloorCompPreview() {
     val facilities = Facility.entries.toList()
     val urllist = mutableListOf("httpsL")
-    val rooms = mutableListOf(Room(urllist,"101", "전산실습실", "강의실", mutableListOf<String>()))
-    val floorInfos = mutableListOf(FloorInfo(1,"https://",facilities, rooms))
-    floorInfos.add(FloorInfo(2,"https://",facilities, rooms))
+    //val rooms = mutableListOf(Room(urllist,"101", "전산실습실", "강의실", mutableListOf<String>()))
+   // val floorInfos = mutableListOf(FloorInfo(1,"https://",facilities, rooms))
+    //floorInfos.add(FloorInfo(2,"https://",facilities, rooms))
 }
