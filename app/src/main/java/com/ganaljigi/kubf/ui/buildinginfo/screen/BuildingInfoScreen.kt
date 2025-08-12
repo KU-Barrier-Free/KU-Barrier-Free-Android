@@ -2,17 +2,13 @@ package com.ganaljigi.kubf.ui.buildinginfo.screen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -53,15 +49,8 @@ import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.ui.buildinginfo.component.DoorComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.FacilityComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.FloorComponent
-import com.ganaljigi.kubf.ui.buildinginfo.component.NoteComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.SearchPopup
-import com.ganaljigi.kubf.ui.buildinginfo.model.BuildingInfo
 import com.ganaljigi.kubf.ui.buildinginfo.model.Door
-import com.ganaljigi.kubf.ui.buildinginfo.model.Facility
-import com.ganaljigi.kubf.ui.buildinginfo.model.FloorInfo
-import com.ganaljigi.kubf.ui.buildinginfo.model.Note
-import com.ganaljigi.kubf.ui.buildinginfo.model.Room
-import com.ganaljigi.kubf.ui.buildinginfo.model.TotalFloor
 import com.ganaljigi.kubf.ui.buildinginfo.viewmodel.BuildingViewModel
 import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.Gray4
@@ -80,12 +69,71 @@ fun BuildingInfoScreen( // id 값 (int) 만 받기
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var selectedIndex by remember { mutableStateOf(0) }
     val floors = uiState.totalFloor.floorList
-    val current = floors[selectedIndex]
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
 
+    val safeIndex = selectedIndex.coerceIn(0,(floors.size -1).coerceAtLeast(0))
+    val current = floors.getOrNull(safeIndex)
+
     var showSearchPopup by remember { mutableStateOf(false) }
-    var searchValue by remember { mutableStateOf(TextFieldValue()) }
+
+    if(floors.isEmpty()){
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    navigationIcon = {
+                        IconButton(onClick = onBack) {
+                            Icon(Icons.Filled.ArrowBack, contentDescription = "뒤로")
+                        }
+                    },
+                    title = {
+                        Text(
+                            text = uiState.buildingInfo.name,
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center,
+                            style = KUBFAndroidTheme.typography.medium15.copy(
+                                fontSize = 16.sp
+                            )
+                        )
+                    },
+                    actions = {
+                        IconButton(onClick = {
+                            showSearchPopup = true
+                            onSearch()
+                        }) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_search_bar_leading),
+                                contentDescription = "검색"
+                            )
+                        }
+                    }
+                )
+            }
+        ) { inner ->
+            Box(Modifier.fillMaxSize().padding(inner), contentAlignment = Alignment.Center){
+                Text("층 정보 로딩 중...")
+            }
+
+            if (showSearchPopup) {
+                Dialog(
+                    onDismissRequest = {
+                        showSearchPopup = false
+                        viewModel.clearQuery()
+                    }
+                ) {
+                    SearchPopup(
+                        modifier = Modifier,
+                        onClose = {
+                            showSearchPopup = false
+                            viewModel.clearQuery()
+                        },
+                        onRoomClick = {}
+                    )
+                }
+            }
+        }
+        return
+    }
 
     Scaffold(
         topBar = {
@@ -229,7 +277,6 @@ fun BuildingInfoScreen( // id 값 (int) 만 받기
                                 onClick = {
                                     selectedIndex = idx
                                     scope.launch {
-                                        //listState.animateScrollToItem(1)
                                         listState.scrollToItem(1)
                                     }
                                 },
@@ -282,45 +329,25 @@ fun BuildingInfoScreen( // id 값 (int) 만 받기
             }
             item {
                 Spacer(Modifier.height(16.dp))
-                FloorComponent(current) { }
+                current?.let { FloorComponent(it) { } }
             }
         }
         if (showSearchPopup) {
-            Dialog(
-                onDismissRequest = {}
-            ) {
-
-            }
-            Box(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Black.copy(0.4f))
-                        .clickable { showSearchPopup = false })
-                Box(
-                    modifier = Modifier
-                        .size(width = 328.dp, height = 302.dp)
-                        .align(Alignment.Center)
-                        .offset(y = (-60).dp)
-                        .clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() }) {},
-                    contentAlignment = Alignment.Center
-                ) {
-                    SearchPopup(
-                        modifier = Modifier,
-                        value = searchValue,
-                        onValueChange = { searchValue = it },
-                        onClose = {
-                            showSearchPopup = false
-                        }
-                    )
+            Dialog( // TODO: 위치 조정
+                onDismissRequest = {
+                    showSearchPopup = false
+                    viewModel.clearQuery()
                 }
+            ) {
+                SearchPopup(
+                    modifier = Modifier,
+                    onClose = {
+                        showSearchPopup = false
+                        viewModel.clearQuery()
+                    },
+                    onRoomClick = {}
+                )
             }
-
-
         }
     }
 }
@@ -328,21 +355,6 @@ fun BuildingInfoScreen( // id 값 (int) 만 받기
 @Preview
 @Composable
 private fun PreviewBuilding() {
-    val doors = mutableListOf(Door("https://", "경영관", "A", false))
-    doors.add(Door("https://", "경영관", "A-2", true))
-    val facilities = Facility.entries.toList()
-    val urllist = mutableListOf("httpsL")
-    val rooms = mutableListOf(Room(urllist, "101", "전산실습실", "강의실", mutableListOf<String>()))
-    val floorInfos = mutableListOf(FloorInfo(1, "https://", facilities, rooms))
-    floorInfos.add(FloorInfo(2, "https://", facilities, rooms))
-    //floorInfos.add(FloorInfo(3,"https://",features, rooms))
-    val totalFloor = TotalFloor(2, floorInfos)
-//    val building =
-//        BuildingInfo("경영관", 2, "경영대학", "http://", Note("2층 구름다리로", mutableListOf("", "")))
-//    BuildingInfoScreen(
-//        building, facilities, doors, totalFloor,
-//        onBack = {},
-//        onSearch = {},
-//        onDoorClick = {})
+
 
 }

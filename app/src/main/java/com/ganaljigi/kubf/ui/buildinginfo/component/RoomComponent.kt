@@ -143,6 +143,6 @@ fun RoomComponent(
 @Composable
 private fun PreviewRoom() {
     var urlL = mutableListOf("http")
-    val room = Room(urlL, "101", "전산실습실", "강의", mutableListOf("경사로"))
-    RoomComponent(room)
+    //val room = Room(urlL, "101", "전산실습실", "강의", mutableListOf("경사로"))
+   // RoomComponent(room)
 }
