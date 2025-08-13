@@ -7,7 +7,9 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.withStyle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ganaljigi.kubf.data.remote.repository.BuildingRepository
 import com.ganaljigi.kubf.data.remote.repository.HomeRepository
+import com.ganaljigi.kubf.mapper.toHomeBuildingInfo
 import com.ganaljigi.kubf.mapper.toSpecialMarkerInfo
 import com.ganaljigi.kubf.mapper.toUiState
 import com.ganaljigi.kubf.ui.common.model.Convenience
@@ -31,6 +33,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val homeRepository: HomeRepository,
+    private val buildingRepository: BuildingRepository,
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
@@ -100,9 +103,75 @@ class HomeViewModel @Inject constructor(
         updateSpecialMarkerInfo(selectedSpecialMarker)
     }
 
-    fun updateBuildingInfo(buildingInfo: HomeBuildingInfo) {
+    fun updateBuildingInfo(
+        buildingId: Long = 1L,
+    ) {
+
+        val buildingInfo = if (buildingId == 1L) {
+            HomeBuildingInfo(
+                id = 1L,
+                name = "경영관",
+                buildingNumber = 1,
+                latitude = 0.0,
+                longitude = 0.0,
+                convenienceList = Convenience.entries.toImmutableList(),
+                doorInfoList = persistentListOf(
+                    DoorInfo(
+                        label = "B",
+                        imageUrl = "",
+                        description = "입구 설명",
+                        isWheelchairAccessible = true
+                    ),
+                    DoorInfo(
+                        label = "B",
+                        imageUrl = "",
+                        description = "입구 설명",
+                        isWheelchairAccessible = true
+                    ),
+                )
+            )
+        } else {
+            HomeBuildingInfo(
+                id = 2L,
+                name = "새천년관",
+                buildingNumber = 2,
+                latitude = 0.0,
+                longitude = 0.0,
+                convenienceList = Convenience.entries.take(4).toImmutableList(),
+                doorInfoList = persistentListOf(
+                    DoorInfo(
+                        label = "B",
+                        imageUrl = "",
+                        description = "입구 설명",
+                        isWheelchairAccessible = true
+                    ),
+                    DoorInfo(
+                        label = "B",
+                        imageUrl = "",
+                        description = "입구 설명",
+                        isWheelchairAccessible = true
+                    ),
+                )
+            )
+        }
+
         // TODO: 건물 정보 API 호출
         viewModelScope.launch {
+            buildingRepository.getBuildingInfo(buildingId = buildingId)
+                .onSuccess { response ->
+//                    _uiState.update {
+//                        it.copy(
+//                            buildingInfo = response.toHomeBuildingInfo()
+//                        )
+//                    }
+                }
+                .onFailure { error ->
+                    Log.e(
+                        "HomeViewModel",
+                        "updateBuildingInfo: Error fetching building info",
+                        error
+                    )
+                }
 
         }
         _uiState.update { it.copy(buildingInfo = buildingInfo) }
@@ -203,30 +272,7 @@ class HomeViewModel @Inject constructor(
 
     private fun getBuildingInfoByResult(searchResult: SearchResult) {
         // TODO: 건물 정보 API 호출
-        updateBuildingInfo(
-            HomeBuildingInfo(
-                id = 1L,
-                name = "경영관",
-                buildingNumber = 1,
-                latitude = 0.0,
-                longitude = 0.0,
-                convenienceList = Convenience.entries.toImmutableList(),
-                doorInfoList = persistentListOf(
-                    DoorInfo(
-                        label = "B",
-                        imageUrl = "",
-                        description = "입구 설명",
-                        isWheelchairAccessible = true
-                    ),
-                    DoorInfo(
-                        label = "B",
-                        imageUrl = "",
-                        description = "입구 설명",
-                        isWheelchairAccessible = true
-                    ),
-                )
-            )
-        )
+        updateBuildingInfo(searchResult.id)
         _uiState.update {
             it.copy(
                 bottomSheetType = HomeBottomSheetType.BUILDING_INFO,
@@ -236,55 +282,7 @@ class HomeViewModel @Inject constructor(
 
     fun getBuildingInfoByMarker(selectedBuildingMarker: BuildingMarker) {
         // TODO: 건물 정보 API 호출
-        updateBuildingInfo(
-            if (selectedBuildingMarker.id == 1L) {
-                HomeBuildingInfo(
-                    id = 1L,
-                    name = "경영관",
-                    buildingNumber = 1,
-                    latitude = selectedBuildingMarker.latitude,
-                    longitude = selectedBuildingMarker.longitude,
-                    convenienceList = Convenience.entries.toImmutableList(),
-                    doorInfoList = persistentListOf(
-                        DoorInfo(
-                            label = "B",
-                            imageUrl = "",
-                            description = "입구 설명",
-                            isWheelchairAccessible = true
-                        ),
-                        DoorInfo(
-                            label = "B",
-                            imageUrl = "",
-                            description = "입구 설명",
-                            isWheelchairAccessible = true
-                        ),
-                    )
-                )
-            } else {
-                HomeBuildingInfo(
-                    id = 2L,
-                    name = "새천년관",
-                    buildingNumber = 2,
-                    latitude = selectedBuildingMarker.latitude,
-                    longitude = selectedBuildingMarker.longitude,
-                    convenienceList = Convenience.entries.take(4).toImmutableList(),
-                    doorInfoList = persistentListOf(
-                        DoorInfo(
-                            label = "B",
-                            imageUrl = "",
-                            description = "입구 설명",
-                            isWheelchairAccessible = true
-                        ),
-                        DoorInfo(
-                            label = "B",
-                            imageUrl = "",
-                            description = "입구 설명",
-                            isWheelchairAccessible = true
-                        ),
-                    )
-                )
-            }
-        )
+        updateBuildingInfo(selectedBuildingMarker.id)
         updateSelectedBuildingMarker(selectedBuildingMarker)
     }
 
