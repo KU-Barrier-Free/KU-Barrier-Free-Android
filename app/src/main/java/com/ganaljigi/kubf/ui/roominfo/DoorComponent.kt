@@ -34,7 +34,7 @@ fun DoorComponent(
 
         Text(
             text = "출입문",
-            style = KUBFAndroidTheme.typography.semiBold14
+            style = KUBFAndroidTheme.typography.semiBold16
         )
 
         Spacer(modifier = Modifier.height(12.dp))
