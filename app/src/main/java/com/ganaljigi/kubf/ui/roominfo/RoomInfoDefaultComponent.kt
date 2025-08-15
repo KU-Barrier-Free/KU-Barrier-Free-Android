@@ -41,11 +41,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import com.ganaljigi.kubf.ui.theme.MainGreen
 import com.ganalijigi.kubf.R
 
@@ -231,15 +234,15 @@ fun RoomInfoDefaultComponent(
             }
 
             if (showTooltip) {
-                Box(
-                    modifier = Modifier
-                        .matchParentSize()
-                        .clickable { showTooltip = false }
-                )
+                val density = LocalDensity.current
+                val xOffset = with(density) { (-16).dp.roundToPx() }
+                val yOffset = with(density) { 0.dp.roundToPx() }
 
                 Popup (
                     alignment = Alignment.TopEnd,
-                    offset = IntOffset(x = -16, y = 56)
+                    offset = IntOffset(x = xOffset, y = yOffset),
+                    properties = PopupProperties(focusable = true),
+                    onDismissRequest = { showTooltip = false }
                 ) {
                     Box(
                         modifier = Modifier
@@ -247,7 +250,8 @@ fun RoomInfoDefaultComponent(
                             .shadow(elevation = 4.dp, shape = RoundedCornerShape(8.dp))
                             .clip(RoundedCornerShape(8.dp))
                             .background(Color.White)
-                            .padding(12.dp)
+                            .padding(12.dp),
+                        contentAlignment = Alignment.CenterStart
                     ) {
                         Text(
                             text = buildAnnotatedString {
@@ -256,7 +260,10 @@ fun RoomInfoDefaultComponent(
                                 withStyle(SpanStyle(color = MainGreen)) { append("계단식") }
                                 append("은 바닥에 단차가 있는 호실입니다.")
                             },
-                            style = KUBFAndroidTheme.typography.regular14
+                            style = KUBFAndroidTheme.typography.regular14.copy(
+                                lineHeight = 25.sp,
+                                letterSpacing = (-0.025).em
+                            )
                         )
                     }
                 }
