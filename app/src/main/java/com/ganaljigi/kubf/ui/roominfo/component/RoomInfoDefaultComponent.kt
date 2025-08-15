@@ -121,7 +121,7 @@ fun RoomInfoDefaultComponent(
             Icon(
                 painter = painterResource(R.drawable.ic_roominfo_area),
                 contentDescription = "면적",
-                tint = Gray3,
+                tint = Gray4,
                 modifier = Modifier
                     .size(20.dp)
             )
@@ -182,7 +182,7 @@ fun RoomInfoDefaultComponent(
                 Icon(
                     painter = painterResource(R.drawable.ic_roominfo_roomtypequestion),
                     contentDescription = "호실 형태 설명",
-                    tint = Gray3,
+                    tint = Gray4,
                     modifier = Modifier
                         .size(20.dp)
                 )
@@ -203,7 +203,7 @@ fun RoomInfoDefaultComponent(
                     modifier = Modifier
                         .size(18.dp)
                         .clickable { showTooltip = true },
-                    tint = Gray3
+                    tint = Gray4
                 )
 
                 Spacer(Modifier.width(1.5.dp))
@@ -264,7 +264,7 @@ fun RoomInfoDefaultComponent(
                     contentDescription = "관리 부서",
                     modifier = Modifier
                         .size(20.dp),
-                    tint = Gray3
+                    tint = Gray4
                 )
 
                 Spacer(Modifier.width(8.dp))
@@ -292,14 +292,14 @@ fun RoomInfoDefaultComponent(
                     contentDescription = "관리 부서 전화번호",
                     modifier = Modifier
                         .size(20.dp),
-                    tint = Gray3
+                    tint = Gray4
                 )
 
                 Text(
                     text = departmentNumber,
                     modifier = Modifier,
                     style = KUBFAndroidTheme.typography.regular14,
-                    color = Gray3
+                    color = Gray4
                 )
             }
         }
