@@ -46,10 +46,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.window.Popup
-import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.ui.theme.MainGreen
-
-//import com.ganaljigi.kubf.R
+import com.ganalijigi.kubf.R
 
 @Composable
 fun RoomInfoDefaultComponent(
@@ -66,7 +64,7 @@ fun RoomInfoDefaultComponent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 16.dp)
+            .padding(horizontal = 16.dp, vertical = 16.dp)
     ) {
         // 상단 제목 + 강의실 칩
         Row(
@@ -94,22 +92,17 @@ fun RoomInfoDefaultComponent(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(
-                Modifier
+
+            Icon(
+                painter = painterResource(R.drawable.ic_roominfo_capacity),
+                contentDescription = "수용 인원",
+                tint = Color.Unspecified,
+                modifier = Modifier
                     .size(20.dp)
-                    .background(color = Color.White),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_roominfo_capacity),
-                    contentDescription = "수용 인원",
-                    tint = Gray3,
-                    modifier = Modifier
-                        .size(20.dp)
-                        .padding(start = 16.dp, end = 8.dp)
-                        .align(Alignment.Center)
-                )
-            }
+            )
+
+            Spacer(Modifier.width(8.dp))
+
             Text(
                 text = "수용 인원",
                 style = KUBFAndroidTheme.typography.regular14,
@@ -118,7 +111,6 @@ fun RoomInfoDefaultComponent(
             Spacer(modifier = Modifier.weight(1f))
             Row(
                 verticalAlignment = Alignment.Bottom,
-                modifier = Modifier.padding(end = 16.dp)
             ) {
                 Text(
                     text = "$capacity",
@@ -147,8 +139,10 @@ fun RoomInfoDefaultComponent(
                 tint = Gray3,
                 modifier = Modifier
                     .size(20.dp)
-                    .padding(start = 16.dp, end = 8.dp)
             )
+
+            Spacer(Modifier.width(8.dp))
+
             Text(
                 text = "면적",
                 style = KUBFAndroidTheme.typography.regular14,
@@ -157,7 +151,6 @@ fun RoomInfoDefaultComponent(
             Spacer(modifier = Modifier.weight(1f))
             Row(
                 verticalAlignment = Alignment.Bottom,
-                modifier = Modifier.padding(end = 16.dp)
             ) {
                 Text(
                     text = "$area ",
@@ -198,8 +191,7 @@ fun RoomInfoDefaultComponent(
         ) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(end = 16.dp),
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
@@ -208,8 +200,10 @@ fun RoomInfoDefaultComponent(
                     tint = Gray3,
                     modifier = Modifier
                         .size(20.dp)
-                        .padding(start = 16.dp, end = 8.dp)
                 )
+
+                Spacer(Modifier.width(8.dp))
+
                 Text(
                     text = "호실 형태",
                     style = KUBFAndroidTheme.typography.regular14,
@@ -219,13 +213,16 @@ fun RoomInfoDefaultComponent(
 
                 Spacer(modifier = Modifier.width(4.dp))
                 Icon(
-                    imageVector = Icons.Default.Info,
+                    painter = painterResource(R.drawable.ic_roominfo_roomtypequestion),
                     contentDescription = "도움말",
                     modifier = Modifier
                         .size(18.dp)
                         .clickable { showTooltip = true },
                     tint = Gray3
                 )
+
+                Spacer(Modifier.width(1.5.dp))
+
                 Text(
                     text = roomType,
                     style = KUBFAndroidTheme.typography.semiBold16,
@@ -274,14 +271,15 @@ fun RoomInfoDefaultComponent(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    //painter = painterResource(id = R.drawable.ic_roominfo_department),
-                    imageVector = Icons.Default.Info,
+                Icon(painter = painterResource(id = R.drawable.ic_roominfo_department),
                     contentDescription = "관리 부서",
                     modifier = Modifier
-                        .size(20.dp)
-                        .padding(start = 16.dp, end = 8.dp)
+                        .size(20.dp),
+                    tint = Gray3
                 )
+
+                Spacer(Modifier.width(8.dp))
+
                 Text(
                     text = "관리 부서",
                     style = KUBFAndroidTheme.typography.regular14,
@@ -292,17 +290,29 @@ fun RoomInfoDefaultComponent(
                     text = department,
                     style = KUBFAndroidTheme.typography.semiBold16,
                     color = Color.Black,
-                    modifier = Modifier.padding(end = 16.dp, bottom = 4.dp)
+                    modifier = Modifier.padding(bottom = 4.dp)
                 )
             }
-            Text(
-                text = departmentNumber,
+
+            Row(
                 modifier = Modifier
                     .align(Alignment.End)
-                    .padding(end = 16.dp),
-                style = KUBFAndroidTheme.typography.regular14,
-                color = Gray3
-            )
+            ) {
+                Icon(
+                    painter = painterResource(id=R.drawable.ic_roominfo_departmentnumber),
+                    contentDescription = "관리 부서 전화번호",
+                    modifier = Modifier
+                        .size(20.dp),
+                    tint = Gray3
+                )
+
+                Text(
+                    text = departmentNumber,
+                    modifier = Modifier,
+                    style = KUBFAndroidTheme.typography.regular14,
+                    color = Gray3
+                )
+            }
         }
     }
 }
