@@ -1,5 +1,6 @@
-package com.ganaljigi.kubf.ui.roominfo
+package com.ganaljigi.kubf.ui.roominfo.service
 
+import com.ganaljigi.kubf.ui.roominfo.response.RoomInfoResponseDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

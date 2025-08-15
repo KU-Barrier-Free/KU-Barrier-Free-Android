@@ -1,5 +1,8 @@
-package com.ganaljigi.kubf.ui.roominfo
+package com.ganaljigi.kubf.ui.roominfo.repositoryimpl
 
+import com.ganaljigi.kubf.ui.roominfo.response.RoomInfoResponseDto
+import com.ganaljigi.kubf.ui.roominfo.service.RoomInfoService
+import com.ganaljigi.kubf.ui.roominfo.repository.RoomInfoRepository
 import javax.inject.Inject
 
 class RoomInfoRepositoryImpl @Inject constructor(

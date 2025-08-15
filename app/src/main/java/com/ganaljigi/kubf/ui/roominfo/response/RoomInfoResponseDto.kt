@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.roominfo
+package com.ganaljigi.kubf.ui.roominfo.response
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

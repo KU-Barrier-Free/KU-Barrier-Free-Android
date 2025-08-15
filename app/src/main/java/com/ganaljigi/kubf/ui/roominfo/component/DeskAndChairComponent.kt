@@ -1,7 +1,6 @@
-package com.ganaljigi.kubf.ui.roominfo
+package com.ganaljigi.kubf.ui.roominfo.component
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,7 +12,6 @@ import com.ganaljigi.kubf.ui.theme.Gray1
 import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.theme.MainGreen
-import java.nio.file.WatchEvent
 
 @Composable
 fun DeskAndChairComponent(

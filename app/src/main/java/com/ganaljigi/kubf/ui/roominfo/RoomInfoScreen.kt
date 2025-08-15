@@ -10,12 +10,15 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ganaljigi.kubf.ui.roominfo.component.DeskAndChairComponent
+import com.ganaljigi.kubf.ui.roominfo.component.DoorComponent
+import com.ganaljigi.kubf.ui.roominfo.component.RoomInfoDefaultComponent
+import com.ganaljigi.kubf.ui.roominfo.component.RoomInfoTopAppBar
+import com.ganaljigi.kubf.ui.roominfo.component.RoomPic
 import com.ganaljigi.kubf.ui.roominfo.viewmodel.RoomInfoUiState
 import com.ganaljigi.kubf.ui.roominfo.viewmodel.RoomInfoViewModel
 

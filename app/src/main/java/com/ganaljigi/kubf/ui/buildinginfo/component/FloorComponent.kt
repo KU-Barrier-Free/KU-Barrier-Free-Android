@@ -53,12 +53,12 @@ fun FloorComponent(
     }
 }
 
-@Preview
-@Composable
-private fun FloorCompPreview() {
-    val facilities = Facility.entries.toList()
-    val urllist = mutableListOf("httpsL")
-    val roomData = mutableListOf(RoomData(urllist,"101", "전산실습실", "강의실", mutableListOf<String>()))
-    val floorInfos = mutableListOf(FloorInfoData(1,"https://",facilities, roomData))
-    floorInfos.add(FloorInfoData(2,"https://",facilities, roomData))
-}
+//@Preview
+//@Composable
+//private fun FloorCompPreview() {
+//    val facilities = Facility.entries.toList()
+//    val urllist = mutableListOf("httpsL")
+//    val roomData = mutableListOf(RoomData(urllist,"101", "전산실습실", "강의실", mutableListOf<String>()))
+//    val floorInfos = mutableListOf(FloorInfoData(1,"https://",facilities, roomData))
+//    floorInfos.add(FloorInfoData(2,"https://",facilities, roomData))
+//}

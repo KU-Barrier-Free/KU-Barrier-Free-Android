@@ -3,13 +3,12 @@ package com.ganaljigi.kubf.ui.roominfo.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ganaljigi.kubf.ui.roominfo.RoomInfoRepository
-import com.ganaljigi.kubf.ui.roominfo.toUiState
+import com.ganaljigi.kubf.ui.roominfo.repository.RoomInfoRepository
+import com.ganaljigi.kubf.ui.roominfo.mapper.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
