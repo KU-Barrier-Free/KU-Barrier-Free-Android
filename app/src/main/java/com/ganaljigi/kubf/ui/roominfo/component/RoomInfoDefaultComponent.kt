@@ -174,6 +174,8 @@ fun RoomInfoDefaultComponent(
         Box(
             modifier = Modifier.fillMaxWidth()
         ) {
+            var anchorTopPx by remember { mutableStateOf(0) }
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -217,8 +219,10 @@ fun RoomInfoDefaultComponent(
 
             if (showTooltip) {
                 val density = LocalDensity.current
-                val xOffset = with(density) { (-16).dp.roundToPx() }
-                val yOffset = with(density) { 0.dp.roundToPx() }
+                val popupHeightPx = with(density) { 82.dp.roundToPx() }
+                val gapPx = with(density) { 12.dp.roundToPx() }
+                val xOffset = with(density) { 0.dp.roundToPx() }
+                val yOffset = anchorTopPx - popupHeightPx - gapPx
 
                 Popup (
                     alignment = Alignment.TopEnd,
