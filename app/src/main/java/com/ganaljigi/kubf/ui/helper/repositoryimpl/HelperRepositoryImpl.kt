@@ -8,11 +8,8 @@ import javax.inject.Inject
 class HelperRepositoryImpl @Inject constructor(
     private val service: HelperService
 ) : HelperRepository {
-    override suspend fun getHelper(
-        title: String,
-        date: String,
-        url: String
-    ): Result<HelperNoticeResponseDto> = runCatching {
+
+    override suspend fun fetchNotices(): Result<HelperNoticeResponseDto> = runCatching {
         service.getSupportCenterNotices()
     }
 }

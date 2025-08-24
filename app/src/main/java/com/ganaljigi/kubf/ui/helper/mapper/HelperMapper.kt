@@ -1,12 +1,9 @@
 package com.ganaljigi.kubf.ui.helper.mapper
 
-import android.R.id.message
-import coil3.util.CoilUtils.result
 import com.ganaljigi.kubf.ui.helper.response.HelperNoticeDto
 import com.ganaljigi.kubf.ui.helper.response.HelperNoticeResponseDto
 import com.ganaljigi.kubf.ui.helper.viewmodel.HelperUiState
 import com.ganaljigi.kubf.ui.helper.viewmodel.NoticeUi
-import kotlin.Result.Companion.success
 
 
 //상태? 에 대한~것!
@@ -35,5 +32,3 @@ fun HelperNoticeDto.toUi(): NoticeUi = NoticeUi(
     date = date,
     url = url
 )
-
-//저녁 뭐먹을까

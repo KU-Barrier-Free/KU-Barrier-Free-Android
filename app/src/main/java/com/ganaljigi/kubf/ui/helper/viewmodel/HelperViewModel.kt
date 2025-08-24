@@ -13,6 +13,9 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,6 +33,10 @@ class HelperViewModel @Inject constructor(
             initialValue = HelperUiState()
         )
 
+    private val dateFmt = DateTimeFormatter.ofPattern("yyyy.MM.dd", Locale.KOREA)
+    private fun String.toLocalDateOrMin(): LocalDate =
+        runCatching { LocalDate.parse(this, dateFmt) }.getOrElse { LocalDate.MIN }
+
     fun loadNotices(
 
     ) {
@@ -38,7 +45,14 @@ class HelperViewModel @Inject constructor(
             repository.fetchNotices().fold(
                 onSuccess = { dto ->
                     val mapped = dto.toUiState()
-                    _uiState.value = mapped.copy(isLoading = false)
+                    val top3 = mapped.notices
+                        .sortedByDescending { it.date.toLocalDateOrMin() }
+                        .take(3)
+
+                    _uiState.value = mapped.copy(
+                        isLoading = false,
+                        notices = top3
+                    )
                 },
                 onFailure = { e ->
                      _uiState.update { it.copy(isLoading = false, error = e.message ?: "") }

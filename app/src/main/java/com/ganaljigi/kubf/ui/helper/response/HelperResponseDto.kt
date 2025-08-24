@@ -1,4 +1,3 @@
-
 package com.ganaljigi.kubf.ui.helper.response
 
 import kotlinx.serialization.SerialName
