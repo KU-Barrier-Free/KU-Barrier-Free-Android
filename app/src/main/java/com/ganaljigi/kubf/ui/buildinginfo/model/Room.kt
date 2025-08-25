@@ -5,6 +5,6 @@ data class Room(
     val imageUrl: List<String> = emptyList(),
     val number: String = "",
     val name: String="",
-    val use: String="",
+    val isLecture: Boolean = false,
     val note: List<String> = emptyList()
 )

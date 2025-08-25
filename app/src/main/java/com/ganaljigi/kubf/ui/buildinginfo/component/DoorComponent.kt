@@ -75,7 +75,7 @@ fun DoorCard(door: Door) {
             ) {
                 AsyncImage(
                     model = door.imageUrl,
-                    contentDescription = "${door.label} ${door.number}",
+                    contentDescription = "${door.label}",
                     modifier = Modifier.matchParentSize()
                         .clip(RoundedCornerShape(10.dp))
                         .background(Gray2),
@@ -93,7 +93,7 @@ fun DoorCard(door: Door) {
                     contentAlignment = Alignment.Center,
                     ) {
                     Text( // 출입문 이름
-                        text = door.number,
+                        text = door.label,
                         style = KUBFAndroidTheme.typography.medium14,
                         color = Color.White,
                         modifier = Modifier.padding(horizontal = 3.dp)
@@ -119,7 +119,7 @@ fun DoorCard(door: Door) {
 @Preview
 @Composable
 private fun DoorPreview() {
-    val doors = mutableListOf(Door("https://", "창의관", "A", false))
-    doors.add(Door("https://", "창의관", "B", true))
-    DoorComponent(doors)
+//    val doors = mutableListOf(Door("https://", "창의관", "A", false))
+//    doors.add(Door("https://", "창의관", "B", true))
+//    DoorComponent(doors)
 }

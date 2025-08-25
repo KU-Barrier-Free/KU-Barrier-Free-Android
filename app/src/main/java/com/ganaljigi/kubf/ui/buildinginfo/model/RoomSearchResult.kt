@@ -8,5 +8,5 @@ data class RoomSearchResult(
     val name: String = "",
     val building: String = "",
     val room: Room? = null,
-    @DrawableRes val icon: Int = R.drawable.ic_toggle_curb, // TODO: Response 형식에 맞춰 수정
+    @DrawableRes val icon: Int = R.drawable.ic_toggle_curb
 )

@@ -26,6 +26,7 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,7 +37,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,12 +45,14 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import com.ganalijigi.kubf.BuildConfig
 import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.ui.buildinginfo.component.DoorComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.FacilityComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.FloorComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.SearchPopup
 import com.ganaljigi.kubf.ui.buildinginfo.model.Door
+import com.ganaljigi.kubf.ui.buildinginfo.model.Room
 import com.ganaljigi.kubf.ui.buildinginfo.viewmodel.BuildingViewModel
 import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.Gray4
@@ -61,12 +63,35 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun BuildingInfoScreen( // id 값 (int) 만 받기
+    buildingId: Long,
     onBack: () -> Unit,
     onSearch: () -> Unit,
     onDoorClick: (Door) -> Unit,
     viewModel: BuildingViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    LaunchedEffect(buildingId) {
+        if(BuildConfig.DEBUG){
+            viewModel.loadDemoIfEmpty()
+            viewModel.loading()
+        }
+
+        // TODO: 실제 저장소에서 해당 건물 방 목록 불러오기
+        // val rooms = repo.getRooms(buildingId)
+        val rooms = listOf(
+            Room(id=1, name="전산실습실", number="102"),
+            Room(id=2, name="전산실습실", number="103"),
+            Room(id=3, name="전산실습실", number="104"),
+            Room(id=4, name="세미나실",   number="201"),
+        )
+        viewModel.setBuilding(
+            buildingId = buildingId,
+            buildingName = "경영관",      // 실제 데이터로 교체
+            rooms = rooms
+        )
+        viewModel.clearQuery()            // 진입 시 검색어 초기화(선택)
+    }
+
     var selectedIndex by remember { mutableStateOf(0) }
     val floors = uiState.totalFloor.floorList
     val listState = rememberLazyListState()
