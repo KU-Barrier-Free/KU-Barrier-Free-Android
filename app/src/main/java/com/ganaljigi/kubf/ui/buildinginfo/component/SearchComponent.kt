@@ -1,12 +1,16 @@
 package com.ganaljigi.kubf.ui.buildinginfo.component
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -26,16 +30,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.min
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ganaljigi.kubf.ui.buildinginfo.model.Room
 import com.ganaljigi.kubf.ui.buildinginfo.model.RoomSearchResult
+import com.ganaljigi.kubf.ui.buildinginfo.viewmodel.BuildingUIState
 import com.ganaljigi.kubf.ui.buildinginfo.viewmodel.BuildingViewModel
 import com.ganaljigi.kubf.ui.common.component.KUBFSearchBar
 import com.ganaljigi.kubf.ui.theme.Gray3
-import com.ganaljigi.kubf.ui.theme.Gray4
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.theme.MainGreen
+import kotlinx.collections.immutable.toPersistentList
+import kotlin.math.exp
 
 @Composable
 fun SearchPopup(
@@ -48,10 +54,19 @@ fun SearchPopup(
 
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused = interactionSource.collectIsFocusedAsState().value
+
+    val hasQuery = ui.query.text.isNotBlank()
+    val hasResult = ui.result.isNotEmpty()
+
+    val expanded = isFocused || hasQuery
+
+    val popupHeight by animateDpAsState(
+        targetValue = if(expanded) 480.dp else 302.dp
+    )
     Box(
         modifier = Modifier
             .width(328.dp)
-            .heightIn(min = 302.dp, max = 480.dp)
+            .height(popupHeight)
             .clip(shape = RoundedCornerShape(6))
             .background(Color.White)
     ) {
@@ -77,39 +92,76 @@ fun SearchPopup(
                 onValueCleared = { viewModel.clearQuery() }
             )
             Spacer(Modifier.height(24.dp))
-            if (ui.query.text.isNotBlank()) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                ) {
-                    Text(
-                        "결과 ",
-                        style = KUBFAndroidTheme.typography.regular13,
-                        color = Gray3
-                    )
-                    Text(
-                        "${ui.result.size}",
-                        style = KUBFAndroidTheme.typography.regular13,
-                        color = MainGreen
-                    )
+
+            // 결과 개수: 0이면 숨김
+            if (hasQuery && hasResult) {
+                Row(Modifier.padding(horizontal = 16.dp)) {
+                    Text("결과 ", style = KUBFAndroidTheme.typography.regular13, color = Gray3)
+                    Text("${ui.result.size}", style = KUBFAndroidTheme.typography.regular13, color = MainGreen)
                 }
             }
-            Spacer(Modifier.height(12.dp))
-            LazyColumn(
-                modifier = Modifier
+
+            // 본문 영역 (팝업 내부 스크롤/센터 메시지)
+            Box(
+                Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                    .weight(1f)
+                    .padding(horizontal = 16.dp, vertical = 4.dp)
             ) {
-                items(ui.result, key = {it.id to it.isBuilding}){item ->
-                    item.room?.let { RoomComponent(room = it){onRoomClick} }
+                when {
+                    !hasQuery -> {
+                        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Text(
+                                "건물, 편의시설을 검색해보세요.",
+                                style = KUBFAndroidTheme.typography.regular14,
+                                color = Gray3
+                            )
+                        }
+                    }
+
+                    hasQuery && !hasResult -> {
+                        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Text(
+                                "검색 결과가 없어요.",
+                                style = KUBFAndroidTheme.typography.regular14,
+                                color = Gray3
+                            )
+                        }
+                    }
+
+                    else -> {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                            contentPadding = PaddingValues(bottom = 8.dp)
+                        ) {
+                            items(
+                                items = ui.result,
+                                key = { it.id }
+                            ) { item ->
+                                val room = item.room ?: return@items
+                                RoomComponent(room = room){
+                                    onRoomClick(item)
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
     }
 }
 
-@Preview
+
+@Preview(showBackground = true)
 @Composable
 private fun SearchPreview() {
-//    var value by remember { MutableStateOf }
-//    SearchPopup(TextFieldValue("")){}
+    val fakeUi = BuildingUIState(
+        query = TextFieldValue("경영관"),
+        result = listOf(
+            RoomSearchResult(id = 1,  room = null),
+            RoomSearchResult(id = 2,  room = Room(id=10, name="101호"))
+        ).toPersistentList()
+    )
+
 }
