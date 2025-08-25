@@ -9,10 +9,9 @@ import com.ganaljigi.kubf.ui.buildinginfo.model.Note
 import com.ganaljigi.kubf.ui.buildinginfo.model.Room
 import com.ganaljigi.kubf.ui.buildinginfo.model.RoomSearchResult
 import com.ganaljigi.kubf.ui.buildinginfo.model.TotalFloor
-import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 
-data class BuildingUIState (
+data class BuildingUIState(
     val door: Door = Door(),
     val floorInfo: FloorInfo = FloorInfo(),
     val buildingInfo: BuildingInfo = BuildingInfo(),
@@ -24,6 +23,6 @@ data class BuildingUIState (
     val currentBuildingId: Long = 0L,
     val currentBuildingName: String = "",
     val query: TextFieldValue = TextFieldValue(""),
-    val result: PersistentList<RoomSearchResult> = persistentListOf(),
+    val result: List<RoomSearchResult> = persistentListOf(),
     val isSearching: Boolean = false
 )
