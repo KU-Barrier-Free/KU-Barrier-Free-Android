@@ -71,18 +71,13 @@ fun BuildingInfoScreen( // id 값 (int) 만 받기
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(buildingId) {
-        if(BuildConfig.DEBUG){
-            viewModel.loadDemoIfEmpty()
-            viewModel.loading()
-        }
-
         // TODO: 실제 저장소에서 해당 건물 방 목록 불러오기
         // val rooms = repo.getRooms(buildingId)
         val rooms = listOf(
-            Room(id=1, name="전산실습실", number="102"),
-            Room(id=2, name="전산실습실", number="103"),
-            Room(id=3, name="전산실습실", number="104"),
-            Room(id=4, name="세미나실",   number="201"),
+            Room(id =1, name ="전산실습실", number ="102"),
+            Room(id =2, name ="전산실습실", number ="103"),
+            Room(id =3, name ="전산실습실", number ="104"),
+            Room(id =4, name ="세미나실",   number ="201"),
         )
         viewModel.setBuilding(
             buildingId = buildingId,
@@ -307,7 +302,7 @@ fun BuildingInfoScreen( // id 값 (int) 만 받기
                                 },
                                 text = {
                                     Text(
-                                        text = "${floorInfo.floorNum}층",
+                                        text = "${floorInfo.floorLabel}층",
                                         textAlign = TextAlign.Center,
                                         style = if (idx == selectedIndex) KUBFAndroidTheme.typography.regular14 else KUBFAndroidTheme.typography.medium14,
                                         color = if (idx == selectedIndex) MainGreen else Gray4
@@ -341,7 +336,7 @@ fun BuildingInfoScreen( // id 값 (int) 만 받기
                                 },
                                 text = {
                                     Text(
-                                        text = "${floorInfo.floorNum}층",
+                                        text = "${floorInfo.floorLabel}층",
                                         textAlign = TextAlign.Center,
                                         style = if (idx == selectedIndex) KUBFAndroidTheme.typography.regular14 else KUBFAndroidTheme.typography.medium14,
                                         color = if (idx == selectedIndex) MainGreen else Gray4

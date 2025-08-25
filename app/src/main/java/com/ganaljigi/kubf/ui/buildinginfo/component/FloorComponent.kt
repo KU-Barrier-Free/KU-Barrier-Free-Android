@@ -24,10 +24,10 @@ fun FloorComponent(
     onRoomClick: (Room) -> Unit
 ) {
     Column {
-        if(current.imageUrl.isNotBlank()){
+        if(current.imageUrl.isNotEmpty()){
             AsyncImage(
                 model = current.imageUrl,
-                contentDescription = "${current.floorNum}층 사진",
+                contentDescription = "${current.floorLabel}층 사진",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.padding(horizontal = 16.dp)
                     .clip(RoundedCornerShape(10.dp))

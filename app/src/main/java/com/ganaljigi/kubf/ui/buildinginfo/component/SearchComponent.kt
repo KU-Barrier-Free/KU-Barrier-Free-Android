@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -41,7 +40,6 @@ import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.theme.MainGreen
 import kotlinx.collections.immutable.toPersistentList
-import kotlin.math.exp
 
 @Composable
 fun SearchPopup(
@@ -160,7 +158,7 @@ private fun SearchPreview() {
         query = TextFieldValue("경영관"),
         result = listOf(
             RoomSearchResult(id = 1,  room = null),
-            RoomSearchResult(id = 2,  room = Room(id=10, name="101호"))
+            RoomSearchResult(id = 2,  room = Room(id =10, name ="101호"))
         ).toPersistentList()
     )
 
