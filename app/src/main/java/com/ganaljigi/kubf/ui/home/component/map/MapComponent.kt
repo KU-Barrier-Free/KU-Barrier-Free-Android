@@ -32,6 +32,7 @@ import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.ui.home.model.BuildingMarker
 import com.ganaljigi.kubf.ui.home.model.DoorMarker
 import com.ganaljigi.kubf.ui.home.model.MapToggle
+import com.ganaljigi.kubf.ui.home.model.RouteResult
 import com.ganaljigi.kubf.ui.home.model.ToggleMarker
 import com.ganaljigi.kubf.ui.home.viewmodel.SpecialMarkerInfo
 import com.ganaljigi.kubf.ui.theme.Gray4
@@ -48,6 +49,7 @@ import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MarkerComposable
 import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.Polyline
 
 @Composable
 fun MapComponent(
@@ -57,6 +59,7 @@ fun MapComponent(
     toggleMarkers: List<ToggleMarker> = emptyList(),
     buildingMarkers: List<BuildingMarker> = emptyList(),
     doorMarkers: List<DoorMarker> = emptyList(),
+    selectedRouteResult: RouteResult? = null,
     onBuildingMarkerClick: (BuildingMarker) -> Unit = { },
     onSpecialMarkerClick: (ToggleMarker) -> Unit = { },
     onSpecialInfoClick: (List<String>) -> Unit = { },
@@ -72,6 +75,18 @@ fun MapComponent(
         uiSettings = MapParam.mapUiSettings,
         googleMapOptionsFactory = { MapParam.mapOptions }
     ) {
+        // 선택된 경로만 렌더링
+        selectedRouteResult?.let { selectedRoute ->
+            if (selectedRoute.pathPoints.isNotEmpty()) {
+                Polyline(
+                    points = selectedRoute.pathPoints,
+                    color = MainGreen,
+                    width = 10f,
+                    zIndex = 2f
+                )
+            }
+        }
+        
         toggleMarkers.forEach { mapMarker ->
             if (mapMarker.mapToggle == MapToggle.SPECIAL_MARK) {
                 ToggleSpecialMarker(

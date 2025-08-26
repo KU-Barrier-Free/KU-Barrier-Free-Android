@@ -3,6 +3,7 @@ package com.ganaljigi.kubf.ui.home.viewmodel
 import androidx.compose.ui.text.input.TextFieldValue
 import com.ganaljigi.kubf.ui.common.model.Convenience
 import com.ganaljigi.kubf.ui.common.model.DoorInfo
+import com.ganaljigi.kubf.ui.common.model.SearchMode
 import com.ganaljigi.kubf.ui.home.model.BuildingMarker
 import com.ganaljigi.kubf.ui.home.model.DoorMarker
 import com.ganaljigi.kubf.ui.home.model.MapToggle
@@ -17,7 +18,7 @@ import kotlinx.collections.immutable.persistentListOf
 
 data class HomeUiState(
     val cameraPositionState: CameraPositionState = CameraPositionState(
-        position = CameraPosition.fromLatLngZoom(LatLng(37.5407, 127.0785), 16f)
+        position = CameraPosition.fromLatLngZoom(LatLng(37.5407, 127.0785), 17f)
     ),
     val searchWord: TextFieldValue = TextFieldValue(""),
     val buildingInfo: HomeBuildingInfo = HomeBuildingInfo(),
@@ -49,6 +50,7 @@ data class HomeUiState(
     val toLocation: SearchResult = SearchResult(),
     val routeResults: ImmutableList<RouteResult> = persistentListOf(),
     val selectedRouteResult: RouteResult = RouteResult(),
+    val isBottomSheetExpanded: Boolean = false,
 )
 
 

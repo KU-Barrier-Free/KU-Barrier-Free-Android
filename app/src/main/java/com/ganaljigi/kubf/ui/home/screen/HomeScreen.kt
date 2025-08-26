@@ -1,5 +1,6 @@
 package com.ganaljigi.kubf.ui.home.screen
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -30,18 +31,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImage
 import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.ui.common.model.SearchMode
 import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoChip
@@ -86,19 +83,20 @@ fun HomeScreen(
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
 
-    LaunchedEffect(uiState.bottomSheetType) {
-        scope.launch {
-            when (uiState.bottomSheetType) {
-                HomeBottomSheetType.SEARCH, HomeBottomSheetType.BUILDING_INFO -> {
-                    if (bottomSheetState.isVisible.not()) {
-                        bottomSheetState.expand()
-                    }
+    LaunchedEffect(uiState.isBottomSheetExpanded, uiState.bottomSheetType) {
+        Log.d(
+            "HomeScreen",
+            "Bottom sheet state changed, ${uiState.bottomSheetType} ${uiState.isBottomSheetExpanded}"
+        )
+        if (uiState.isBottomSheetExpanded && uiState.bottomSheetType != HomeBottomSheetType.NONE) {
+            if (bottomSheetState.isVisible.not()) {
+                scope.launch {
+                    bottomSheetState.expand()
                 }
-
-                else -> {
-                    viewModel.setBottomSheetType(HomeBottomSheetType.NONE)
-                    bottomSheetState.hide()
-                }
+            }
+        } else {
+            scope.launch {
+                bottomSheetState.hide()
             }
         }
     }
@@ -109,6 +107,43 @@ fun HomeScreen(
         sheetTonalElevation = 4.dp,
         sheetDragHandle = { },
         sheetContent = {
+            if (uiState.isBottomSheetExpanded) {
+                when (uiState.bottomSheetType) {
+                    HomeBottomSheetType.SEARCH -> {
+                        HomeSearchBottomSheet(
+                            searchResults = uiState.searchResults,
+                            onInquireClick = {
+                                viewModel.setShowInquiryDialog(true)
+                            },
+                            onFromClick = { searchResult ->
+                                viewModel.onFromClick(searchResult)
+                            },
+                            onToClick = { searchResult ->
+                                viewModel.onToClick(searchResult)
+                            },
+                            onItemClick = { buildingId ->
+                                navigateToBuildingInfo(buildingId)
+                            },
+                        )
+                    }
+
+                    HomeBottomSheetType.BUILDING_INFO -> {
+                        HomeBuildingInfoSheetContent(
+                            modifier = Modifier.fillMaxWidth(),
+                            buildingInfo = uiState.buildingInfo,
+                            onItemClick = { buildingId ->
+                                navigateToBuildingInfo(buildingId)
+                            },
+                        )
+                    }
+
+                    else -> {}
+                }
+            }
+        }
+    ) { innerPadding ->
+
+        if (uiState.isBottomSheetExpanded) {
             when (uiState.bottomSheetType) {
                 HomeBottomSheetType.SEARCH -> {
                     HomeSearchBottomSheet(
@@ -141,7 +176,7 @@ fun HomeScreen(
                 else -> {}
             }
         }
-    ) { innerPadding ->
+
 
         if (uiState.showInquiryDialog) {
             HomeInquiryDialog(
@@ -170,6 +205,8 @@ fun HomeScreen(
             buildingMarkers = uiState.buildingMarkers
                 .filter { it.id != uiState.selectedBuildingMarker?.id },
             doorMarkers = uiState.doorMarkers,
+//            routeResults = uiState.routeResults,
+            selectedRouteResult = uiState.selectedRouteResult,
             onBuildingMarkerClick = { marker ->
                 viewModel.getBuildingInfoByMarker(selectedBuildingMarker = marker)
             },
@@ -342,7 +379,7 @@ fun HomeScreen(
                 ) {
                     HomeRouteInfo(
                         modifier = Modifier
-                            .padding(16.dp),
+                            .padding(vertical = 16.dp),
                         selectedRoute = uiState.selectedRouteResult,
                         routeResults = uiState.routeResults,
                         onRouteSelected = { routeResult ->

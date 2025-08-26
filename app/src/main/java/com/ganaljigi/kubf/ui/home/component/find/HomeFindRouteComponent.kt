@@ -80,7 +80,7 @@ fun HomeRouteInfoItem(
     ) {
         Text(
             text = routeResult.routeMode.label,
-            style = KUBFAndroidTheme.typography.semiBold16,
+            style = KUBFAndroidTheme.typography.semiBold14,
             color = if (isSelected) MainGreen else Gray4
         )
         Row(
@@ -91,16 +91,17 @@ fun HomeRouteInfoItem(
                 text = buildAnnotatedString {
                     append(routeResult.time.toString())
                     withStyle(
-                        style = KUBFAndroidTheme.typography.regular14.toSpanStyle()
+                        style = KUBFAndroidTheme.typography.regular13.toSpanStyle()
                     ) {
                         append("분")
                     }
                 },
-                style = KUBFAndroidTheme.typography.semiBold20
+                style = KUBFAndroidTheme.typography.semiBold18
             )
             Text(
-                text = routeResult.distance.toDistanceString(),
-                style = KUBFAndroidTheme.typography.semiBold16,
+                text = routeResult.distanceText.takeIf { it.isNotEmpty() } 
+                    ?: routeResult.distance.toDistanceString(),
+                style = KUBFAndroidTheme.typography.semiBold13,
                 color = Gray3
             )
         }

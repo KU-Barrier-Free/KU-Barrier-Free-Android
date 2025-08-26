@@ -1,5 +1,6 @@
 package com.ganaljigi.kubf.ui.home.screen
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -39,6 +40,11 @@ fun HomeSearchScreen(
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
+        viewModel.getSearchResults()
+    }
+    LaunchedEffect(Unit) {
+        viewModel.updateSearchWord(TextFieldValue(""))
+        viewModel.updateSearchResults(emptyList(), false)
     }
 
     Column(
@@ -51,13 +57,23 @@ fun HomeSearchScreen(
             onClick = { navigateUp() }
         )
         Spacer(modifier = Modifier.height(8.dp))
+        Log.d(
+            "HomeSearchScreen",
+            "${uiState.searchWord} HomeSearchScreen with searchMode: $searchMode"
+        )
         HomeSearchBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .focusRequester(focusRequester),
-            onValueChange = { viewModel.updateSearchWord(it) },
-            onValueCleared = { viewModel.updateSearchWord() },
+            onValueChange = {
+                viewModel.updateSearchWord(it)
+                Log.d("HomeSearchScreen", "Search word updated: ${it.text}")
+            },
+            onValueCleared = {
+                viewModel.updateSearchWord()
+                Log.d("HomeSearchScreen", "Search word cleared")
+            },
             onSearchKeyboardEntered = {
                 if (searchMode == SearchMode.SEARCH) {
                     viewModel.updateSearchResults()
@@ -76,10 +92,10 @@ fun HomeSearchScreen(
                 )
             },
             onItemClick = {
-                when(searchMode) {
+                when (searchMode) {
                     SearchMode.SEARCH -> viewModel.updateSearchResults(listOf(it))
-                    SearchMode.FIND_FROM_LOCATION -> viewModel.updateFromLocation(it)
-                    SearchMode.FIND_TO_LOCATION -> viewModel.updateToLocation(it)
+                    SearchMode.FIND_FROM_LOCATION -> viewModel.onFromClick(it)
+                    SearchMode.FIND_TO_LOCATION -> viewModel.onToClick(it)
                 }
                 navigateUp()
             },
@@ -87,11 +103,6 @@ fun HomeSearchScreen(
             popularKeywords = uiState.popularKeywords,
         )
     }
-}
-
-@Composable
-fun LaunchedEffect(x0: Unit, content: @Composable () -> Unit) {
-    TODO("Not yet implemented")
 }
 
 @Preview(showBackground = true)

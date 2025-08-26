@@ -52,8 +52,8 @@ fun String.toAnnotatedString(matchKeyword: String): AnnotatedString {
     return buildAnnotatedString {
         append(this@toAnnotatedString.substring(0 until firstIndex))
         withStyle(style = SpanStyle(color = MainGreen)) {
-            append(this@toAnnotatedString.substring(firstIndex until lastIndex))
+            append(this@toAnnotatedString.substring(firstIndex until firstIndex + matchKeyword.length))
         }
-        append(this@toAnnotatedString.substring(lastIndex until length))
+        append(this@toAnnotatedString.substring(firstIndex + matchKeyword.length until this@toAnnotatedString.length))
     }
 }

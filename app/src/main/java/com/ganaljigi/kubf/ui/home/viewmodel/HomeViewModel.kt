@@ -1,15 +1,13 @@
 package com.ganaljigi.kubf.ui.home.viewmodel
 
 import android.util.Log
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.withStyle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ganaljigi.kubf.data.remote.repository.BuildingRepository
 import com.ganaljigi.kubf.data.remote.repository.HomeRepository
-import com.ganaljigi.kubf.mapper.toHomeBuildingInfo
+import com.ganaljigi.kubf.data.remote.repository.RouteRepository
+import com.ganaljigi.kubf.mapper.toRouteResults
 import com.ganaljigi.kubf.mapper.toSpecialMarkerInfo
 import com.ganaljigi.kubf.mapper.toUiState
 import com.ganaljigi.kubf.ui.common.model.Convenience
@@ -20,7 +18,7 @@ import com.ganaljigi.kubf.ui.home.model.MapToggle
 import com.ganaljigi.kubf.ui.home.model.RouteResult
 import com.ganaljigi.kubf.ui.home.model.SearchResult
 import com.ganaljigi.kubf.ui.home.model.ToggleMarker
-import com.ganaljigi.kubf.ui.theme.MainGreen
+import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -34,6 +32,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val homeRepository: HomeRepository,
     private val buildingRepository: BuildingRepository,
+    private val routeRepository: RouteRepository,
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
@@ -43,8 +42,10 @@ class HomeViewModel @Inject constructor(
     }
 
     fun updateSearchWord(newSearchWord: TextFieldValue = TextFieldValue("")) {
+        Log.d("HomeViewModel", "updateSearchWord: $newSearchWord")
+        if (newSearchWord.text == uiState.value.searchWord.text) return
         _uiState.update { it.copy(searchWord = newSearchWord) }
-        getSearchResults()
+        getSearchResults(newSearchWord.text)
     }
 
     fun updateInquiryField(newInquiryField: TextFieldValue) {
@@ -56,13 +57,14 @@ class HomeViewModel @Inject constructor(
         setShowInquiryDialog(false)
     }
 
-    fun getSearchResults() {
-        // TODO: 검색 API 호출
-        val searchWord = uiState.value.searchWord.text
+    fun getSearchResults(newSearchWord: String = uiState.value.searchWord.text) {
+        if (newSearchWord.isEmpty()) {
+            return
+        }
         viewModelScope.launch {
-            homeRepository.getHomeSearchResult(searchWord).fold(
+            homeRepository.getHomeSearchResult(newSearchWord).fold(
                 onSuccess = { response ->
-                    updateSearchResults(response.toUiState(searchWord))
+                    updateSearchResults(response.toUiState(newSearchWord), false)
                 },
                 onFailure = { error ->
                     Log.e("HomeViewModel", "getSearchResults: Error fetching search results", error)
@@ -178,22 +180,27 @@ class HomeViewModel @Inject constructor(
     }
 
     fun updateSearchResults(
-        newSearchResults: List<SearchResult> = uiState.value.searchResults
+        newSearchResults: List<SearchResult> = uiState.value.searchResults,
+        showSheet: Boolean = true,
     ) {
+        Log.d("HomeViewModel", "updateSearchResults: $newSearchResults")
         if (newSearchResults.size == 1) {
             setSingleResult(newSearchResults.first())
         } else {
             _uiState.update {
                 it.copy(
                     selectedBuildingMarker = null,
-                    bottomSheetType = HomeBottomSheetType.SEARCH,
-                    searchResults = newSearchResults.toImmutableList()
+                    searchResults = newSearchResults.toImmutableList(),
                 )
+            }
+            if (showSheet) {
+                setBottomSheetType(HomeBottomSheetType.SEARCH)
             }
         }
     }
 
     private fun setSingleResult(searchResult: SearchResult) {
+        Log.d("HomeViewModel", "setSingleResult: $searchResult")
         if (searchResult.isBuilding) {
             getBuildingInfoByResult(searchResult)
         } else {
@@ -209,22 +216,23 @@ class HomeViewModel @Inject constructor(
 
 
     fun onFromClick(searchResult: SearchResult) {
-        updateFromLocation(searchResult)
         setHomeUiMode(HomeUiMode.FIND_MODE)
         setBottomSheetType(HomeBottomSheetType.NONE)
+        updateFromLocation(searchResult)
     }
 
     fun onToClick(searchResult: SearchResult) {
-        updateToLocation(searchResult)
         setHomeUiMode(HomeUiMode.FIND_MODE)
         setBottomSheetType(HomeBottomSheetType.NONE)
+        updateToLocation(searchResult)
     }
 
     fun updateFromLocation(fromLocation: SearchResult) {
         _uiState.update {
             it.copy(
                 searchWord = TextFieldValue(""),
-                fromLocation = fromLocation
+                searchResults = persistentListOf(),
+                fromLocation = fromLocation,
             )
         }
         if (fromLocation.name.isNotEmpty() && uiState.value.toLocation.name.isNotEmpty()) {
@@ -236,6 +244,7 @@ class HomeViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 searchWord = TextFieldValue(""),
+                searchResults = persistentListOf(),
                 toLocation = toLocation
             )
         }
@@ -254,18 +263,89 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getRouteBetweenLocations() {
-        // TODO: 경로 API 호출
+        val fromLocation = _uiState.value.fromLocation
+        val toLocation = _uiState.value.toLocation
+
         Log.d(
             "HomeViewModel",
-            "getRouteBetweenLocations: from=${uiState.value.fromLocation.name}, to=${uiState.value.toLocation.name}"
+            "getRouteBetweenLocations: from=${fromLocation.name}, to=${toLocation.name}"
+        )
+
+        viewModelScope.launch {
+            routeRepository.getPath(
+                srcId = fromLocation.id,
+                srcType = if (fromLocation.isBuilding) "BUILDING" else "FACILITY",
+                destId = toLocation.id,
+                destType = if (toLocation.isBuilding) "BUILDING" else "FACILITY"
+            ).fold(
+                onSuccess = { response ->
+                    val routeResults = response.toRouteResults()
+                    if (routeResults.isNotEmpty()) {
+                        _uiState.update {
+                            it.copy(
+                                homeUiMode = HomeUiMode.ROUTE_MODE,
+                                routeResults = routeResults.toImmutableList(),
+                                selectedRouteResult = routeResults.first()
+                            )
+                        }
+                    } else {
+                        Log.w(
+                            "HomeViewModel",
+                            "getRouteBetweenLocations: No routes returned from API"
+                        )
+                        // 빈 응답 시 fallback 사용
+                        useFallbackRoutes()
+                    }
+                },
+                onFailure = { error ->
+                    Log.e("HomeViewModel", "getRouteBetweenLocations: Error fetching route", error)
+                    useFallbackRoutes()
+                }
+            )
+        }
+    }
+
+    private fun useFallbackRoutes() {
+        val fallbackRoutes = listOf(
+            RouteResult(
+                routeMode = RouteMode.SHORTEST,
+                time = 7,
+                distance = 428,
+                distanceText = "428m",
+                pathPoints = listOf(
+                    LatLng(37.5407, 127.0725), // 고려대 중앙광장 근처
+                    LatLng(37.5415, 127.0728),
+                    LatLng(37.5420, 127.0735)
+                ).toImmutableList()
+            ),
+            RouteResult(
+                routeMode = RouteMode.NO_STAIRS,
+                time = 10,
+                distance = 650,
+                distanceText = "650m",
+                pathPoints = listOf(
+                    LatLng(37.5407, 127.0725),
+                    LatLng(37.5412, 127.0730),
+                    LatLng(37.5418, 127.0738)
+                ).toImmutableList()
+            ),
+            RouteResult(
+                routeMode = RouteMode.BARRIER_FREE,
+                time = 14,
+                distance = 1136,
+                distanceText = "1136m",
+                pathPoints = listOf(
+                    LatLng(37.5407, 127.0725),
+                    LatLng(37.5410, 127.0732),
+                    LatLng(37.5415, 127.0740)
+                ).toImmutableList()
+            ),
         )
         _uiState.update {
             it.copy(
                 homeUiMode = HomeUiMode.ROUTE_MODE,
-                routeResults = persistentListOf(
-                    RouteResult(routeMode = RouteMode.SHORTEST, time = 7, distance = 428),
-                    RouteResult(routeMode = RouteMode.BARRIER_FREE, time = 14, distance = 1136),
-                )
+                routeResults = fallbackRoutes.toImmutableList(),
+                selectedRouteResult = fallbackRoutes.first()
             )
         }
     }
@@ -273,17 +353,14 @@ class HomeViewModel @Inject constructor(
     private fun getBuildingInfoByResult(searchResult: SearchResult) {
         // TODO: 건물 정보 API 호출
         updateBuildingInfo(searchResult.id)
-        _uiState.update {
-            it.copy(
-                bottomSheetType = HomeBottomSheetType.BUILDING_INFO,
-            )
-        }
+        setBottomSheetType(HomeBottomSheetType.BUILDING_INFO)
     }
 
     fun getBuildingInfoByMarker(selectedBuildingMarker: BuildingMarker) {
         // TODO: 건물 정보 API 호출
         updateBuildingInfo(selectedBuildingMarker.id)
         updateSelectedBuildingMarker(selectedBuildingMarker)
+        setBottomSheetType(HomeBottomSheetType.BUILDING_INFO)
     }
 
     private fun updateSelectedBuildingMarker(selectedBuildingMarker: BuildingMarker) {
@@ -291,7 +368,6 @@ class HomeViewModel @Inject constructor(
             it.copy(
                 selectedBuildingMarker = selectedBuildingMarker,
                 selectedSpecialMarker = null,
-                bottomSheetType = HomeBottomSheetType.BUILDING_INFO,
                 searchResults = persistentListOf(),
             )
         }
@@ -309,11 +385,23 @@ class HomeViewModel @Inject constructor(
     }
 
     fun setHomeUiMode(homeUiMode: HomeUiMode) {
-        _uiState.update { it.copy(homeUiMode = homeUiMode) }
+        _uiState.update {
+            it.copy(
+                homeUiMode = homeUiMode,
+                isBottomSheetExpanded = homeUiMode != HomeUiMode.FIND_MODE && homeUiMode != HomeUiMode.ROUTE_MODE,
+            )
+        }
     }
 
     fun setBottomSheetType(bottomSheetType: HomeBottomSheetType) {
-        _uiState.update { it.copy(bottomSheetType = bottomSheetType) }
+        Log.d("HomeViewModel", "setBottomSheetType: $bottomSheetType")
+        val isBottomSheetExpanded = bottomSheetType != HomeBottomSheetType.NONE
+        _uiState.update {
+            it.copy(
+                bottomSheetType = bottomSheetType,
+                isBottomSheetExpanded = isBottomSheetExpanded,
+            )
+        }
     }
 
     fun setShowInquiryDialog(showInquiryDialog: Boolean) {
