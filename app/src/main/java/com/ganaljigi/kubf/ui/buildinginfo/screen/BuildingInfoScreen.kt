@@ -50,6 +50,7 @@ import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.ui.buildinginfo.component.DoorComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.FacilityComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.FloorComponent
+import com.ganaljigi.kubf.ui.buildinginfo.component.NoteComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.SearchPopup
 import com.ganaljigi.kubf.ui.buildinginfo.model.Door
 import com.ganaljigi.kubf.ui.buildinginfo.model.Room
@@ -71,20 +72,9 @@ fun BuildingInfoScreen( // id 값 (int) 만 받기
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(buildingId) {
-        // TODO: 실제 저장소에서 해당 건물 방 목록 불러오기
-        // val rooms = repo.getRooms(buildingId)
-        val rooms = listOf(
-            Room(id =1, name ="전산실습실", number ="102"),
-            Room(id =2, name ="전산실습실", number ="103"),
-            Room(id =3, name ="전산실습실", number ="104"),
-            Room(id =4, name ="세미나실",   number ="201"),
-        )
-        viewModel.setBuilding(
-            buildingId = buildingId,
-            buildingName = "경영관",      // 실제 데이터로 교체
-            rooms = rooms
-        )
-        viewModel.clearQuery()            // 진입 시 검색어 초기화(선택)
+//        // TODO: 실제 저장소에서 해당 건물 방 목록 불러오기
+        viewModel.loadMock(buildingId)
+        viewModel.clearQuery()
     }
 
     var selectedIndex by remember { mutableStateOf(0) }
@@ -266,7 +256,11 @@ fun BuildingInfoScreen( // id 값 (int) 만 받기
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
                     Spacer(modifier = Modifier.height(12.dp))
-                    //NoteComponent(note = uiState.buildingInfo.notes)
+                    uiState.buildingInfo.notes.forEachIndexed{idx , note ->
+                        NoteComponent(note = note)
+                        if(idx < uiState.buildingInfo.notes.lastIndex)
+                            Spacer(Modifier.height(8.dp))
+                    }
                     Spacer(Modifier.height(20.dp))
                 }
                 Spacer(Modifier.height(16.dp))

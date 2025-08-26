@@ -16,6 +16,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+    private const val STUB_BASE_URL = "https://example.invalid/"
 
     @Provides
     @Singleton
@@ -45,12 +46,27 @@ object NetworkModule {
     fun providesRetrofit(
         client: OkHttpClient,
         json: Json,
-    ): Retrofit = Retrofit.Builder()
-        .baseUrl(BuildConfig.BASE_URL)
-        .client(client)
-        .addConverterFactory(
-            json.asConverterFactory("application/json".toMediaType())
-        )
-        .build()
+    ): Retrofit{
+        val raw = kotlin.runCatching { BuildConfig.BASE_URL }
+            .getOrNull().orEmpty().trim()
+
+        val normalized = when{
+            raw.isBlank() -> STUB_BASE_URL
+            "://".let { !raw.contains(it) } -> "httpsL//$raw/"
+            else -> if(raw.endsWith("/")) raw else "$raw/"
+        }
+        return Retrofit.Builder()
+            .baseUrl(normalized)
+            .client(client)
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            .build()
+    }
+//    ): Retrofit = Retrofit.Builder()
+//        .baseUrl(BuildConfig.BASE_URL)
+//        .client(client)
+//        .addConverterFactory(
+//            json.asConverterFactory("application/json".toMediaType())
+//        )
+//        .build()
 
 }

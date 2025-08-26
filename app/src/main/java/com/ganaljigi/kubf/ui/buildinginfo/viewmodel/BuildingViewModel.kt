@@ -2,35 +2,134 @@ package com.ganaljigi.kubf.ui.buildinginfo.viewmodel
 
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
-import com.ganaljigi.kubf.DemoData
+import androidx.lifecycle.viewModelScope
+import com.ganaljigi.kubf.data.repository.BuildingInfoRepository
+import com.ganaljigi.kubf.ui.buildinginfo.model.BuildingInfo
+import com.ganaljigi.kubf.ui.buildinginfo.model.Door
 import com.ganaljigi.kubf.ui.buildinginfo.model.Facility
 import com.ganaljigi.kubf.ui.buildinginfo.model.FloorInfo
 import com.ganaljigi.kubf.ui.buildinginfo.model.Note
 import com.ganaljigi.kubf.ui.buildinginfo.model.Room
 import com.ganaljigi.kubf.ui.buildinginfo.model.RoomSearchResult
+import com.ganaljigi.kubf.ui.buildinginfo.model.TotalFloor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class BuildingViewModel @Inject constructor(
+class BuildingViewModel @Inject constructor( private val repo: BuildingInfoRepository
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<BuildingUIState> = MutableStateFlow(BuildingUIState())
     val uiState = _uiState.asStateFlow()
 
     private var sourceRoom: List<Room> = emptyList()
-    fun setBuilding(buildingId: Long, buildingName: String, rooms: List<Room>){
-        sourceRoom = rooms
+
+    fun init(buildingId: Long){
+        viewModelScope.launch {
+            _uiState.update { it.copy(isSearching = false) }
+            runCatching { repo.fetchBuildingSpaces(buildingId) }
+                .onSuccess { (info, total) ->
+                    sourceRoom = total.floorList.flatMap { it.rooms }
+                    _uiState.update {
+                        it.copy(
+                            currentBuildingId = buildingId,
+                            currentBuildingName = info.name,
+                            buildingInfo = info,
+                            totalFloor = total
+                        )
+                    }
+                }
+        }
+    }
+
+    fun loadMock(buildingId: Long = 100L){ // 임시데이터
+        val mockInfo = BuildingInfo(
+            id = buildingId,
+            name = "경영관",
+            number = 2,
+            department = "경영대학 / 경영학부",
+            imageUrl = "https://cdn.pixabay.com/photo/2024/06/17/14/58/school-8835808_1280.jpg",
+            lecture = true,
+            facilities = listOf(
+                Facility.CAFE, Facility.CONV, Facility.PRINT, Facility.REST, Facility.SERVICE, Facility.BANK
+            ),
+            doors = listOf(
+                Door(
+                    id = 1,
+                    imageUrl = listOf("https://cdn.pixabay.com/photo/2024/06/17/14/58/school-8835808_1280.jpg"),
+                    label = "A",
+                    wheel = true,
+                    latitude = 37.54012, longitude = 127.07371
+                ),
+                Door(
+                    id = 2,
+                    imageUrl = listOf("https://cdn.pixabay.com/photo/2024/06/17/14/58/school-8835808_1280.jpg"),
+                    label = "B",
+                    wheel = false,
+                    latitude = 37.54028, longitude = 127.07386
+                )
+            ),
+            notes = listOf(
+                Note(id = 1, note = "지하1층 엘리베이터 점검 (8/31까지)", imageUrl = emptyList()),
+                Note(id = 2, note = "주차장 혼잡: 제2주차장 이용 권장", imageUrl = emptyList())
+            ),
+            latitude = 37.54000,
+            longitude = 127.07350
+        )
+
+        val floorB1 = FloorInfo(
+            floorLabel = "B1",
+            imageUrl = listOf("https://cdn.pixabay.com/photo/2024/06/17/14/58/school-8835808_1280.jpg"),
+            facilities = listOf(Facility.PARK, Facility.REST),
+            rooms = listOf(
+                Room(id = 101, number = "B101", name = "기계실", isLecture = false, comment = "관계자 외 출입금지"),
+                Room(id = 102, number = "B102", name = "주차장 연결 출입구", isLecture = false)
+            )
+        )
+        val floor1 = FloorInfo(
+            floorLabel = "1",
+            imageUrl = listOf("https://cdn.pixabay.com/photo/2024/06/17/14/58/school-8835808_1280.jpg"),
+            facilities = listOf(Facility.CAFE, Facility.CONV, Facility.SERVICE),
+            rooms = listOf(
+                Room(id = 201, number = "101", name = "전산실습실", isLecture = true, roomImages = listOf("https://cdn.pixabay.com/photo/2024/06/17/14/58/school-8835808_1280.jpg")),
+                Room(id = 202, number = "102", name = "세미나실", isLecture = false, roomImages = listOf("https://cdn.pixabay.com/photo/2024/06/17/14/58/school-8835808_1280.jpg")),
+                Room(id = 203, number = "103", name = "학생회실", isLecture = false)
+            )
+        )
+        val floor2 = FloorInfo(
+            floorLabel = "2",
+            imageUrl = listOf("https://cdn.pixabay.com/photo/2024/06/17/14/58/school-8835808_1280.jpg"),
+            facilities = listOf(Facility.PRINT),
+            rooms = listOf(
+                Room(id = 301, number = "201", name = "전산실습실", isLecture = true),
+                Room(id = 302, number = "202", name = "일반강의실", isLecture = true, roomImages = listOf("https://cdn.pixabay.com/photo/2024/06/17/14/58/school-8835808_1280.jpg","https://cdn.pixabay.com/photo/2024/06/17/14/58/school-8835808_1280.jpg")),
+                Room(id = 303, number = "203", name = "세미나실", isLecture = false)
+            )
+        )
+
+        val total = TotalFloor(
+            num = 3,
+            floorList = listOf(floorB1, floor1, floor2)
+        )
+
+        // 검색소스 업데이트
+        sourceRoom = total.floorList.flatMap { it.rooms }
+
+        // UI 반영
         _uiState.update {
             it.copy(
                 currentBuildingId = buildingId,
-                currentBuildingName = buildingName,
+                currentBuildingName = mockInfo.name,
+                buildingInfo = mockInfo,
+                totalFloor = total,
                 query = TextFieldValue(),
-                result = persistentListOf()
+                result = persistentListOf(),
+                isSearching = false
             )
         }
     }
@@ -47,17 +146,6 @@ class BuildingViewModel @Inject constructor(
         val digits = num?.filter { it.isDigit() }
         return digits?.toIntOrNull()?:Int.MAX_VALUE
     }
-    private fun matchRank(room: Room, q: String): Int{
-        val name = room.name ?: ""
-        val num = room.number ?: ""
-        return when{
-            num.startsWith(q,ignoreCase = true) -> 0
-            name.startsWith(q, ignoreCase = true) -> 1
-            num.contains(q, ignoreCase = true) -> 2
-            name.contains(q, ignoreCase = true) -> 3
-            else -> Int.MAX_VALUE
-        }
-    }
 
     private fun refreshResults() {
         val q = _uiState.value.query.text.trim()
@@ -65,7 +153,6 @@ class BuildingViewModel @Inject constructor(
             _uiState.update { it.copy(result = persistentListOf()) }
             return
         }
-        val building = _uiState.value.currentBuildingName
         val roomSearchResults:List<RoomSearchResult> =
             sourceRoom.asSequence()
                 .filter { r ->
@@ -91,39 +178,6 @@ class BuildingViewModel @Inject constructor(
                 .take(50)
                 .toPersistentList()
         _uiState.update { it.copy(result = roomSearchResults) }
-
-    }
-    fun loadDemoIfEmpty(){
-        if(sourceRoom.isEmpty()){
-            setBuilding(
-                buildingId = 100L,
-                buildingName = "경영관",
-                rooms = DemoData.rooms
-            )
-        }
-    }
-
-    fun loading(){
-        _uiState.update {
-            it.copy(
-                buildingInfo = it.buildingInfo.copy(
-                    name = "경영관",
-                    number = 12,
-                    department = "경영대학",
-                    imageUrl = "h",
-                    facilities = listOf(Facility.CAFE, Facility.CONV),
-                    doors = listOf(),
-                    notes = listOf(Note("못 지나감", listOf("htt")))
-                ),
-                totalFloor = it.totalFloor.copy(
-                    num = 6,
-                    floorList = listOf(
-                        FloorInfo(1),FloorInfo(2),
-                        FloorInfo(3),FloorInfo(4),FloorInfo(5),FloorInfo(6)
-                    )
-                )
-            )
-        }
     }
 }
 
