@@ -55,6 +55,6 @@ fun NoteComponent(
 @Preview
 @Composable
 private fun NotePreview() {
-    val note = Note("2층에서 구름다리로 나가면 건물 내부로 다시 들어올 수 없음", mutableListOf("https","https"))
-    NoteComponent(note)
+    //val note = Note("2층에서 구름다리로 나가면 건물 내부로 다시 들어올 수 없음", mutableListOf("https","https"))
+   // NoteComponent(note)
 }

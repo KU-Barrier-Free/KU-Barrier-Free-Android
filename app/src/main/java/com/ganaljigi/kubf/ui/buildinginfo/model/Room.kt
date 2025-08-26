@@ -6,7 +6,7 @@ data class Room(
     val number: String = "",
     val name: String="",
     val isLecture: Boolean = false,
-    val note: String="",
+    val comment: String="",
     val roomImages: List<String> = emptyList(),
     val doorImages: List<String> = emptyList()
 )
