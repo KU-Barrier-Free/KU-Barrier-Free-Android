@@ -45,8 +45,8 @@ fun RoomComponent(
     room: Room,
     onClick: () -> Unit = {}
 ) {
-    val hasNote: Boolean = room.note.isNotEmpty()
-    val hasImage = room.imageUrl.isNotEmpty()
+    val hasNote: Boolean = room.comment.isNotEmpty()
+    val hasImage = room.roomImages.isNotEmpty()
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -82,7 +82,7 @@ fun RoomComponent(
                     color = Black
                 )
                 Spacer(Modifier.width(8.dp))
-                if (room.use == "강의실"){
+                if (room.isLecture){
                     Box(
                         modifier = Modifier
                             .height(20.dp)
@@ -93,7 +93,7 @@ fun RoomComponent(
                             .wrapContentWidth(),
                     ) {
                         Text(
-                            text = "${room.use}",
+                            text = "강의실",
                             color = Color(0xFFD29027),
                             style = MaterialTheme.typography.labelSmall,
                             modifier = Modifier.padding(horizontal = 4.dp)
@@ -112,7 +112,7 @@ fun RoomComponent(
                     )
                     Spacer(Modifier.width(16.dp))
                     Text(
-                        text = room.note.joinToString(separator = ", "),
+                        text = room.comment,
                         style = KUBFAndroidTheme.typography.medium14,
                         color = Gray3,
                         fontWeight = FontWeight.Bold
@@ -122,7 +122,7 @@ fun RoomComponent(
             if (hasImage) {
                 Spacer(Modifier.height(12.dp))
                 Row {
-                    room.imageUrl.forEach { url ->
+                    room.roomImages.forEach { url ->
                         AsyncImage(
                             model = url,
                             contentDescription = room.number + "이미지",

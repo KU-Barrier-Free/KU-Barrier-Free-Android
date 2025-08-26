@@ -26,7 +26,7 @@ fun FloorComponent(
     Column {
         if(current.imageUrl.isNotEmpty()){
             AsyncImage(
-                model = current.imageUrl,
+                model = current.imageUrl.first(),
                 contentDescription = "${current.floorLabel}층 사진",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.padding(horizontal = 16.dp)
@@ -51,6 +51,7 @@ fun FloorComponent(
                 )
             }
         }
+        Spacer(Modifier.height(20.dp))
     }
 }
 

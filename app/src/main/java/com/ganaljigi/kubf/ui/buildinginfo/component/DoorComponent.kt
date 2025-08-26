@@ -74,7 +74,7 @@ fun DoorCard(door: Door) {
                     .size(80.dp)
             ) {
                 AsyncImage(
-                    model = door.imageUrl,
+                    model = door.imageUrl.first(),
                     contentDescription = "${door.label}",
                     modifier = Modifier.matchParentSize()
                         .clip(RoundedCornerShape(10.dp))
