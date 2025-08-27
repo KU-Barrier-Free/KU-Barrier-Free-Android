@@ -6,9 +6,10 @@ import com.ganaljigi.kubf.ui.buildinginfo.model.Facility
 import com.ganaljigi.kubf.ui.buildinginfo.model.FloorInfo
 import com.ganaljigi.kubf.ui.buildinginfo.model.Note
 import com.ganaljigi.kubf.ui.buildinginfo.model.Room
+import com.ganaljigi.kubf.ui.buildinginfo.model.TotalFloor
 import com.ganaljigi.kubf.ui.buildinginfo.response.DoorInfoDto
 import com.ganaljigi.kubf.ui.buildinginfo.response.FloorDto
-import com.ganaljigi.kubf.ui.buildinginfo.response.NoteDto
+import com.ganaljigi.kubf.ui.buildinginfo.response.SignificantInfosDto
 import com.ganaljigi.kubf.ui.buildinginfo.response.SpaceSummaryDto
 import com.ganaljigi.kubf.ui.buildinginfo.response.SpacesDto
 
@@ -29,14 +30,14 @@ fun DoorInfoDto.toUi() = Door(
     id = id,
     label = label.orEmpty(),
     imageUrl = imageUrl.orEmpty(),
-    wheel = wheel,
+    wheelchair = wheelchair,
     latitude = latitude,
     longitude = longitude
 )
 
-fun NoteDto.toUi() = Note(
+fun SignificantInfosDto.toUi() = Note(
     id = id,
-    note = note.orEmpty(),
+    note = description.orEmpty(),
     imageUrl = imageUrl.orEmpty()
 )
 
@@ -61,16 +62,59 @@ fun FloorDto.toUi(): FloorInfo = FloorInfo(
     rooms = spaceSummaries.orEmpty().map{ it.toRoomUi() }
 )
 
-fun SpacesDto.toBuildingInfoUi(): BuildingInfo = BuildingInfo(
-    id = id,
-    name = name,
-    number = number,
-    department = department.orEmpty(),
-    imageUrl = image.orEmpty(),
-    lecture = lecture,
-    facilities = facility.orEmpty().mapNotNull { it.toFacilityOrNull() },
-    doors = doorInfos.orEmpty().map { it.toUi() },
-    notes = notes.orEmpty().map { it.toUi() },
-    latitude = latitude,
-    longitude = longitude
-)
+fun SpacesDto.toUiPair(): Pair<BuildingInfo, TotalFloor> {
+    val info = BuildingInfo(
+        id = id,
+        name = name,
+        number = number,
+        department = department.orEmpty(),
+        imageUrl = image.orEmpty(),
+        lecture = lecture,
+        notes = significantInfos.map {
+            Note(
+                id = it.id,
+                note = it.description,
+                imageUrl = it.imageUrl
+            )
+        },
+        facilities = facilityPurposes.mapNotNull { it.toFacilityOrNull() },
+        doors = doorInfos.map {
+            Door(
+                id = it.id,
+                imageUrl = it.imageUrl,
+                label = it.label,
+                wheelchair = it.wheelchair,
+                latitude = it.latitude,
+                longitude = it.longitude
+            )
+        },
+        latitude = latitude,
+        longitude = longitude
+    )
+    val floors = floorList.map { f ->
+        val rooms = f.spaceSummaries.map { s->
+            val roomImgs = s.roomImages.filter { it.imageType.equals("ROOM",true) }.map{ it.imageUrl}
+            val doorImgs = s.roomImages.filter { it.imageType.equals("DOOR",true) }.map{ it.imageUrl}
+            Room(
+                id = s.id,
+                number = s.roomNumber.orEmpty(),
+                name = s.roomName.orEmpty(),
+                isLecture = s.isLecture,
+                comment = s.comment.orEmpty(),
+                roomImages = roomImgs,
+                doorImages = doorImgs
+            )
+        }
+        FloorInfo(
+            floorLabel = f.floor,
+            imageUrl = f.drawings,
+            facilities = f.purposes.mapNotNull { it.toFacilityOrNull() },
+            rooms = rooms
+        )
+    }
+    val total = TotalFloor(
+        num = floors.size,
+        floorList = floors
+    )
+    return info to total
+}

@@ -72,8 +72,7 @@ fun BuildingInfoScreen( // id 값 (int) 만 받기
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(buildingId) {
-//        // TODO: 실제 저장소에서 해당 건물 방 목록 불러오기
-        viewModel.loadMock(buildingId)
+        viewModel.loadMockFromJson()
         viewModel.clearQuery()
     }
 

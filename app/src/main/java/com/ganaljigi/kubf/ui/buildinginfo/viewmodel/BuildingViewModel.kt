@@ -1,9 +1,13 @@
 package com.ganaljigi.kubf.ui.buildinginfo.viewmodel
 
+import android.widget.Space
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ganaljigi.kubf.data.mock.DummySpacesJson
 import com.ganaljigi.kubf.data.repository.BuildingInfoRepository
+import com.ganaljigi.kubf.ui.buildinginfo.mapper.toUiPair
 import com.ganaljigi.kubf.ui.buildinginfo.model.BuildingInfo
 import com.ganaljigi.kubf.ui.buildinginfo.model.Door
 import com.ganaljigi.kubf.ui.buildinginfo.model.Facility
@@ -12,6 +16,8 @@ import com.ganaljigi.kubf.ui.buildinginfo.model.Note
 import com.ganaljigi.kubf.ui.buildinginfo.model.Room
 import com.ganaljigi.kubf.ui.buildinginfo.model.RoomSearchResult
 import com.ganaljigi.kubf.ui.buildinginfo.model.TotalFloor
+import com.ganaljigi.kubf.ui.buildinginfo.response.ApiResponse
+import com.ganaljigi.kubf.ui.buildinginfo.response.SpacesDto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -19,6 +25,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,6 +54,37 @@ class BuildingViewModel @Inject constructor( private val repo: BuildingInfoRepos
         }
     }
 
+    fun loadMockFromJson(){
+        viewModelScope.launch {
+            _uiState.update { it.copy(isSearching = true) }
+            runCatching {
+                val json = Json { ignoreUnknownKeys = true }
+                val resp: ApiResponse<SpacesDto> = json.decodeFromString(
+                    ApiResponse.serializer(SpacesDto.serializer()),
+                    DummySpacesJson.JSON
+                )
+                resp.result
+            }.onSuccess { dto ->
+                val (info, total) = dto.toUiPair()
+                sourceRoom = total.floorList.flatMap { it.rooms }
+                _uiState.update {
+                    it.copy(
+                        currentBuildingId = info.id,
+                        currentBuildingName = info.name,
+                        buildingInfo = info,
+                        totalFloor = total,
+                        query = TextFieldValue(),
+                        result = persistentListOf(),
+                        isSearching = false
+                    )
+                }
+            }.onFailure { e ->
+                _uiState.update { it.copy(isSearching = false) }
+                e.printStackTrace()
+            }
+        }
+    }
+
     fun loadMock(buildingId: Long = 100L){ // 임시데이터
         val mockInfo = BuildingInfo(
             id = buildingId,
@@ -63,14 +101,14 @@ class BuildingViewModel @Inject constructor( private val repo: BuildingInfoRepos
                     id = 1,
                     imageUrl = listOf("https://cdn.pixabay.com/photo/2024/06/17/14/58/school-8835808_1280.jpg"),
                     label = "A",
-                    wheel = true,
+                    wheelchair = true,
                     latitude = 37.54012, longitude = 127.07371
                 ),
                 Door(
                     id = 2,
                     imageUrl = listOf("https://cdn.pixabay.com/photo/2024/06/17/14/58/school-8835808_1280.jpg"),
                     label = "B",
-                    wheel = false,
+                    wheelchair = false,
                     latitude = 37.54028, longitude = 127.07386
                 )
             ),
