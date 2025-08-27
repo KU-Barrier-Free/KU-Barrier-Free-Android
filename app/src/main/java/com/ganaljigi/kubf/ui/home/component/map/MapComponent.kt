@@ -149,7 +149,7 @@ private fun ToggleMarker(
             contentDescription = null,
             tint = Color.Unspecified,
             modifier = Modifier
-                .size(24.dp)
+                .size(16.dp)
                 .shadow(1.dp)
         )
     }
