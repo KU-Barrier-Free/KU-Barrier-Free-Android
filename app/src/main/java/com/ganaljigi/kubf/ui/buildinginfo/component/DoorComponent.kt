@@ -107,9 +107,9 @@ fun DoorCard(door: Door) {
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = if (door.wheel) "가능 O" else "불가능 X",
+                text = if (door.wheelchair) "가능 O" else "불가능 X",
                 style = KUBFAndroidTheme.typography.semiBold14.copy(
-                    color = if (door.wheel) MainGreen else Gray3
+                    color = if (door.wheelchair) MainGreen else Gray3
                 )
             )
         }

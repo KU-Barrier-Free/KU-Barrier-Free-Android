@@ -1,7 +1,7 @@
 package com.ganaljigi.kubf.data.repository
 
 import com.ganaljigi.kubf.data.remote.service.BuildingService
-import com.ganaljigi.kubf.ui.buildinginfo.mapper.toBuildingInfoUi
+import com.ganaljigi.kubf.ui.buildinginfo.mapper.toUiPair
 import com.ganaljigi.kubf.ui.buildinginfo.mapper.toFacilityOrNull
 import com.ganaljigi.kubf.ui.buildinginfo.mapper.toRoomUi
 import com.ganaljigi.kubf.ui.buildinginfo.mapper.toUi
@@ -26,7 +26,7 @@ class BuildingInfoRepositoryImpl @Inject constructor(
             name = res.name,
             number = res.number,
             lecture = res.lecture,
-            facilities = res.facility.mapNotNull { it.toFacilityOrNull() },
+            facilities = res.facilityPurposes.mapNotNull { it.toFacilityOrNull() },
             doors = res.doorInfos.map { it.toUi() },
             notes = emptyList(),
             latitude = res.latitude,
@@ -36,10 +36,7 @@ class BuildingInfoRepositoryImpl @Inject constructor(
 
     override suspend fun fetchBuildingSpaces(id: Long): Pair<BuildingInfo, TotalFloor> {
         val r = api.getBuildingSpaces(id).result
-        val info = r.toBuildingInfoUi()
-        val floors= r.floorList.orEmpty().map{it.toUi()}
-        val total = TotalFloor(num = floors.size, floorList = floors)
-        return info to total
+        return r.toUiPair()
     }
 
     override suspend fun searchSpaces(id: Long, keyword: String): List<RoomSearchResult> {
