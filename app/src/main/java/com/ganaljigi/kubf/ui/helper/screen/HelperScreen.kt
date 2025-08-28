@@ -35,6 +35,10 @@ import com.ganaljigi.kubf.ui.helper.viewmodel.HelperViewModel
 @Composable
 fun HelperScreen(
     onBackClick: () -> Unit,
+    onNoticeClick: () -> Unit,
+    onDisableStudentHelperClick: () -> Unit,
+    onSupportClick: () -> Unit,
+    onJobInformationClick: () -> Unit,
     vm: HelperViewModel = hiltViewModel()
 ) {
     val state by vm.uiState.collectAsStateWithLifecycle()
@@ -50,7 +54,7 @@ fun HelperScreen(
                 .verticalScroll(rememberScrollState()),
         ) {
             //공지사항
-            NoticeTitle {}
+            NoticeTitle(onNavigateClick = onNoticeClick)
 //            NoticeItem(
 //                title = "[KIRD] 포용성장사업_이공계 장애 대학(원)생 경력개발 멘토링 모집 홍보 새글",
 //                date = "2025.05.13",
@@ -103,17 +107,17 @@ fun HelperScreen(
                 ShortCutItem(
                     text = "장애학생 도우미",
                     iconResId = R.drawable.ic_helper_disablestudenthelper,
-                    onClick = {}
+                    onClick = onDisableStudentHelperClick
                 )
                 ShortCutItem(
                     text = "지원 업무",
                     iconResId = R.drawable.ic_helper_support,
-                    onClick = {}
+                    onClick = onSupportClick
                 )
                 ShortCutItem(
                     text = "채용 정보",
                     iconResId = R.drawable.ic_helper_jobinformation,
-                    onClick = {}
+                    onClick = onJobInformationClick
                 )
             }
 
