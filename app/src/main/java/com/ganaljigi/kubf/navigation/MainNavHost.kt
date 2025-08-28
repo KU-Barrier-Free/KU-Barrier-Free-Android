@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.ganaljigi.kubf.ui.helper.screen.HelperScreen
 import com.ganaljigi.kubf.ui.home.screen.HomeScreen
 import com.ganaljigi.kubf.ui.home.screen.HomeSearchScreen
 import com.ganaljigi.kubf.ui.home.viewmodel.HomeViewModel
@@ -58,11 +59,11 @@ fun MainNavHost(
         }
 
         composable<Routes.Helper> {
-//            HelperScreen(
+            HelperScreen(
 //                padding = padding,
 //                navigateToNotice = { navController.navigate(Routes.Notice) },
-//                navigateBack = { navController.popBackStack() },
-//            )
+                onBackClick = { navController.popBackStack() },
+            )
         }
 
         composable<Routes.Notice> {
