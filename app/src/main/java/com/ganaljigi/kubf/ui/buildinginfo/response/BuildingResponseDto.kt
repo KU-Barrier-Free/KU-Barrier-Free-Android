@@ -120,12 +120,3 @@ data class SearchResponseDto(
     @SerialName("spaces")
     val spaces: List<SpaceSummaryDto>
 )
-
-// 공통 응답 래퍼
-@Serializable
-data class ApiResponse<T>(
-    val success: Boolean,
-    val code: Int,
-    val message: String,
-    val result: T
-)

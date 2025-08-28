@@ -104,7 +104,7 @@ object DummySpacesJson{
             "isLecture": false
           }
         ],
-        "floor": "1F"
+        "floor": "1"
       },
       {
         "drawings": ["2f_map.png"],
@@ -142,7 +142,7 @@ object DummySpacesJson{
             "isLecture": false
           }
         ],
-        "floor": "2F"
+        "floor": "2"
       },
       {
         "drawings": ["3f_map.png"],
@@ -169,7 +169,7 @@ object DummySpacesJson{
             "isLecture": true
           }
         ],
-        "floor": "3F"
+        "floor": "3"
       }
     ],
     "latitude": 37.54321,

@@ -1,11 +1,10 @@
 package com.ganaljigi.kubf.ui.buildinginfo.viewmodel
 
-import android.widget.Space
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ganaljigi.kubf.data.mock.DummySpacesJson
+import com.ganaljigi.kubf.data.remote.base.BaseResponse
 import com.ganaljigi.kubf.data.repository.BuildingInfoRepository
 import com.ganaljigi.kubf.ui.buildinginfo.mapper.toUiPair
 import com.ganaljigi.kubf.ui.buildinginfo.model.BuildingInfo
@@ -16,7 +15,6 @@ import com.ganaljigi.kubf.ui.buildinginfo.model.Note
 import com.ganaljigi.kubf.ui.buildinginfo.model.Room
 import com.ganaljigi.kubf.ui.buildinginfo.model.RoomSearchResult
 import com.ganaljigi.kubf.ui.buildinginfo.model.TotalFloor
-import com.ganaljigi.kubf.ui.buildinginfo.response.ApiResponse
 import com.ganaljigi.kubf.ui.buildinginfo.response.SpacesDto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
@@ -59,8 +57,8 @@ class BuildingViewModel @Inject constructor( private val repo: BuildingInfoRepos
             _uiState.update { it.copy(isSearching = true) }
             runCatching {
                 val json = Json { ignoreUnknownKeys = true }
-                val resp: ApiResponse<SpacesDto> = json.decodeFromString(
-                    ApiResponse.serializer(SpacesDto.serializer()),
+                val resp: BaseResponse<SpacesDto> = json.decodeFromString(
+                    BaseResponse.serializer(SpacesDto.serializer()),
                     DummySpacesJson.JSON
                 )
                 resp.result
