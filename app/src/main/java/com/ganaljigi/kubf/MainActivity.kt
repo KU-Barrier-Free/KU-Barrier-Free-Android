@@ -13,7 +13,6 @@ import com.ganaljigi.kubf.navigation.MainNavHost
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

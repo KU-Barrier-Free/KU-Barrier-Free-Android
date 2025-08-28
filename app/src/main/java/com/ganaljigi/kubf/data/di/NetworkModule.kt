@@ -6,16 +6,21 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import java.net.InetAddress
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import javax.inject.Singleton
+import okhttp3.HttpUrl.Companion.toHttpUrl
+import okhttp3.dnsoverhttps.DnsOverHttps
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+    private const val STUB_BASE_URL = "https://example.invalid/"
 
     @Provides
     @Singleton
@@ -52,5 +57,4 @@ object NetworkModule {
             json.asConverterFactory("application/json".toMediaType())
         )
         .build()
-
 }
