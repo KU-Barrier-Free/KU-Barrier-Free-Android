@@ -37,61 +37,24 @@ object NetworkModule {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
-//    @Provides
-//    @Singleton
-//    fun providesOkHttpClient(
-//        loggingInterceptor: HttpLoggingInterceptor,
-//    ): OkHttpClient = OkHttpClient.Builder()
-//        .addInterceptor(loggingInterceptor)
-//        .build()
-
     @Provides
     @Singleton
     fun providesOkHttpClient(
-        logging: HttpLoggingInterceptor,
-    ): OkHttpClient {
-        val doh = DnsOverHttps.Builder().client(OkHttpClient())
-            .url("https://cloudflare-dns.com/dns-query".toHttpUrl())
-            .bootstrapDnsHosts(
-                InetAddress.getByName("1.1.1.1"),
-                InetAddress.getByName("1.0.0.1"),
-                InetAddress.getByName("2606:4700:4700::1111"),
-                InetAddress.getByName("2606:4700:4700::1001"),
-            )
-            .build()
-
-        return OkHttpClient.Builder()
-            .dns(doh) // ← 핵심
-            .addInterceptor(logging)
-            .build()
-    }
+        loggingInterceptor: HttpLoggingInterceptor,
+    ): OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(loggingInterceptor)
+        .build()
 
     @Provides
     @Singleton
     fun providesRetrofit(
         client: OkHttpClient,
         json: Json,
-    ): Retrofit{
-        val raw = kotlin.runCatching { BuildConfig.BASE_URL }
-            .getOrNull().orEmpty().trim()
-
-        val normalized = when{
-            raw.isBlank() -> STUB_BASE_URL
-            "://".let { !raw.contains(it) } -> "httpsL//$raw/"
-            else -> if(raw.endsWith("/")) raw else "$raw/"
-        }
-        return Retrofit.Builder()
-            .baseUrl(normalized)
-            .client(client)
-            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-            .build()
-    }
-//    ): Retrofit = Retrofit.Builder()
-//        .baseUrl(BuildConfig.BASE_URL)
-//        .client(client)
-//        .addConverterFactory(
-//            json.asConverterFactory("application/json".toMediaType())
-//        )
-//        .build()
-
+    ): Retrofit = Retrofit.Builder()
+        .baseUrl(BuildConfig.BASE_URL)
+        .client(client)
+        .addConverterFactory(
+            json.asConverterFactory("application/json".toMediaType())
+        )
+        .build()
 }
