@@ -1,12 +1,7 @@
 package com.ganaljigi.kubf.data.remote.service
 
 import com.ganaljigi.kubf.data.remote.base.BaseResponse
-import com.ganaljigi.kubf.data.remote.response.building.BuildingInfoResponseDto
 import com.ganaljigi.kubf.data.remote.response.building.BuildingSummaryResponseDto
-import retrofit2.http.GET
-import retrofit2.http.Path
-
-import com.ganaljigi.kubf.data.remote.base.BaseResponse
 import com.ganaljigi.kubf.ui.buildinginfo.response.BuildingDto
 import com.ganaljigi.kubf.ui.buildinginfo.response.SearchResponseDto
 import com.ganaljigi.kubf.ui.buildinginfo.response.SpacesDto

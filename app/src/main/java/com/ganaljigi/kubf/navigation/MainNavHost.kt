@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.ganaljigi.kubf.ui.buildinginfo.screen.BuildingInfoScreen
 import com.ganaljigi.kubf.ui.helper.screen.HelperScreen
 import com.ganaljigi.kubf.ui.home.screen.HomeScreen
 import com.ganaljigi.kubf.ui.home.screen.HomeSearchScreen
@@ -75,13 +76,13 @@ fun MainNavHost(
 
         composable<Routes.BuildingInfo> { navBackStackEntry ->
             val buildingNumber = navBackStackEntry.toRoute<Routes.BuildingInfo>().number
-//             BuildingInfoScreen(
-//                padding = padding,
-//                navigateToRoomInfo = { roomId ->
-//                    navController.navigate(Routes.RoomInfo(roomId))
-//                },
-//                navigateBack = { navController.popBackStack() },
-//             )
+            BuildingInfoScreen(
+                buildingId = buildingNumber.toLong(),
+                onBack = { navController.popBackStack() },
+                onSearch = {},
+                onDoorClick = {},
+
+            )
         }
 
         composable<Routes.RoomInfo> { navBackStackEntry ->

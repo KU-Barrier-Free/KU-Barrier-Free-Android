@@ -102,6 +102,8 @@ fun HomeScreen(
     }
 
     BottomSheetScaffold(
+        containerColor = Color.White,
+        sheetContainerColor = Color.White,
         modifier = Modifier.padding(padding),
         scaffoldState = scaffoldState,
         sheetTonalElevation = 4.dp,

@@ -124,9 +124,9 @@ fun MapComponent(
                 onBuildingMarkerClick(it)
             }
         }
-        doorMarkers.forEach { mapMarker ->
-            DoorMarker(doorMarker = mapMarker)
-        }
+//        doorMarkers.forEach { mapMarker ->
+//            DoorMarker(doorMarker = mapMarker)
+//        }
     }
 }
 

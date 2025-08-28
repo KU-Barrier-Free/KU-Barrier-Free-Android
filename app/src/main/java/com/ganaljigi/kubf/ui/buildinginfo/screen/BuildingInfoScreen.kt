@@ -68,7 +68,7 @@ fun BuildingInfoScreen(
     onBack: () -> Unit,
     onSearch: () -> Unit,
     onDoorClick: (Door) -> Unit,
-    viewModel: BuildingViewModel = hiltViewModel()
+    viewModel: BuildingViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(buildingId) {
@@ -81,13 +81,14 @@ fun BuildingInfoScreen(
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
 
-    val safeIndex = selectedIndex.coerceIn(0,(floors.size -1).coerceAtLeast(0))
+    val safeIndex = selectedIndex.coerceIn(0, (floors.size - 1).coerceAtLeast(0))
     val current = floors.getOrNull(safeIndex)
 
     var showSearchPopup by remember { mutableStateOf(false) }
 
-    if(floors.isEmpty()){
+    if (floors.isEmpty()) {
         Scaffold(
+            containerColor = Color.White,
             topBar = {
                 TopAppBar(
                     navigationIcon = {
@@ -119,7 +120,9 @@ fun BuildingInfoScreen(
                 )
             }
         ) { inner ->
-            Box(Modifier.fillMaxSize().padding(inner), contentAlignment = Alignment.Center){
+            Box(Modifier
+                .fillMaxSize()
+                .padding(inner), contentAlignment = Alignment.Center) {
                 Text("층 정보 로딩 중...")
             }
 
@@ -145,6 +148,7 @@ fun BuildingInfoScreen(
     }
 
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             TopAppBar(
                 navigationIcon = {
@@ -181,6 +185,7 @@ fun BuildingInfoScreen(
             modifier = Modifier
                 .padding(inner)
                 .fillMaxSize()
+                .background(Color.White)
         ) {
             item {
                 // 건물 이미지
@@ -255,9 +260,9 @@ fun BuildingInfoScreen(
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
                     Spacer(modifier = Modifier.height(12.dp))
-                    uiState.buildingInfo.notes.forEachIndexed{idx , note ->
+                    uiState.buildingInfo.notes.forEachIndexed { idx, note ->
                         NoteComponent(note = note)
-                        if(idx < uiState.buildingInfo.notes.lastIndex)
+                        if (idx < uiState.buildingInfo.notes.lastIndex)
                             Spacer(Modifier.height(8.dp))
                     }
                     Spacer(Modifier.height(20.dp))

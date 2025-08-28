@@ -35,12 +35,13 @@ fun HomeToggle(
         verticalAlignment = Alignment.CenterVertically
     ) {
         toggleUiStates.forEach {
-            HomeToggleChip(
-                modifier = Modifier,
-                isSelected = it.isSelected,
-                toggle = it.toggle,
-                onToggleClick = { onToggleClick(it.toggle) }
-            )
+            if (it.toggle != MapToggle.CURB)
+                HomeToggleChip(
+                    modifier = Modifier,
+                    isSelected = it.isSelected,
+                    toggle = it.toggle,
+                    onToggleClick = { onToggleClick(it.toggle) }
+                )
         }
     }
 }
@@ -50,7 +51,7 @@ fun HomeToggleChip(
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
     toggle: MapToggle,
-    onToggleClick: () -> Unit = {}
+    onToggleClick: () -> Unit = {},
 ) {
     Surface(
         modifier = modifier
