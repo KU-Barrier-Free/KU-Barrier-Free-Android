@@ -3,6 +3,7 @@ package com.ganaljigi.kubf.mapper
 import com.ganaljigi.kubf.data.remote.response.building.BuildingSummaryResponseDto
 import com.ganaljigi.kubf.ui.common.model.DoorInfo
 import com.ganaljigi.kubf.ui.common.model.fromLabel
+import com.ganaljigi.kubf.ui.home.model.DoorMarker
 import com.ganaljigi.kubf.ui.home.viewmodel.HomeBuildingInfo
 import kotlinx.collections.immutable.toPersistentList
 
@@ -26,3 +27,13 @@ fun BuildingSummaryResponseDto.DoorInfoDto.toDoorInfo() = DoorInfo(
     description = "",
     imageUrls = this.imageUrl,
 )
+
+fun BuildingSummaryResponseDto.DoorInfoDto.toDoorMarker() = DoorMarker(
+    id = this.id,
+    label = this.label,
+    latitude = this.latitude,
+    longitude = this.longitude,
+    isWheelChairAccessible = this.wheelchair
+)
+
+fun BuildingSummaryResponseDto.toDoorMarkers() = doorInfos.map { it.toDoorMarker() }

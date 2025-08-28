@@ -19,8 +19,8 @@ fun HomeResponseDto.toUiState() = HomeUiState(
     curbMarkers = this.curbs.toToggleMarkers(MapToggle.CURB),
     slopeMarkers = this.ramps.toToggleMarkers(MapToggle.SLOPE),
     stairsMarkers = this.stairs.toToggleMarkers(MapToggle.STAIRS),
-    specialMarkers = this.significants.toToggleMarkers(MapToggle.SPECIAL_MARK)
-        .toImmutableList(),
+    specialMarkers = this.significants.toToggleMarkers(MapToggle.SPECIAL_MARK),
+    showingToggleMarkers = this.significants.toToggleMarkers(MapToggle.SPECIAL_MARK)
 )
 
 fun HomeSignificantResponseDto.toSpecialMarkerInfo() = SpecialMarkerInfo(

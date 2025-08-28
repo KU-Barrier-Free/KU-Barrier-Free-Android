@@ -204,7 +204,7 @@ fun HomeScreen(
             toggleMarkers = uiState.showingToggleMarkers,
             buildingMarkers = uiState.buildingMarkers
                 .filter { it.id != uiState.selectedBuildingMarker?.id },
-            doorMarkers = uiState.doorMarkers,
+            doorMarkers = uiState.showingDoorMarkers,
 //            routeResults = uiState.routeResults,
             selectedRouteResult = uiState.selectedRouteResult,
             onBuildingMarkerClick = { marker ->

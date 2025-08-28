@@ -38,6 +38,7 @@ data class HomeUiState(
     val buildingMarkers: ImmutableList<BuildingMarker> = persistentListOf(),
     val selectedBuildingMarker: BuildingMarker? = null,
     val doorMarkers: ImmutableList<DoorMarker> = persistentListOf(),
+    val showingDoorMarkers: ImmutableList<DoorMarker> = persistentListOf(),
     val curbMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
     val slopeMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
     val stairsMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
