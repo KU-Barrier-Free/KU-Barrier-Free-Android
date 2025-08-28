@@ -7,11 +7,15 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import java.net.InetAddress
 import javax.inject.Singleton
+import okhttp3.HttpUrl.Companion.toHttpUrl
+import okhttp3.dnsoverhttps.DnsOverHttps
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -33,13 +37,34 @@ object NetworkModule {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
+//    @Provides
+//    @Singleton
+//    fun providesOkHttpClient(
+//        loggingInterceptor: HttpLoggingInterceptor,
+//    ): OkHttpClient = OkHttpClient.Builder()
+//        .addInterceptor(loggingInterceptor)
+//        .build()
+
     @Provides
     @Singleton
     fun providesOkHttpClient(
-        loggingInterceptor: HttpLoggingInterceptor,
-    ): OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(loggingInterceptor)
-        .build()
+        logging: HttpLoggingInterceptor,
+    ): OkHttpClient {
+        val doh = DnsOverHttps.Builder().client(OkHttpClient())
+            .url("https://cloudflare-dns.com/dns-query".toHttpUrl())
+            .bootstrapDnsHosts(
+                InetAddress.getByName("1.1.1.1"),
+                InetAddress.getByName("1.0.0.1"),
+                InetAddress.getByName("2606:4700:4700::1111"),
+                InetAddress.getByName("2606:4700:4700::1001"),
+            )
+            .build()
+
+        return OkHttpClient.Builder()
+            .dns(doh) // ← 핵심
+            .addInterceptor(logging)
+            .build()
+    }
 
     @Provides
     @Singleton
