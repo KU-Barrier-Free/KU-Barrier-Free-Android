@@ -1,9 +1,9 @@
 package com.ganaljigi.kubf.data.di
 
 import com.ganaljigi.kubf.data.remote.service.BuildingService
-import com.ganaljigi.kubf.data.remote.service.HelperService
 import com.ganaljigi.kubf.data.remote.service.HomeService
 import com.ganaljigi.kubf.data.remote.service.RouteService
+import com.ganaljigi.kubf.data.remote.service.HelperService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
