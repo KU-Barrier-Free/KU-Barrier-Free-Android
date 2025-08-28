@@ -16,14 +16,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.ganaljigi.kubf.data.dto.buildingdata.NotesData
+import com.ganaljigi.kubf.ui.buildinginfo.model.Note
 import com.ganaljigi.kubf.ui.theme.Gray4
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 
 
+
 @Composable
 fun NoteComponent(
-    note: NotesData
+    note: Note
 ) {
     Box(
         modifier = Modifier.padding(horizontal = 16.dp)
@@ -54,6 +55,6 @@ fun NoteComponent(
 @Preview
 @Composable
 private fun NotePreview() {
-    val note = NotesData("2층에서 구름다리로 나가면 건물 내부로 다시 들어올 수 없음", mutableListOf("https","https"))
-    NoteComponent(note)
+    //val note = Note("2층에서 구름다리로 나가면 건물 내부로 다시 들어올 수 없음", mutableListOf("https","https"))
+   // NoteComponent(note)
 }
