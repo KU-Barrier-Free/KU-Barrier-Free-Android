@@ -61,7 +61,7 @@ fun DoorCard(door: Door) {
     Box(
         modifier = Modifier
             .width(80.dp)
-            .background(MaterialTheme.colorScheme.surface)
+            .background(Color.White)
     ) {
         Column(
             modifier = Modifier
