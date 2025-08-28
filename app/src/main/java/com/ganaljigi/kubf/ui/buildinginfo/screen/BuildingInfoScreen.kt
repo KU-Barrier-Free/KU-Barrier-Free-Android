@@ -26,6 +26,7 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -117,7 +118,11 @@ fun BuildingInfoScreen(
                                 contentDescription = "검색"
                             )
                         }
-                    }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.White,
+                        titleContentColor = Color.Black
+                    )
                 )
             }
         ) { inner ->
@@ -177,7 +182,11 @@ fun BuildingInfoScreen(
                             contentDescription = "검색"
                         )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.White,
+                    titleContentColor = Color.Black
+                )
             )
         }
     ) { inner ->
@@ -288,7 +297,7 @@ fun BuildingInfoScreen(
                                 color = MainGreen
                             )
                         },
-                        modifier = Modifier.fillMaxWidth()
+                        containerColor = Color.White
                     ) {
                         floors.forEachIndexed { idx, floorInfo ->
                             Tab(
