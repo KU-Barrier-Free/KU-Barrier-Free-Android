@@ -76,7 +76,7 @@ fun RoomComponent(
         Column {
             Row {
                 Text(
-                    text = "${room.number}호 ${room.name}",
+                    text = "${room.number} ${room.name}",
                     style = KUBFAndroidTheme.typography.semiBold16,
                     fontWeight = FontWeight.Bold,
                     color = Black

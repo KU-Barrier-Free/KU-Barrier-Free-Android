@@ -12,8 +12,8 @@ interface BuildingService {
     @GET("/buildings/{buildingId}")
     suspend fun getBuildingInfo(@Path("id") id:Long): BaseResponse<BuildingDto>
 
-    @GET("/building/{buildingId}/spaces")
-    suspend fun getBuildingSpaces(@Path("id") id:Long): BaseResponse<SpacesDto>
+    @GET("/buildings/{buildingId}/spaces")
+    suspend fun getBuildingSpaces(@Path("buildingId") id:Long): BaseResponse<SpacesDto>
 
     @GET("/buildings/{buildingId}/spaces/search")
     suspend fun searchSpaces(

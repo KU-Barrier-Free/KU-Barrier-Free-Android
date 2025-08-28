@@ -63,7 +63,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun BuildingInfoScreen( // id 값 (int) 만 받기
+fun BuildingInfoScreen(
     buildingId: Long,
     onBack: () -> Unit,
     onSearch: () -> Unit,
@@ -72,7 +72,7 @@ fun BuildingInfoScreen( // id 값 (int) 만 받기
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(buildingId) {
-        viewModel.loadMockFromJson()
+        viewModel.init(buildingId)
         viewModel.clearQuery()
     }
 
