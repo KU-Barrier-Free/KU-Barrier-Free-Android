@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -67,7 +68,7 @@ fun BuildingInfoScreen(
     buildingId: Long,
     onBack: () -> Unit,
     onSearch: () -> Unit,
-    onDoorClick: (Door) -> Unit,
+    onRoomClick: () -> Unit,
     viewModel: BuildingViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -123,7 +124,7 @@ fun BuildingInfoScreen(
             Box(Modifier
                 .fillMaxSize()
                 .padding(inner), contentAlignment = Alignment.Center) {
-                Text("층 정보 로딩 중...")
+                CircularProgressIndicator()
             }
 
             if (showSearchPopup) {
@@ -347,7 +348,7 @@ fun BuildingInfoScreen(
             }
             item {
                 Spacer(Modifier.height(16.dp))
-                current?.let { FloorComponent(it) { } }
+                current?.let { FloorComponent(it) { onRoomClick() } }
             }
         }
         if (showSearchPopup) {
