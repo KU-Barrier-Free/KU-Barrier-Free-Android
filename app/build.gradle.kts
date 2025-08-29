@@ -37,8 +37,7 @@ android {
 
         manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = mapsApiKey.toString()
         buildConfigField("String", "GOOGLE_MAPS_ID", localProperties["GOOGLE_MAPS_ID"].toString())
-        val baseUrl = localProperties["BASE_URL"]?.toString() ?: ""
-        buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+        buildConfigField("String", "BASE_URL", "\"https://ku-barrierfree.site/\"")
     }
 
     buildTypes {
@@ -81,6 +80,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.coil.compose)
     implementation(libs.okhttp.dnsoverhttps)
 
     // Serialization
