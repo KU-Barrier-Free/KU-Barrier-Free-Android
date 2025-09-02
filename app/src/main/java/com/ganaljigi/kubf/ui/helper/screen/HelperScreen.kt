@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ganalijigi.kubf.R
@@ -31,6 +32,7 @@ import com.ganaljigi.kubf.ui.helper.component.shortcut.ShortCutItem
 import com.ganaljigi.kubf.ui.helper.component.shortcut.ShortCutTitle
 import com.ganaljigi.kubf.ui.helper.component.topappbar.HelperTopAppBar
 import com.ganaljigi.kubf.ui.helper.viewmodel.HelperViewModel
+import com.ganaljigi.kubf.ui.helper.viewmodel.Notice
 
 @Composable
 fun HelperScreen(
@@ -50,6 +52,7 @@ fun HelperScreen(
                 .verticalScroll(rememberScrollState()),
         ) {
             //공지사항
+
             NoticeTitle {}
 //            NoticeItem(
 //                title = "[KIRD] 포용성장사업_이공계 장애 대학(원)생 경력개발 멘토링 모집 홍보 새글",
@@ -69,6 +72,7 @@ fun HelperScreen(
 //                number = 45,
 //                index = 2
 //            )
+
 
             when {
                 state.isLoading -> {
@@ -128,6 +132,7 @@ fun HelperScreen(
         }
     }
 }
+
 
 //@Preview (showBackground = true)
 //@Composable
