@@ -29,6 +29,7 @@ import com.ganaljigi.kubf.ui.theme.Gray4
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.theme.MainGreen
 import com.ganaljigi.kubf.ui.util.noRippleClickable
+import com.ganaljigi.kubf.ui.util.toAnnotatedString
 
 @Composable
 fun HomeSearchContent(
@@ -158,7 +159,7 @@ private fun HomeSearchConvItem(
                 tint = Color.Unspecified,
             )
             Text(
-                text = item.annotatedName,
+                text = item.name.toAnnotatedString(item.searchKeyword),
                 style = KUBFAndroidTheme.typography.medium15,
             )
         }
@@ -184,39 +185,19 @@ private fun HomeSearchContentPreview() {
                 isBuilding = true,
                 name = "경영관",
                 building = "경영관",
-                annotatedName = buildAnnotatedString { }
+                searchKeyword = "레스티"
             ),
             SearchResult(
                 id = 2,
                 name = "카페 레스티오",
                 building = "경영관",
-                annotatedName = buildAnnotatedString {
-                    append("카페 ")
-                    withStyle(
-                        style = SpanStyle(
-                            color = MainGreen,
-                        ),
-                    ) {
-                        append("레스티")
-                    }
-                    append("오")
-                }
+                searchKeyword = "레스티"
             ),
             SearchResult(
                 id = 3,
                 name = "카페 레스티오",
                 building = "공학관",
-                annotatedName = buildAnnotatedString {
-                    append("카페 ")
-                    withStyle(
-                        style = SpanStyle(
-                            color = MainGreen,
-                        ),
-                    ) {
-                        append("레스티")
-                    }
-                    append("오")
-                }
+                searchKeyword = "레스티"
             )
         )
     )

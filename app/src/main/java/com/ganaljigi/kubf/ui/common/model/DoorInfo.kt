@@ -5,6 +5,7 @@ data class DoorInfo(
     val label: String = "",
     val description: String = "",
     val imageUrl: String = "",
+    val imageUrls: List<String> = emptyList(),
     val isWheelchairAccessible: Boolean = false,
     val latitude: Double = 0.0,
     val longitude: Double = 0.0,

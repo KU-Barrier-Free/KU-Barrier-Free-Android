@@ -145,7 +145,7 @@ private fun HomeBuildingInfoBottomSheetPreview() {
             latitude = 37.5665,
             longitude = 126.978,
             convenienceList = persistentListOf(
-                Convenience.CONVENIENCE_STORE,
+                Convenience.CONVENIENCE,
                 Convenience.CAFE,
             ),
             doorInfoList = persistentListOf(

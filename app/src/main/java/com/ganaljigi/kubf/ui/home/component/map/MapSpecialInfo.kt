@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -23,15 +24,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ganalijigi.kubf.R
-import com.ganaljigi.kubf.ui.home.viewmodel.SpecialMarkerInfo
 import com.ganaljigi.kubf.ui.theme.Gray2
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 
 @Composable
 fun MapSpecialInfo(
     modifier: Modifier = Modifier,
-    painter: Painter,
-    specialMarkerInfo: SpecialMarkerInfo,
+    painters: List<Painter>,
+    description: String,
 ) {
     Column(
         modifier = modifier
@@ -46,16 +46,22 @@ fun MapSpecialInfo(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = painter,
-            contentDescription = specialMarkerInfo.description,
-            modifier = Modifier
-                .size(80.dp)
-                .clip(RoundedCornerShape(10.dp)),
-            contentScale = ContentScale.Crop,
-        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            painters.forEach { it ->
+                Image(
+                    painter = it,
+                    contentDescription = description,
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(RoundedCornerShape(10.dp)),
+                    contentScale = ContentScale.Crop,
+                )
+            }
+        }
         Text(
-            text = specialMarkerInfo.description,
+            text = description,
             style = KUBFAndroidTheme.typography.semiBold14.copy(
                 lineHeight = 22.sp,
             ),
@@ -68,12 +74,10 @@ fun MapSpecialInfo(
 @Composable
 private fun MapSpecialInfoPreview() {
     MapSpecialInfo(
-        painter = painterResource(id = R.drawable.ic_special_marker),
-        specialMarkerInfo = SpecialMarkerInfo(
-            id = 1L,
-            markerId = 1L,
-            imageUrl = "",
-            description = "특별한 장소",
-        )
+        painters = listOf(
+            painterResource(id = R.drawable.ic_special_marker),
+            painterResource(id = R.drawable.ic_special_marker)
+        ),
+        description = "특별한 장소",
     )
 }

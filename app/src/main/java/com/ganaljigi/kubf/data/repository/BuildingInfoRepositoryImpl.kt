@@ -14,7 +14,7 @@ class BuildingInfoRepositoryImpl @Inject constructor(
     private val api: BuildingService,
 ): BuildingInfoRepository {
     override suspend fun fetchBuilding(id: Long): BuildingInfo {
-        val res = api.getBuildingInfo(id).result
+        val res = api.getBuildingInfo2(id).result
         return BuildingInfo(
             id = res.id,
             name = res.name,

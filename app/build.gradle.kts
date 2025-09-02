@@ -37,8 +37,7 @@ android {
 
         manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = mapsApiKey.toString()
         buildConfigField("String", "GOOGLE_MAPS_ID", localProperties["GOOGLE_MAPS_ID"].toString())
-        val baseUrl = localProperties["BASE_URL"]?.toString() ?: ""
-        buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+        buildConfigField("String", "BASE_URL", localProperties["BASE_URL"].toString())
     }
 
     buildTypes {
