@@ -26,19 +26,20 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.ganaljigi.kubf.data.dto.buildingdata.DoorData
+import com.ganaljigi.kubf.ui.buildinginfo.model.Door
 import com.ganaljigi.kubf.ui.theme.Gray2
 import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.Gray4
 import com.ganaljigi.kubf.ui.theme.MainGreen
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 
+
 /**
  * - 출입문 컴포넌트 - 문 사진과 휠체어 가능 여부,
  * - 가로로 스크롤 가능
  */
 @Composable
-fun DoorComponent(doors: List<DoorData>) {
+fun DoorComponent(doors: List<Door>) {
 
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -56,7 +57,7 @@ fun DoorComponent(doors: List<DoorData>) {
  * - 휠체어 여부
  */
 @Composable
-fun DoorCard(door: DoorData) {
+fun DoorCard(door: Door) {
     Box(
         modifier = Modifier
             .width(80.dp)
@@ -73,8 +74,8 @@ fun DoorCard(door: DoorData) {
                     .size(80.dp)
             ) {
                 AsyncImage(
-                    model = door.imageUrl,
-                    contentDescription = "${door.label} ${door.number}",
+                    model = door.imageUrl.first(),
+                    contentDescription = "${door.label}",
                     modifier = Modifier.matchParentSize()
                         .clip(RoundedCornerShape(10.dp))
                         .background(Gray2),
@@ -92,7 +93,7 @@ fun DoorCard(door: DoorData) {
                     contentAlignment = Alignment.Center,
                     ) {
                     Text( // 출입문 이름
-                        text = door.number,
+                        text = door.label,
                         style = KUBFAndroidTheme.typography.medium14,
                         color = Color.White,
                         modifier = Modifier.padding(horizontal = 3.dp)
@@ -106,9 +107,9 @@ fun DoorCard(door: DoorData) {
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = if (door.wheel) "가능 O" else "불가능 X",
+                text = if (door.wheelchair) "가능 O" else "불가능 X",
                 style = KUBFAndroidTheme.typography.semiBold14.copy(
-                    color = if (door.wheel) MainGreen else Gray3
+                    color = if (door.wheelchair) MainGreen else Gray3
                 )
             )
         }
@@ -118,7 +119,7 @@ fun DoorCard(door: DoorData) {
 @Preview
 @Composable
 private fun DoorPreview() {
-    val doors = mutableListOf(DoorData("https://", "창의관", "A", false))
-    doors.add(DoorData("https://", "창의관", "B", true))
-    DoorComponent(doors)
+//    val doors = mutableListOf(Door("https://", "창의관", "A", false))
+//    doors.add(Door("https://", "창의관", "B", true))
+//    DoorComponent(doors)
 }

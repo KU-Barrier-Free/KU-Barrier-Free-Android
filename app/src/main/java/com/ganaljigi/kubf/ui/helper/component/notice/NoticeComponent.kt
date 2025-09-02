@@ -1,6 +1,7 @@
 package com.ganaljigi.kubf.ui.helper.component.notice
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -67,15 +68,17 @@ fun NoticeItem(
     date: String,
     number: Int,
     index: Int,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val backgroundColor
     = if (index%2==0) Color(0xFFF8FFFA) else Color.White
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(backgroundColor)
+            .clickable { onClick() }
             .padding(horizontal = 20.dp, vertical = 12.dp)
     ) {
         Text(

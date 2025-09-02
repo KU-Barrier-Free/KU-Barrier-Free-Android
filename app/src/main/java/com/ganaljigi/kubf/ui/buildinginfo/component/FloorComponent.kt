@@ -14,19 +14,20 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.ganaljigi.kubf.data.dto.buildingdata.FloorInfoData
-import com.ganaljigi.kubf.data.dto.buildingdata.RoomData
+import com.ganaljigi.kubf.ui.buildinginfo.model.Facility
+import com.ganaljigi.kubf.ui.buildinginfo.model.FloorInfo
+import com.ganaljigi.kubf.ui.buildinginfo.model.Room
 
 @Composable
 fun FloorComponent(
-    current: FloorInfoData,
-    onRoomClick: (RoomData) -> Unit
+    current: FloorInfo,
+    onRoomClick: (Room) -> Unit
 ) {
     Column {
-        if(current.imageUrl.isNotBlank()){
+        if(current.imageUrl.isNotEmpty()){
             AsyncImage(
-                model = current.imageUrl,
-                contentDescription = "${current.floorNum}층 사진",
+                model = current.imageUrl.first(),
+                contentDescription = "${current.floorLabel}층 사진",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.padding(horizontal = 16.dp)
                     .clip(RoundedCornerShape(10.dp))
@@ -43,22 +44,23 @@ fun FloorComponent(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp),
         ){
-            current.roomData.forEach{ room->
+            current.rooms.forEach{room->
                 RoomComponent(
-                    roomData = room,
+                    room = room,
                     onClick = {onRoomClick(room)}
                 )
             }
         }
+        Spacer(Modifier.height(20.dp))
     }
 }
 
-//@Preview
-//@Composable
-//private fun FloorCompPreview() {
-//    val facilities = Facility.entries.toList()
-//    val urllist = mutableListOf("httpsL")
-//    val roomData = mutableListOf(RoomData(urllist,"101", "전산실습실", "강의실", mutableListOf<String>()))
-//    val floorInfos = mutableListOf(FloorInfoData(1,"https://",facilities, roomData))
-//    floorInfos.add(FloorInfoData(2,"https://",facilities, roomData))
-//}
+@Preview
+@Composable
+private fun FloorCompPreview() {
+    val facilities = Facility.entries.toList()
+    val urllist = mutableListOf("httpsL")
+    //val rooms = mutableListOf(Room(urllist,"101", "전산실습실", "강의실", mutableListOf<String>()))
+   // val floorInfos = mutableListOf(FloorInfo(1,"https://",facilities, rooms))
+    //floorInfos.add(FloorInfo(2,"https://",facilities, rooms))
+}

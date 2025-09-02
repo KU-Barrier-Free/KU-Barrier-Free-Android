@@ -28,11 +28,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.ganaljigi.kubf.data.dto.buildingdata.RoomData
+import com.ganaljigi.kubf.ui.buildinginfo.model.Room
 import com.ganaljigi.kubf.ui.theme.Black
 import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.Gray4
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
+
 
 /**
  * 강의실 썸네일 컴포넌트
@@ -41,11 +42,11 @@ import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
  */
 @Composable
 fun RoomComponent(
-    roomData: RoomData,
+    room: Room,
     onClick: () -> Unit = {}
 ) {
-    val hasNote: Boolean = roomData.note.isNotEmpty()
-    val hasImage = roomData.imageUrl.isNotEmpty()
+    val hasNote: Boolean = room.comment.isNotEmpty()
+    val hasImage = room.roomImages.isNotEmpty()
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -67,7 +68,7 @@ fun RoomComponent(
         ) {
             Icon(
                 imageVector = Icons.Default.KeyboardArrowRight,
-                contentDescription = "navTo${roomData.number}",
+                contentDescription = "navTo${room.number}",
                 modifier = Modifier.size(24.dp),
                 tint = Gray4
             )
@@ -75,13 +76,13 @@ fun RoomComponent(
         Column {
             Row {
                 Text(
-                    text = "${roomData.number}호 ${roomData.name}",
+                    text = "${room.number} ${room.name}",
                     style = KUBFAndroidTheme.typography.semiBold16,
                     fontWeight = FontWeight.Bold,
                     color = Black
                 )
                 Spacer(Modifier.width(8.dp))
-                if (roomData.use == "강의실"){
+                if (room.isLecture){
                     Box(
                         modifier = Modifier
                             .height(20.dp)
@@ -92,7 +93,7 @@ fun RoomComponent(
                             .wrapContentWidth(),
                     ) {
                         Text(
-                            text = "${roomData.use}",
+                            text = "강의실",
                             color = Color(0xFFD29027),
                             style = MaterialTheme.typography.labelSmall,
                             modifier = Modifier.padding(horizontal = 4.dp)
@@ -111,7 +112,7 @@ fun RoomComponent(
                     )
                     Spacer(Modifier.width(16.dp))
                     Text(
-                        text = roomData.note.joinToString(separator = ", "),
+                        text = room.comment,
                         style = KUBFAndroidTheme.typography.medium14,
                         color = Gray3,
                         fontWeight = FontWeight.Bold
@@ -121,10 +122,10 @@ fun RoomComponent(
             if (hasImage) {
                 Spacer(Modifier.height(12.dp))
                 Row {
-                    roomData.imageUrl.forEach { url ->
+                    room.roomImages.forEach { url ->
                         AsyncImage(
                             model = url,
-                            contentDescription = roomData.number + "이미지",
+                            contentDescription = room.number + "이미지",
                             modifier = Modifier
                                 .height(84.dp)
                                 .wrapContentWidth()
@@ -142,6 +143,6 @@ fun RoomComponent(
 @Composable
 private fun PreviewRoom() {
     var urlL = mutableListOf("http")
-    val roomData = RoomData(urlL, "101", "전산실습실", "강의", mutableListOf("경사로"))
-    RoomComponent(roomData)
+    //val room = Room(urlL, "101", "전산실습실", "강의", mutableListOf("경사로"))
+   // RoomComponent(room)
 }
