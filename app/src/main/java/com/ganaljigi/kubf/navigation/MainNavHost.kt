@@ -12,6 +12,7 @@ import com.ganaljigi.kubf.ui.helper.screen.HelperScreen
 import com.ganaljigi.kubf.ui.home.screen.HomeScreen
 import com.ganaljigi.kubf.ui.home.screen.HomeSearchScreen
 import com.ganaljigi.kubf.ui.home.viewmodel.HomeViewModel
+import com.ganaljigi.kubf.ui.roominfo.RoomInfoScreen
 
 @Composable
 fun MainNavHost(
@@ -86,12 +87,11 @@ fun MainNavHost(
         }
 
         composable<Routes.RoomInfo> { navBackStackEntry ->
-            val roomNumber = navBackStackEntry.toRoute<Routes.BuildingInfo>().number
-//             RoomInfoScreen(
-//                padding = padding,
-//                roomId = it.toRoute<Routes.RoomInfo>().roomId,
-//                navigateBack = { navController.popBackStack() },
-//             )
+            //val roomNumber = navBackStackEntry.toRoute<Routes.BuildingInfo>().number
+            val args = navBackStackEntry.toRoute<Routes.RoomInfo>()
+            RoomInfoScreen(
+                onBackClick = { navController.popBackStack() }
+            )
         }
     }
 }
