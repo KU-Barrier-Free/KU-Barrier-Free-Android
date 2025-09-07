@@ -1,5 +1,6 @@
 package com.ganaljigi.kubf.navigation
 
+import androidx.navigation.NavType
 import com.ganaljigi.kubf.ui.common.model.SearchMode
 import kotlinx.serialization.Serializable
 
@@ -23,7 +24,12 @@ sealed interface Routes {
     data class BuildingInfo(val number: Int) : Routes
 
     @Serializable
-    data class RoomInfo(val number: Int) : Routes
+    data class RoomInfo(
+        val buildingId: Long,
+        val spaceId: Long,
+        val type: Int = 1,
+        val buildingName: String? = null
+    ) : Routes
 
     @Serializable
     data object Support : Routes
