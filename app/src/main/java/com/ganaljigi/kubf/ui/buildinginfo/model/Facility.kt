@@ -9,7 +9,8 @@ enum class Facility(val label: String, @DrawableRes val iconResId:Int){
     PRINT("복사기", R.drawable.ic_feature_print),
     REST("휴게실", R.drawable.ic_feature_rest),
     KCUBE("K-CUBE", R.drawable.ic_feature_kcube),
+    KHUB("K-Hub",R.drawable.ic_feature_kcube),
     SERVICE("IT-서비스센터", R.drawable.ic_feature_itser),
     PARK("주차장", R.drawable.ic_feature_park),
-    BANK("은행",R.drawable.ic_feature_itser)
+    BANK("은행",R.drawable.ic_feature_itser),
 }
