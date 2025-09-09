@@ -43,7 +43,6 @@ import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun SearchPopup(
-    modifier: Modifier,
     viewModel: BuildingViewModel = hiltViewModel(),
     onClose: () -> Unit,
     onRoomClick: (RoomSearchResult) -> Unit

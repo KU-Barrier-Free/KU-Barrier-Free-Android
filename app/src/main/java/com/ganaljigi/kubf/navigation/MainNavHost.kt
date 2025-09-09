@@ -8,10 +8,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.ganaljigi.kubf.ui.buildinginfo.screen.BuildingInfoScreen
+import com.ganaljigi.kubf.ui.buildinginfo.viewmodel.BuildingViewModel
 import com.ganaljigi.kubf.ui.helper.screen.HelperScreen
 import com.ganaljigi.kubf.ui.home.screen.HomeScreen
 import com.ganaljigi.kubf.ui.home.screen.HomeSearchScreen
 import com.ganaljigi.kubf.ui.home.viewmodel.HomeViewModel
+import com.ganaljigi.kubf.ui.roominfo.RoomInfoScreen
+import com.ganaljigi.kubf.ui.roominfo.viewmodel.RoomInfoViewModel
 
 @Composable
 fun MainNavHost(
@@ -20,6 +23,8 @@ fun MainNavHost(
 ) {
 
     val homeViewModel = hiltViewModel<HomeViewModel>()
+    val buildingViewModel = hiltViewModel<BuildingViewModel>()
+    val roomViewModel = hiltViewModel<RoomInfoViewModel>()
 
     NavHost(
         navController = navController,
@@ -40,7 +45,7 @@ fun MainNavHost(
             HomeScreen(
                 padding = padding,
                 navigateToHelper = { navController.navigate(Routes.Helper) },
-                navigateToBuildingInfo = { navController.navigate(Routes.BuildingInfo(it.toInt())) },
+                navigateToBuildingInfo = { navController.navigate(Routes.BuildingInfo(it.toLong())) },
                 navigateToSearch = { title ->
                     navController.navigate(Routes.HomeSearch(title))
                 },
@@ -75,14 +80,22 @@ fun MainNavHost(
         }
 
         composable<Routes.BuildingInfo> { navBackStackEntry ->
-            val buildingNumber = navBackStackEntry.toRoute<Routes.BuildingInfo>().number
-            BuildingInfoScreen(
-                buildingId = buildingNumber.toLong(),
-                onBack = { navController.popBackStack() },
-                onSearch = {},
-                onDoorClick = {},
+            val buildingId = navBackStackEntry.toRoute<Routes.BuildingInfo>().number.toLong()
 
-            )
+             BuildingInfoScreen(
+                buildingId = buildingId,
+                onRoomClick = { room, buildingName ->
+                    navController.navigate(Routes.RoomInfo(
+                        buildingId = buildingId,
+                        spaceId = room.id,
+                        type = if (room.isLecture) 1 else 0,
+                        buildingName = buildingName
+                    ))
+
+                },
+                onBack = { navController.popBackStack() },
+                 viewModel = buildingViewModel
+             )
         }
 
         composable<Routes.RoomInfo> { navBackStackEntry ->

@@ -20,10 +20,15 @@ sealed interface Routes {
     data object Notice : Routes
 
     @Serializable
-    data class BuildingInfo(val number: Int) : Routes
+    data class BuildingInfo(val number: Long) : Routes
 
     @Serializable
-    data class RoomInfo(val number: Int) : Routes
+    data class RoomInfo(
+        val buildingId: Long,
+        val spaceId: Long,
+        val type: Int = 1,
+        val buildingName: String? = null
+    ) : Routes
 
     @Serializable
     data object Support : Routes

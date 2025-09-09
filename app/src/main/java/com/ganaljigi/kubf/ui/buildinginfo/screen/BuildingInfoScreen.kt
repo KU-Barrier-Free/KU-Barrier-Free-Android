@@ -47,14 +47,12 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
-import com.ganalijigi.kubf.BuildConfig
 import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.ui.buildinginfo.component.DoorComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.FacilityComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.FloorComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.NoteComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.SearchPopup
-import com.ganaljigi.kubf.ui.buildinginfo.model.Door
 import com.ganaljigi.kubf.ui.buildinginfo.model.Room
 import com.ganaljigi.kubf.ui.buildinginfo.viewmodel.BuildingViewModel
 import com.ganaljigi.kubf.ui.theme.Gray3
@@ -68,16 +66,14 @@ import kotlinx.coroutines.launch
 fun BuildingInfoScreen(
     buildingId: Long,
     onBack: () -> Unit,
-    onSearch: () -> Unit,
-    onRoomClick: () -> Unit,
+    onRoomClick: ( Room, String)-> Unit,
     viewModel: BuildingViewModel = hiltViewModel(),
-) {
+    ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(buildingId) {
         viewModel.init(buildingId)
         viewModel.clearQuery()
     }
-
     var selectedIndex by remember { mutableStateOf(0) }
     val floors = uiState.totalFloor.floorList
     val listState = rememberLazyListState()
@@ -111,7 +107,6 @@ fun BuildingInfoScreen(
                     actions = {
                         IconButton(onClick = {
                             showSearchPopup = true
-                            onSearch()
                         }) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_search_bar_leading),
@@ -126,9 +121,11 @@ fun BuildingInfoScreen(
                 )
             }
         ) { inner ->
-            Box(Modifier
-                .fillMaxSize()
-                .padding(inner), contentAlignment = Alignment.Center) {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .padding(inner), contentAlignment = Alignment.Center
+            ) {
                 CircularProgressIndicator()
             }
 
@@ -140,7 +137,6 @@ fun BuildingInfoScreen(
                     }
                 ) {
                     SearchPopup(
-                        modifier = Modifier,
                         onClose = {
                             showSearchPopup = false
                             viewModel.clearQuery()
@@ -175,7 +171,6 @@ fun BuildingInfoScreen(
                 actions = {
                     IconButton(onClick = {
                         showSearchPopup = true
-                        onSearch()
                     }) {
                         Icon(
                             painter = painterResource(R.drawable.ic_search_bar_leading),
@@ -357,7 +352,14 @@ fun BuildingInfoScreen(
             }
             item {
                 Spacer(Modifier.height(16.dp))
-                current?.let { FloorComponent(it) { onRoomClick() } }
+                current?.let { floor ->
+                    FloorComponent(
+                        current = floor,
+                        onRoomClick = { room ->
+                            onRoomClick(room, uiState.buildingInfo.name)
+                        }
+                    )
+                }
             }
         }
         if (showSearchPopup) {
@@ -368,7 +370,6 @@ fun BuildingInfoScreen(
                 }
             ) {
                 SearchPopup(
-                    modifier = Modifier,
                     onClose = {
                         showSearchPopup = false
                         viewModel.clearQuery()
@@ -379,10 +380,8 @@ fun BuildingInfoScreen(
         }
     }
 }
-
 @Preview
 @Composable
 private fun PreviewBuilding() {
-
 
 }
