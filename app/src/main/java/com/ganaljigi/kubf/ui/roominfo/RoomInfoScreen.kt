@@ -6,13 +6,16 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -33,52 +36,57 @@ fun RoomInfoScreen(
 ) {
     val scrollState = rememberScrollState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.systemBars)
-            .verticalScroll(scrollState)
-    ) {
-        RoomInfoTopAppBar(
-            buildingName = uiState.buildingName,
-            onBackClick = onBackClick
-        )
+    Scaffold(
+        topBar = {
+            RoomInfoTopAppBar(
+                buildingName = uiState.buildingName,
+                onBackClick = onBackClick
+            )
+        },
+        containerColor = Color.White
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+        ) {
+            RoomPic(roomPicUrls = uiState.roomPicUrls)
 
-        RoomPic(roomPicUrls = uiState.roomPicUrls)
+            RoomInfoDefaultComponent(
+                roomNumber = uiState.roomNumber,
+                roomName = uiState.roomName,
+                lecture = uiState.lecture,
+                capacity = uiState.capacity,
+                area = uiState.area,
+                floorSpace = uiState.floorSpace,
+                roomType = uiState.roomType,
+                department = uiState.department,
+                departmentNumber = uiState.departmentNumber
+            )
 
-        RoomInfoDefaultComponent(
-            roomNumber = uiState.roomNumber,
-            roomName = uiState.roomName,
-            lecture = uiState.lecture,
-            capacity = uiState.capacity,
-            area = uiState.area,
-            floorSpace = uiState.floorSpace,
-            roomType = uiState.roomType,
-            department = uiState.department,
-            departmentNumber = uiState.departmentNumber
-        )
+            DeskAndChairComponent(
+                allInOne = uiState.allInOne,
+                cinemaSeat = uiState.cinemaSeat,
+                oneSeat = uiState.oneSeat,
+                twoSeat = uiState.twoSeat,
+                multiSeat = uiState.multiSeat,
+                panel = uiState.panel,
+                backOfChair = uiState.backOfChair,
+                wheelChair = uiState.wheelChair,
+                wheelchairTable = uiState.wheelchairTable,
+                computerTable = uiState.computerTable,
+                modifier = Modifier.fillMaxWidth()
+            )
 
-        DeskAndChairComponent(
-            allInOne = uiState.allInOne,
-            cinemaSeat = uiState.cinemaSeat,
-            oneSeat = uiState.oneSeat,
-            twoSeat = uiState.twoSeat,
-            multiSeat = uiState.multiSeat,
-            panel = uiState.panel,
-            backOfChair = uiState.backOfChair,
-            wheelChair = uiState.wheelChair,
-            wheelchairTable = uiState.wheelchairTable,
-            computerTable = uiState.computerTable,
-            modifier = Modifier.fillMaxWidth()
-        )
+            DoorComponent(
+                frontDoor = uiState.frontDoor,
+                backDoor = uiState.backDoor,
+                modifier = Modifier.fillMaxWidth()
+            )
 
-        DoorComponent(
-            frontDoor = uiState.frontDoor,
-            backDoor = uiState.backDoor,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(30.dp))
+        }
     }
 }
 
