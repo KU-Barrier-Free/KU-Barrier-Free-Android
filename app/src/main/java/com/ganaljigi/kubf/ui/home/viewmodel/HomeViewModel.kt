@@ -84,7 +84,6 @@ class HomeViewModel @Inject constructor(
         buildingId: Long = 1L,
     ) {
 
-
         // TODO: 건물 정보 API 호출
         viewModelScope.launch {
             buildingRepository.getBuildingInfo(buildingId = buildingId)
@@ -92,7 +91,8 @@ class HomeViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             buildingInfo = response.toHomeBuildingInfo(),
-                            showingDoorMarkers = response.toDoorMarkers().toImmutableList()
+                            showingDoorMarkers = response.toDoorMarkers().toImmutableList(),
+                            homeUiMode = HomeUiMode.DEFAULT
                         )
                     }
                 }

@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -75,7 +73,8 @@ fun HomeRouteInfoItem(
                 shape = RoundedCornerShape(20.dp)
             )
             .clickable { onClick(routeResult) }
-            .padding(16.dp),
+            .padding(vertical = 16.dp)
+            .padding(start = 16.dp),
         verticalArrangement = Arrangement.spacedBy(11.dp)
     ) {
         Text(
@@ -99,10 +98,12 @@ fun HomeRouteInfoItem(
                 style = KUBFAndroidTheme.typography.semiBold18
             )
             Text(
-                text = routeResult.distanceText.takeIf { it.isNotEmpty() } 
+                text = routeResult.distanceText.takeIf { it.isNotEmpty() }
                     ?: routeResult.distance.toDistanceString(),
                 style = KUBFAndroidTheme.typography.semiBold13,
-                color = Gray3
+                color = Gray3,
+                maxLines = 1,
+                onTextLayout = { it -> it.lineCount}
             )
         }
     }
@@ -120,6 +121,7 @@ private fun HomeFindRouteComponentPreview() {
         ),
         routeResults = listOf(
             RouteResult(routeMode = RouteMode.SHORTEST, time = 7, distance = 428),
+            RouteResult(routeMode = RouteMode.NO_STAIRS, time = 10, distance = 600),
             RouteResult(routeMode = RouteMode.BARRIER_FREE, time = 14, distance = 1136),
         )
     )
