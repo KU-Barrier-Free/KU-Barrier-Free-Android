@@ -25,6 +25,7 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -96,6 +97,9 @@ fun BuildingInfoScreen(
                             Icon(Icons.Filled.ArrowBack, contentDescription = "뒤로")
                         }
                     },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.White
+                    ),
                     title = {
                         Text(
                             text = uiState.buildingInfo.name,
@@ -156,6 +160,9 @@ fun BuildingInfoScreen(
                         Icon(Icons.Filled.ArrowBack, contentDescription = "뒤로")
                     }
                 },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.White
+                ),
                 title = {
                     Text(
                         text = uiState.buildingInfo.name,
@@ -287,6 +294,7 @@ fun BuildingInfoScreen(
                                 color = MainGreen
                             )
                         },
+                        containerColor = Color.White,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         floors.forEachIndexed { idx, floorInfo ->
