@@ -60,6 +60,7 @@ import com.ganaljigi.kubf.ui.theme.Black
 import com.ganaljigi.kubf.ui.theme.Gray2
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.util.noRippleClickable
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -203,10 +204,14 @@ fun HomeScreen(
                 .fillMaxSize(),
             cameraPosition = uiState.cameraPositionState,
             selectedBuildingMarker = uiState.selectedBuildingMarker,
-            toggleMarkers = uiState.showingToggleMarkers,
+            selectedToggles = uiState.toggleUiStates.filter { it.isSelected }.toPersistentList(),
             buildingMarkers = uiState.buildingMarkers
                 .filter { it.id != uiState.selectedBuildingMarker?.id },
             doorMarkers = uiState.showingDoorMarkers,
+            curbMarkers = uiState.curbMarkers,
+            slopeMarkers = uiState.slopeMarkers,
+            stairsMarkers = uiState.stairsMarkers,
+            specialMarkers = uiState.specialMarkers,
 //            routeResults = uiState.routeResults,
             selectedRouteResult = uiState.selectedRouteResult,
             onBuildingMarkerClick = { marker ->
@@ -222,14 +227,15 @@ fun HomeScreen(
             visible = true
         ) { }
 
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
                 .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Box {
+            Box(
+                modifier = Modifier.align(Alignment.TopCenter)
+            ) {
                 androidx.compose.animation.AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.FIND_MODE || uiState.homeUiMode == HomeUiMode.ROUTE_MODE,
                     enter = slideInVertically(
@@ -329,7 +335,9 @@ fun HomeScreen(
                 }
             }
 
-            Box {
+            Box(
+                modifier = Modifier.align(Alignment.BottomCenter)
+            ) {
                 androidx.compose.animation.AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.BARRIER_FREE_SHOWN,
                     enter = slideInVertically(
@@ -345,6 +353,10 @@ fun HomeScreen(
                         }
                     )
                 }
+            }
+            Box(
+                modifier = Modifier.align(Alignment.BottomCenter)
+            ) {
                 androidx.compose.animation.AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.DEFAULT,
                     enter = slideInVertically(
@@ -370,6 +382,10 @@ fun HomeScreen(
                         }
                     }
                 }
+            }
+            Box(
+                modifier = Modifier.align(Alignment.BottomCenter)
+            ) {
                 androidx.compose.animation.AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.ROUTE_MODE,
                     enter = slideInVertically(

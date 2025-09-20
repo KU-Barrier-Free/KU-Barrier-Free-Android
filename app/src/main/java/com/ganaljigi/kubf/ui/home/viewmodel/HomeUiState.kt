@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 data class HomeUiState(
     val cameraPositionState: CameraPositionState = CameraPositionState(
@@ -29,12 +30,12 @@ data class HomeUiState(
     val showSpecialImageDialog: Boolean = false,
     val specialImageUrl: ImmutableList<String> = persistentListOf(),
     val inquiryField: TextFieldValue = TextFieldValue(""),
-    val toggleUiStates: List<ToggleUiState> = MapToggle.entries.map {
+    val toggleUiStates: ImmutableList<ToggleUiState> = MapToggle.entries.map {
         ToggleUiState(
             isSelected = it == MapToggle.SPECIAL_MARK,
             toggle = it
         )
-    },
+    }.toPersistentList(),
     val buildingMarkers: ImmutableList<BuildingMarker> = persistentListOf(),
     val selectedBuildingMarker: BuildingMarker? = null,
     val doorMarkers: ImmutableList<DoorMarker> = persistentListOf(),
@@ -43,7 +44,7 @@ data class HomeUiState(
     val slopeMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
     val stairsMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
     val specialMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
-    val showingToggleMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
+    val showingToggleMarkers: ImmutableList<ImmutableList<ToggleMarker>> = persistentListOf(),
     val selectedSpecialMarker: ToggleMarker? = null,
     val specialMarkerInfo: SpecialMarkerInfo? = null,
     val popularKeywords: ImmutableList<String> = persistentListOf(),
@@ -85,5 +86,5 @@ data class SpecialMarkerInfo(
 
 data class ToggleUiState(
     val toggle: MapToggle = MapToggle.CURB,
-    val isSelected: Boolean = false
+    val isSelected: Boolean = false,
 )

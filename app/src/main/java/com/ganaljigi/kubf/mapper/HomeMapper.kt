@@ -12,6 +12,7 @@ import com.ganaljigi.kubf.ui.home.model.SearchResult
 import com.ganaljigi.kubf.ui.home.model.ToggleMarker
 import com.ganaljigi.kubf.ui.home.viewmodel.HomeUiState
 import com.ganaljigi.kubf.ui.home.viewmodel.SpecialMarkerInfo
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 
 fun HomeResponseDto.toUiState() = HomeUiState(
@@ -20,7 +21,7 @@ fun HomeResponseDto.toUiState() = HomeUiState(
     slopeMarkers = this.ramps.toToggleMarkers(MapToggle.SLOPE),
     stairsMarkers = this.stairs.toToggleMarkers(MapToggle.STAIRS),
     specialMarkers = this.significants.toToggleMarkers(MapToggle.SPECIAL_MARK),
-    showingToggleMarkers = this.significants.toToggleMarkers(MapToggle.SPECIAL_MARK)
+    showingToggleMarkers = persistentListOf(this.significants.toToggleMarkers(MapToggle.SPECIAL_MARK))
 )
 
 fun HomeSignificantResponseDto.toSpecialMarkerInfo() = SpecialMarkerInfo(

@@ -20,11 +20,13 @@ import com.ganaljigi.kubf.ui.home.model.ToggleMarker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.collections.flatten
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -186,7 +188,7 @@ class HomeViewModel @Inject constructor(
                 toLocation = it.fromLocation,
             )
         }
-        
+
         // 바뀐 출발지와 도착지로 경로 다시 검색
         val fromLocation = uiState.value.fromLocation
         val toLocation = uiState.value.toLocation
@@ -330,8 +332,14 @@ class HomeViewModel @Inject constructor(
                 } else {
                     toggleUiState
                 }
-            }
-            val newShowingToggleMarkers = it.toggleUiStates
+            }.toPersistentList()
+            Log.d(
+                "HomeViewModel",
+                "updateToggleUiStates: updatedToggles=${
+                    updatedToggles.filter { b -> b.isSelected }.map { a -> a.toggle }
+                }"
+            )
+            val newShowingToggleMarkers = updatedToggles
                 .filter { toggleUiState -> toggleUiState.isSelected }
                 .map { toggleUiState ->
                     when (toggleUiState.toggle) {
@@ -340,25 +348,14 @@ class HomeViewModel @Inject constructor(
                         MapToggle.STAIRS -> uiState.value.stairsMarkers
                         MapToggle.SPECIAL_MARK -> uiState.value.specialMarkers
                     }
-                }.flatten().toImmutableList()
+                }.toPersistentList()
             it.copy(
                 homeUiMode = HomeUiMode.DEFAULT,
                 toggleUiStates = updatedToggles,
                 showingToggleMarkers = newShowingToggleMarkers,
+                selectedSpecialMarker = null
             )
         }
-
-        val newShowingToggleMarkers = uiState.value.toggleUiStates
-            .filter { it.isSelected }
-            .map { toggleUiState ->
-                when (toggleUiState.toggle) {
-                    MapToggle.CURB -> uiState.value.curbMarkers
-                    MapToggle.SLOPE -> uiState.value.slopeMarkers
-                    MapToggle.STAIRS -> uiState.value.stairsMarkers
-                    MapToggle.SPECIAL_MARK -> uiState.value.specialMarkers
-                }
-            }.flatten().toImmutableList()
-        _uiState.update { it.copy(showingToggleMarkers = newShowingToggleMarkers) }
     }
 
     fun updateSpecialMarkerInfo(toggleMarker: ToggleMarker) {
