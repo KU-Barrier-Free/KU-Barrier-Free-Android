@@ -24,5 +24,7 @@ data class HelperNoticeDto(
     @SerialName("date")
     val date: String,
     @SerialName("url")
-    val url: String
+    val url: String,
+    @SerialName("number")
+    val number: Int
 )

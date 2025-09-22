@@ -88,11 +88,10 @@ fun HelperScreen(
                 }
                 else -> {
                     state.notices.forEachIndexed { index, n ->
-                        val numberToShow = state.notices.size-index
                         NoticeItem(
                             title = n.title,
                             date = n.date,
-                            number = numberToShow,
+                            number = n.displayNumber,
                             index = index,
                             onClick = { uriHandler.openUri(n.url) }
                         )

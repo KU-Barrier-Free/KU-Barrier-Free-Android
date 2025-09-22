@@ -9,5 +9,7 @@ data class HelperUiState(
 data class NoticeUi(
     val title: String,
     val date: String,
-    val url: String
+    val url: String,
+    val rawNumber: Int? = null,
+    val displayNumber: Int = 0
 )

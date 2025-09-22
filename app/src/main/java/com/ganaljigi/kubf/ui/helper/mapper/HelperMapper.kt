@@ -30,5 +30,7 @@ fun HelperNoticeResponseDto.toUiState(): HelperUiState {
 fun HelperNoticeDto.toUi(): NoticeUi = NoticeUi(
     title = title,
     date = date,
-    url = url
+    url = url,
+    rawNumber = number,
+    displayNumber = number
 )
