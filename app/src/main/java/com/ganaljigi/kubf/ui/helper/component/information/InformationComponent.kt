@@ -44,6 +44,7 @@ import androidx.compose.material3.*
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.UiSettings
 import kotlinx.coroutines.launch
 import com.google.android.gms.maps.model.*
 import com.google.maps.android.compose.GoogleMap
@@ -145,6 +146,18 @@ fun MapBox(
     var uiSettings by remember { mutableStateOf(MapUiSettings()) }
     var properties by remember {
         mutableStateOf(MapProperties(mapType = MapType.NORMAL))
+    }
+
+    LaunchedEffect(Unit) {
+        uiSettings = uiSettings.copy(
+            zoomGesturesEnabled = true,
+            zoomControlsEnabled = true, // 우측 +/− 버튼 (싫으면 false)
+            scrollGesturesEnabled = false,
+            scrollGesturesEnabledDuringRotateOrZoom = false,
+            rotationGesturesEnabled = false,
+            tiltGesturesEnabled = false
+        )
+
     }
 
     Box(
