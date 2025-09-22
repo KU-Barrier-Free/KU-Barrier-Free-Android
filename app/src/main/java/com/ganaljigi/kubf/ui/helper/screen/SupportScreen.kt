@@ -66,7 +66,7 @@ fun SupportScreen(
                     onClick = { tabIndex = index },
                     text = {
                         Text(
-                            text = "교수/학습",
+                            text = title,
                             style = KUBFAndroidTheme.typography.medium14
                         )
                     }

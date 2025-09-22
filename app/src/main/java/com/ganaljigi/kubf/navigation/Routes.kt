@@ -33,4 +33,8 @@ sealed interface Routes {
 
     @Serializable
     data object Support : Routes
+    @Serializable
+    data object DisableStudentHelper : Routes
+    @Serializable
+    data object JobInformation : Routes
 }
