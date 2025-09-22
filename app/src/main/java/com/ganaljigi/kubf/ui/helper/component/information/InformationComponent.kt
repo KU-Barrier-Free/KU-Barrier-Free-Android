@@ -1,8 +1,14 @@
 package com.ganaljigi.kubf.ui.helper.component.information
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.snapping.SnapPosition.Center.position
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,6 +47,8 @@ import com.google.android.gms.maps.model.Marker
 import androidx.compose.runtime.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -54,6 +62,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MapType
+import android.net.Uri
 
 //정보 제목 박스
 @Composable
@@ -246,13 +255,17 @@ fun InfoBox(
         ) {
             Column {
                 Spacer(modifier = Modifier.height(1.5.dp))
-                Text(
-                    text = "02-450-3968",
-                    modifier = Modifier.height(20.dp),
-                    style = KUBFAndroidTheme.typography.regular14.copy(
-                        fontSize = 14.sp,
-                        lineHeight = 20.sp
-                    )
+//                Text(
+//                    text = "02-450-3968",
+//                    modifier = Modifier.height(20.dp),
+//                    style = KUBFAndroidTheme.typography.regular14.copy(
+//                        fontSize = 14.sp,
+//                        lineHeight = 20.sp
+//                    )
+//                )
+                PhoneActionText(
+                    number = "02-450-3968",
+                    modifier = Modifier.height(20.dp)
                 )
             }
         }
@@ -273,6 +286,70 @@ fun InfoBox(
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
+private fun normalizeForDial(raw: String): String {
+    val t = raw.trim()
+    val out = StringBuilder()
+    t.forEachIndexed { i, c ->
+        if (c.isDigit() || (i == 0 && c == '+')) out.append(c)
+    }
+    return out.toString()
+}
+
+private fun copyToClipboard(ctx: Context, text: String) {
+    val cm = ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    cm.setPrimaryClip(ClipData.newPlainText("전화번호", text))
+}
+
+@Composable
+private fun PhoneActionText(
+    number: String,
+    modifier: Modifier = Modifier,
+) {
+    val ctx = LocalContext.current
+    var showMenu by remember { mutableStateOf(false) }
+
+    Box(modifier) {
+        Text(
+            text = number,
+            style = KUBFAndroidTheme.typography.regular14,
+            textDecoration = TextDecoration.Underline,
+            modifier = Modifier
+                .padding(vertical = 2.dp)
+                .clickable { showMenu = true }
+        )
+
+        DropdownMenu(
+            expanded = showMenu,
+            onDismissRequest = { showMenu = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text("복사") },
+                onClick = {
+                    copyToClipboard(ctx, number)
+                    Toast.makeText(ctx, "전화번호가 복사되었습니다.", Toast.LENGTH_SHORT).show()
+                    showMenu = false
+                }
+            )
+            DropdownMenuItem(
+                text = { Text("전화하기") },
+                onClick = {
+                    copyToClipboard(ctx, number)
+                    val dial = normalizeForDial(number)
+                    if (dial.isBlank()) {
+                        Toast.makeText(ctx, "유효한 전화번호가 없습니다.", Toast.LENGTH_SHORT).show()
+                    } else {
+                        val intent = Intent(Intent.ACTION_DIAL).apply {
+                            data = Uri.fromParts("tel", dial, null)
+                        }
+                        ctx.startActivity(intent)
+                    }
+                    showMenu = false
+                }
+            )
+        }
     }
 }
 
