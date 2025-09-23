@@ -100,11 +100,10 @@ fun MainNavHost(
 
         composable<Routes.RoomInfo> { navBackStackEntry ->
             val roomNumber = navBackStackEntry.toRoute<Routes.BuildingInfo>().number
-//             RoomInfoScreen(
-//                padding = padding,
-//                roomId = it.toRoute<Routes.RoomInfo>().roomId,
-//                navigateBack = { navController.popBackStack() },
-//             )
+             RoomInfoScreen(
+                onBackClick = {navController.popBackStack()},
+                 viewModel = roomViewModel
+             )
         }
     }
 }
