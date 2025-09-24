@@ -1,6 +1,5 @@
 package com.ganaljigi.kubf.mapper
 
-import androidx.compose.ui.text.buildAnnotatedString
 import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.data.remote.response.home.HomeResponseDto
 import com.ganaljigi.kubf.data.remote.response.home.HomeSearchResponseDto
@@ -61,7 +60,7 @@ fun HomeSearchResponseDto.toUiState(matchKeyword: String): List<SearchResult> =
         )
     } + this.facilities.map {
         SearchResult(
-            id = it.id.toLong(),
+            id = it.buildingId.toLong(),
             name = it.name,
             building = it.buildingName,
             searchKeyword = matchKeyword,
