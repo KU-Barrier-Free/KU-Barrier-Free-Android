@@ -6,14 +6,19 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
@@ -38,13 +43,16 @@ fun HomeRouteInfo(
     Log.d("HomeView", "HomeRouteInfo: selectedRoute = $selectedRoute, routeResults = $routeResults")
     Row(
         modifier = modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         RouteMode.entries.forEach { routeMode ->
             routeResults.find { it.routeMode == routeMode }?.let { route ->
                 HomeRouteInfoItem(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(),
                     routeResult = route,
                     isSelected = selectedRoute.routeMode == routeMode,
                     onClick = onRouteSelected
@@ -63,6 +71,7 @@ fun HomeRouteInfoItem(
 ) {
     Column(
         modifier = modifier
+            .clip(RoundedCornerShape(20.dp))
             .background(
                 if (isSelected) LightGreen else Color.White,
                 shape = RoundedCornerShape(20.dp)
@@ -73,18 +82,24 @@ fun HomeRouteInfoItem(
                 shape = RoundedCornerShape(20.dp)
             )
             .clickable { onClick(routeResult) }
-            .padding(vertical = 16.dp)
-            .padding(start = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(11.dp)
+            .padding(vertical = 16.dp),
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp),
             text = routeResult.routeMode.label,
-            style = KUBFAndroidTheme.typography.semiBold14,
+            style = KUBFAndroidTheme.typography.semiBold13,
             color = if (isSelected) MainGreen else Gray4
         )
+        Spacer(modifier = Modifier.height(10.dp))
         Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp),
             verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Text(
                 text = buildAnnotatedString {
@@ -98,12 +113,11 @@ fun HomeRouteInfoItem(
                 style = KUBFAndroidTheme.typography.semiBold18
             )
             Text(
-                text = routeResult.distanceText.takeIf { it.isNotEmpty() }
-                    ?: routeResult.distance.toDistanceString(),
+                text = routeResult.distanceText.toDistanceString(),
                 style = KUBFAndroidTheme.typography.semiBold13,
                 color = Gray3,
                 maxLines = 1,
-                onTextLayout = { it -> it.lineCount}
+                onTextLayout = { it -> it.lineCount }
             )
         }
     }
@@ -117,12 +131,12 @@ private fun HomeFindRouteComponentPreview() {
         selectedRoute = RouteResult(
             routeMode = RouteMode.BARRIER_FREE,
             time = 30,
-            distance = 5000
+            distanceText = "5000m"
         ),
         routeResults = listOf(
-            RouteResult(routeMode = RouteMode.SHORTEST, time = 7, distance = 428),
-            RouteResult(routeMode = RouteMode.NO_STAIRS, time = 10, distance = 600),
-            RouteResult(routeMode = RouteMode.BARRIER_FREE, time = 14, distance = 1136),
+            RouteResult(routeMode = RouteMode.SHORTEST, time = 7, distanceText = "428m"),
+            RouteResult(routeMode = RouteMode.NO_STAIRS, time = 10, distanceText = "600m"),
+            RouteResult(routeMode = RouteMode.BARRIER_FREE, time = 14, distanceText = "1136m"),
         )
     )
 }

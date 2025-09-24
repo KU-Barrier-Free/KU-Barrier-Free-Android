@@ -27,7 +27,7 @@ inline fun Modifier.noRippleClickable(
 fun Modifier.conditionalModifier(
     condition: Boolean,
     modifierIfTrue: Modifier = Modifier,
-    modifierIfFalse: Modifier = Modifier
+    modifierIfFalse: Modifier = Modifier,
 ): Modifier {
     return if (condition) {
         this.then(modifierIfTrue)
@@ -36,11 +36,17 @@ fun Modifier.conditionalModifier(
     }
 }
 
-fun Int.toDistanceString(): String {
-    return when {
-        this < 1000 -> "${this}m"
-        else -> "%.1fkm".format(this / 1000.0)
+fun String.toDistanceString(): String {
+    Log.d("ViewUtil", "toDistanceString: this = $this")
+    val distanceInt = this.filter { it.isDigit() }
+    Log.d("ViewUtil", "toDistanceString: distanceInt = $distanceInt")
+    val q = distanceInt.toIntOrNull() ?: return this
+    val b = when {
+        q < 1000 -> "${this}m"
+        else -> "%.1fkm".format(q / 1000.0)
     }
+    Log.d("ViewUtil", "toDistanceString: b = $b")
+    return b
 }
 
 fun String.toAnnotatedString(matchKeyword: String): AnnotatedString {

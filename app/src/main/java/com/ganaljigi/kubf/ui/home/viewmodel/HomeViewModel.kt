@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.ganaljigi.kubf.data.remote.repository.BuildingRepository
 import com.ganaljigi.kubf.data.remote.repository.HomeRepository
 import com.ganaljigi.kubf.data.remote.repository.RouteRepository
-import com.ganaljigi.kubf.mapper.toHomeBuildingInfo
 import com.ganaljigi.kubf.mapper.toDoorMarkers
+import com.ganaljigi.kubf.mapper.toHomeBuildingInfo
 import com.ganaljigi.kubf.mapper.toRouteResults
 import com.ganaljigi.kubf.mapper.toSpecialMarkerInfo
 import com.ganaljigi.kubf.mapper.toUiState
@@ -26,7 +26,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.collections.flatten
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -41,6 +40,10 @@ class HomeViewModel @Inject constructor(
         fetchInitData()
     }
 
+    /**
+     * 검색어를 업데이트하고, 관련 검색 결과를 가져옵니다.
+     * @param newSearchWord 새로운 검색어
+     */
     fun updateSearchWord(newSearchWord: TextFieldValue = TextFieldValue("")) {
         Log.d("HomeViewModel", "updateSearchWord: $newSearchWord")
         if (newSearchWord.text == uiState.value.searchWord.text) return
@@ -48,15 +51,27 @@ class HomeViewModel @Inject constructor(
         getSearchResults(newSearchWord.text)
     }
 
+    /**
+     * 문의하기 입력 필드를 업데이트합니다.
+     * @param newInquiryField 새로운 문의 내용
+     */
     fun updateInquiryField(newInquiryField: TextFieldValue) {
         _uiState.update { it.copy(inquiryField = newInquiryField) }
     }
 
+    /**
+     * 문의를 제출합니다.
+     */
     fun submitInquiry() {
         // TODO: 문의 API 호출
         setShowInquiryDialog(false)
     }
 
+    /**
+     * 검색어를 기반으로 검색 결과를 가져옵니다.
+     * @param newSearchWord 검색어
+     */
+    // 검색 결과 호출 API
     fun getSearchResults(newSearchWord: String = uiState.value.searchWord.text) {
         if (newSearchWord.isEmpty()) {
             return
@@ -74,17 +89,24 @@ class HomeViewModel @Inject constructor(
 
     }
 
+    /**
+     * 선택된 특이사항 마커의 정보를 가져옵니다.
+     * @param selectedSpecialMarker 선택된 특이사항 마커
+     */
+    // 특이사항 정보 API
     fun getSpecialMarkerInfo(selectedSpecialMarker: ToggleMarker) {
-        // TODO: 특이사항 정보 API 호출
         updateSelectedSpecialMarker(selectedSpecialMarker)
         updateSpecialMarkerInfo(selectedSpecialMarker)
     }
 
+    /**
+     * 건물 ID를 기반으로 건물 정보를 업데이트합니다.
+     * @param buildingId 건물 ID
+     */
+    // 건물 정보 API 호출
     fun updateBuildingInfo(
         buildingId: Long = 1L,
     ) {
-
-        // TODO: 건물 정보 API 호출
         viewModelScope.launch {
             buildingRepository.getBuildingInfo(buildingId = buildingId)
                 .onSuccess { response ->
@@ -103,10 +125,14 @@ class HomeViewModel @Inject constructor(
                         error
                     )
                 }
-
         }
     }
 
+    /**
+     * 검색 결과를 업데이트하고, 바텀 시트 표시 여부를 결정합니다.
+     * @param newSearchResults 새로운 검색 결과 목록
+     * @param showSheet 바텀 시트 표시 여부
+     */
     fun updateSearchResults(
         newSearchResults: List<SearchResult> = uiState.value.searchResults,
         showSheet: Boolean = true,
@@ -127,6 +153,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 단일 검색 결과를 처리합니다.
+     * @param searchResult 단일 검색 결과
+     */
     private fun setSingleResult(searchResult: SearchResult) {
         Log.d("HomeViewModel", "setSingleResult: $searchResult")
         if (searchResult.isBuilding) {
@@ -142,19 +172,30 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-
+    /**
+     * '출발' 버튼 클릭을 처리합니다.
+     * @param searchResult 선택된 검색 결과
+     */
     fun onFromClick(searchResult: SearchResult) {
         setHomeUiMode(HomeUiMode.FIND_MODE)
         setBottomSheetType(HomeBottomSheetType.NONE)
         updateFromLocation(searchResult)
     }
 
+    /**
+     * '도착' 버튼 클릭을 처리합니다.
+     * @param searchResult 선택된 검색 결과
+     */
     fun onToClick(searchResult: SearchResult) {
         setHomeUiMode(HomeUiMode.FIND_MODE)
         setBottomSheetType(HomeBottomSheetType.NONE)
         updateToLocation(searchResult)
     }
 
+    /**
+     * 출발지를 업데이트하고, 필요한 경우 경로를 검색합니다.
+     * @param fromLocation 출발지
+     */
     fun updateFromLocation(fromLocation: SearchResult) {
         _uiState.update {
             it.copy(
@@ -168,6 +209,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 도착지를 업데이트하고, 필요한 경우 경로를 검색합니다.
+     * @param toLocation 도착지
+     */
     fun updateToLocation(toLocation: SearchResult) {
         _uiState.update {
             it.copy(
@@ -181,6 +226,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 출발지와 도착지를 바꿉니다.
+     */
     fun changeFromToLocation() {
         _uiState.update {
             it.copy(
@@ -197,6 +245,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 출발지와 도착지 사이의 경로를 가져옵니다.
+     */
     private fun getRouteBetweenLocations() {
         val fromLocation = _uiState.value.fromLocation
         val toLocation = _uiState.value.toLocation
@@ -240,16 +291,27 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 경로 검색 실패 시 대체 경로를 사용합니다.
+     */
     private fun useFallbackRoutes() {
         Log.w("HomeViewModel", "No routes returned from API - showing empty routes")
     }
 
+    /**
+     * 검색 결과로부터 건물 정보를 가져옵니다.
+     * @param searchResult 검색 결과
+     */
     private fun getBuildingInfoByResult(searchResult: SearchResult) {
         // TODO: 건물 정보 API 호출
         updateBuildingInfo(searchResult.id)
         setBottomSheetType(HomeBottomSheetType.BUILDING_INFO)
     }
 
+    /**
+     * 마커로부터 건물 정보를 가져옵니다.
+     * @param selectedBuildingMarker 선택된 건물 마커
+     */
     fun getBuildingInfoByMarker(selectedBuildingMarker: BuildingMarker) {
         // TODO: 건물 정보 API 호출
         updateBuildingInfo(selectedBuildingMarker.id)
@@ -257,6 +319,10 @@ class HomeViewModel @Inject constructor(
         setBottomSheetType(HomeBottomSheetType.BUILDING_INFO)
     }
 
+    /**
+     * 선택된 건물 마커를 업데이트합니다.
+     * @param selectedBuildingMarker 선택된 건물 마커
+     */
     private fun updateSelectedBuildingMarker(selectedBuildingMarker: BuildingMarker) {
         _uiState.update {
             it.copy(
@@ -267,6 +333,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 선택된 특이사항 마커를 업데이트합니다.
+     * @param selectedSpecialMarker 선택된 특이사항 마커
+     */
     private fun updateSelectedSpecialMarker(selectedSpecialMarker: ToggleMarker) {
         _uiState.update {
             it.copy(
@@ -278,6 +348,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 홈 화면 UI 모드를 설정합니다.
+     * @param homeUiMode 홈 화면 UI 모드
+     */
     fun setHomeUiMode(homeUiMode: HomeUiMode) {
         _uiState.update {
             it.copy(
@@ -287,6 +361,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 바텀 시트 타입을 설정합니다.
+     * @param bottomSheetType 바텀 시트 타입
+     */
     fun setBottomSheetType(bottomSheetType: HomeBottomSheetType) {
         Log.d("HomeViewModel", "setBottomSheetType: $bottomSheetType")
         val isBottomSheetExpanded = bottomSheetType != HomeBottomSheetType.NONE
@@ -299,6 +377,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 문의하기 다이얼로그 표시 여부를 설정합니다.
+     * @param showInquiryDialog 문의하기 다이얼로그 표시 여부
+     */
     fun setShowInquiryDialog(showInquiryDialog: Boolean) {
         val newInquiryField =
             uiState.value.inquiryField.takeIf { !showInquiryDialog } ?: TextFieldValue("")
@@ -310,6 +392,11 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 특이사항 이미지 다이얼로그 표시 여부를 설정합니다.
+     * @param showSpecialImageDialog 특이사항 이미지 다이얼로그 표시 여부
+     * @param imageUrl 이미지 URL 목록
+     */
     fun setShowSpecialImageDialog(
         showSpecialImageDialog: Boolean,
         imageUrl: List<String> = emptyList(),
@@ -324,6 +411,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 지도 토글 UI 상태를 업데이트합니다.
+     * @param toggle 지도 토글
+     */
     fun updateToggleUiStates(toggle: MapToggle) {
         _uiState.update {
             val updatedToggles = it.toggleUiStates.map { toggleUiState ->
@@ -358,6 +449,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 특이사항 마커 정보를 업데이트합니다.
+     * @param toggleMarker 토글 마커
+     */
     fun updateSpecialMarkerInfo(toggleMarker: ToggleMarker) {
         viewModelScope.launch {
             homeRepository.getSpecialInfo(toggleMarker.id).fold(
@@ -386,6 +481,9 @@ class HomeViewModel @Inject constructor(
 
     }
 
+    /**
+     * 초기 데이터를 가져옵니다.
+     */
     private fun fetchInitData() {
         viewModelScope.launch {
             homeRepository.getHomeData().fold(
@@ -400,6 +498,10 @@ class HomeViewModel @Inject constructor(
 
     }
 
+    /**
+     * 경로를 선택합니다.
+     * @param routeResult 선택된 경로
+     */
     fun selectRoute(routeResult: RouteResult) {
         _uiState.update {
             it.copy(
@@ -408,6 +510,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 기본 모드로 설정합니다.
+     */
     fun setDefaultMode() {
         _uiState.update {
             it.copy(

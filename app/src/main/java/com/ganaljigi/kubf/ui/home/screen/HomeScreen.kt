@@ -60,6 +60,7 @@ import com.ganaljigi.kubf.ui.theme.Black
 import com.ganaljigi.kubf.ui.theme.Gray2
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.util.noRippleClickable
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 
@@ -207,11 +208,16 @@ fun HomeScreen(
             selectedToggles = uiState.toggleUiStates.filter { it.isSelected }.toPersistentList(),
             buildingMarkers = uiState.buildingMarkers
                 .filter { it.id != uiState.selectedBuildingMarker?.id },
-            doorMarkers = uiState.showingDoorMarkers,
-            curbMarkers = uiState.curbMarkers,
-            slopeMarkers = uiState.slopeMarkers,
-            stairsMarkers = uiState.stairsMarkers,
-            specialMarkers = uiState.specialMarkers,
+            doorMarkers = uiState.showingDoorMarkers.takeIf { uiState.homeUiMode == HomeUiMode.FIND_MODE }
+                ?: persistentListOf(),
+            curbMarkers = uiState.curbMarkers.takeIf { uiState.homeUiMode == HomeUiMode.FIND_MODE }
+                ?: persistentListOf(),
+            slopeMarkers = uiState.slopeMarkers.takeIf { uiState.homeUiMode == HomeUiMode.FIND_MODE }
+                ?: persistentListOf(),
+            stairsMarkers = uiState.stairsMarkers.takeIf { uiState.homeUiMode == HomeUiMode.FIND_MODE }
+                ?: persistentListOf(),
+            specialMarkers = uiState.specialMarkers.takeIf { uiState.homeUiMode == HomeUiMode.FIND_MODE }
+                ?: persistentListOf(),
 //            routeResults = uiState.routeResults,
             selectedRouteResult = uiState.selectedRouteResult,
             onBuildingMarkerClick = { marker ->
