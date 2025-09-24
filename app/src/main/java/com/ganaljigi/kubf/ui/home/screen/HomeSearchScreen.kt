@@ -76,6 +76,7 @@ fun HomeSearchScreen(
             },
             onSearchKeyboardEntered = {
                 if (searchMode == SearchMode.SEARCH) {
+                    viewModel.updateSearchWord(uiState.searchWord)
                     viewModel.updateSearchResults()
                     navigateUp()
                 }
