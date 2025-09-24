@@ -1,6 +1,7 @@
 package com.ganaljigi.kubf.ui.home.screen
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -84,6 +85,10 @@ fun HomeScreen(
     val bottomSheetState = scaffoldState.bottomSheetState
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
+
+    BackHandler(enabled = uiState.homeUiMode != HomeUiMode.DEFAULT) {
+        viewModel.setDefaultMode()
+    }
 
     LaunchedEffect(uiState.isBottomSheetExpanded, uiState.bottomSheetType) {
         Log.d(

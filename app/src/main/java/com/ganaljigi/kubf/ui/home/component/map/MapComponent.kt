@@ -324,7 +324,9 @@ private fun BuildingMarker(
                 ),
                 contentDescription = null,
                 tint = Color.Unspecified,
-                modifier = Modifier.shadow(1.dp)
+                modifier = Modifier
+                    .shadow(1.dp)
+                    .then(if (!isSelected) Modifier.size(20.dp) else Modifier)
             )
 
             Text(
