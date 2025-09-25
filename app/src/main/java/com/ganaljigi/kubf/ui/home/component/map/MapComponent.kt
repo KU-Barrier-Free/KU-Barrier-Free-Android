@@ -1,6 +1,5 @@
 package com.ganaljigi.kubf.ui.home.component.map
 
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -219,10 +218,6 @@ private fun SelectedSpecialMarker(
             placeholder = painterResource(R.drawable.img_special_info),
             error = painterResource(R.drawable.img_special_info),
             onSuccess = {
-                Log.d(
-                    "MapComponent",
-                    "Image $index loaded successfully for marker ${toggleMarker.id}"
-                )
                 recomposeKey[index] = !recomposeKey[index]
             }
         )
@@ -242,10 +237,6 @@ private fun SelectedSpecialMarker(
         ),
         zIndex = Float.MAX_VALUE
     ) {
-        Log.d(
-            "MapComponent",
-            "SelectedSpecialMarker ${toggleMarker.id} composing - recomposeKey: ${recomposeKey.toList()}"
-        )
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             MapSpecialInfo(
                 painters = painters,

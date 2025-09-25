@@ -1,6 +1,5 @@
 package com.ganaljigi.kubf.ui.util
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.remember
@@ -37,7 +36,6 @@ fun Modifier.conditionalModifier(
 }
 
 fun String.toDistanceString(): String {
-    Log.d("ViewUtil", "toDistanceString: this = $this")
     val distanceInt = this.filter { it.isDigit() }.toIntOrNull()
     return when {
         distanceInt == null -> this

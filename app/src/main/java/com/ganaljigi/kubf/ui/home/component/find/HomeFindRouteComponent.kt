@@ -40,7 +40,6 @@ fun HomeRouteInfo(
     routeResults: List<RouteResult>,
     onRouteSelected: (RouteResult) -> Unit = {},
 ) {
-    Log.d("HomeView", "HomeRouteInfo: selectedRoute = $selectedRoute, routeResults = $routeResults")
     Row(
         modifier = modifier
             .fillMaxWidth()

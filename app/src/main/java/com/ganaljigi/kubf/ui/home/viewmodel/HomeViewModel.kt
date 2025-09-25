@@ -45,7 +45,6 @@ class HomeViewModel @Inject constructor(
      * @param newSearchWord 새로운 검색어
      */
     fun updateSearchWord(newSearchWord: TextFieldValue = TextFieldValue("")) {
-        Log.d("HomeViewModel", "updateSearchWord: $newSearchWord")
         if (newSearchWord.text == uiState.value.searchWord.text) return
         _uiState.update { it.copy(searchWord = newSearchWord) }
         getSearchResults(newSearchWord.text)
@@ -128,7 +127,6 @@ class HomeViewModel @Inject constructor(
         newSearchResults: List<SearchResult> = uiState.value.searchResults,
         showSheet: Boolean = true,
     ) {
-        Log.d("HomeViewModel", "updateSearchResults: $newSearchResults")
         if (newSearchResults.size == 1) {
             setSingleResult(newSearchResults.first())
         } else {
@@ -149,7 +147,6 @@ class HomeViewModel @Inject constructor(
      * @param searchResult 단일 검색 결과
      */
     private fun setSingleResult(searchResult: SearchResult) {
-        Log.d("HomeViewModel", "setSingleResult: $searchResult")
         if (searchResult.isBuilding) {
             getBuildingInfoByResult(searchResult)
         } else {
@@ -243,11 +240,6 @@ class HomeViewModel @Inject constructor(
         val fromLocation = _uiState.value.fromLocation
         val toLocation = _uiState.value.toLocation
 
-        Log.d(
-            "HomeViewModel",
-            "getRouteBetweenLocations: from=${fromLocation.name}, to=${toLocation.name}"
-        )
-
         viewModelScope.launch {
             routeRepository.getPath(
                 srcId = fromLocation.id,
@@ -270,24 +262,15 @@ class HomeViewModel @Inject constructor(
                             "HomeViewModel",
                             "getRouteBetweenLocations: No routes returned from API"
                         )
-                        // 빈 응답 시 fallback 사용
-                        useFallbackRoutes()
                     }
                 },
                 onFailure = { error ->
                     Log.e("HomeViewModel", "getRouteBetweenLocations: Error fetching route", error)
-                    useFallbackRoutes()
                 }
             )
         }
     }
 
-    /**
-     * 경로 검색 실패 시 대체 경로를 사용합니다.
-     */
-    private fun useFallbackRoutes() {
-        Log.w("HomeViewModel", "No routes returned from API - showing empty routes")
-    }
 
     /**
      * 검색 결과로부터 건물 정보를 가져옵니다.
@@ -376,7 +359,6 @@ class HomeViewModel @Inject constructor(
      * @param bottomSheetType 바텀 시트 타입
      */
     fun setBottomSheetType(bottomSheetType: HomeBottomSheetType) {
-        Log.d("HomeViewModel", "setBottomSheetType: $bottomSheetType")
         val isBottomSheetExpanded = bottomSheetType != HomeBottomSheetType.NONE
         _uiState.update {
             it.copy(
@@ -434,12 +416,6 @@ class HomeViewModel @Inject constructor(
                     toggleUiState
                 }
             }.toPersistentList()
-            Log.d(
-                "HomeViewModel",
-                "updateToggleUiStates: updatedToggles=${
-                    updatedToggles.filter { b -> b.isSelected }.map { a -> a.toggle }
-                }"
-            )
             val newShowingToggleMarkers = updatedToggles
                 .filter { toggleUiState -> toggleUiState.isSelected }
                 .map { toggleUiState ->

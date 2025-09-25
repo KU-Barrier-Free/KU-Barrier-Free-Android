@@ -3,7 +3,6 @@ package com.ganaljigi.kubf.ui.home.screen
 import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -109,7 +108,6 @@ fun HomeScreen(
         val coarseLocationGranted = permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false
 
         if (fineLocationGranted || coarseLocationGranted) {
-            Log.d("TAG", "Location permission granted")
             isLocationPermissionGranted = true
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION) ||
@@ -139,10 +137,6 @@ fun HomeScreen(
     }
 
     LaunchedEffect(uiState.isBottomSheetExpanded, uiState.bottomSheetType) {
-        Log.d(
-            "HomeScreen",
-            "Bottom sheet state changed, ${uiState.bottomSheetType} ${uiState.isBottomSheetExpanded}"
-        )
         if (uiState.isBottomSheetExpanded && uiState.bottomSheetType != HomeBottomSheetType.NONE) {
             if (bottomSheetState.isVisible.not()) {
                 scope.launch {
