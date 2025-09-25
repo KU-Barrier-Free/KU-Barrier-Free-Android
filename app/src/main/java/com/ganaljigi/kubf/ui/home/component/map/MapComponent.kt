@@ -382,17 +382,17 @@ object MapParam {
     val mapProperties = MapProperties(
         isBuildingEnabled = true,
         isIndoorEnabled = false,
-        isMyLocationEnabled = false,
+        isMyLocationEnabled = true,
         isTrafficEnabled = false,
         // 카메라가 이동할 수 있는 범위
         latLngBoundsForCameraTarget = LatLngBounds(
             LatLng(
-                37.53727441241805,
-                127.0655595262516,
+                37.5373,
+                127.0656,
             ),
             LatLng(
-                37.54392357787584,
-                127.0951599033603
+                37.5450,
+                127.0952
             )
         ),
         mapStyleOptions = null,
@@ -409,7 +409,7 @@ object MapParam {
         scrollGesturesEnabled = true,
         scrollGesturesEnabledDuringRotateOrZoom = true,
         tiltGesturesEnabled = true,
-        zoomControlsEnabled = false,
+        zoomControlsEnabled = true,
         zoomGesturesEnabled = true
     )
     val mapOptions = GoogleMapOptions().apply {
