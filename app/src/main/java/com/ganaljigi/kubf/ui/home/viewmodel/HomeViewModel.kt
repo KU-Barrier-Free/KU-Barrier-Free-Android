@@ -93,39 +93,30 @@ class HomeViewModel @Inject constructor(
      * 선택된 특이사항 마커의 정보를 가져옵니다.
      * @param selectedSpecialMarker 선택된 특이사항 마커
      */
-    // 특이사항 정보 API
     fun getSpecialMarkerInfo(selectedSpecialMarker: ToggleMarker) {
-        updateSelectedSpecialMarker(selectedSpecialMarker)
-        updateSpecialMarkerInfo(selectedSpecialMarker)
-    }
-
-    /**
-     * 건물 ID를 기반으로 건물 정보를 업데이트합니다.
-     * @param buildingId 건물 ID
-     */
-    // 건물 정보 API 호출
-    fun updateBuildingInfo(
-        buildingId: Long = 1L,
-    ) {
         viewModelScope.launch {
-            buildingRepository.getBuildingInfo(buildingId = buildingId)
-                .onSuccess { response ->
+            homeRepository.getSpecialInfo(selectedSpecialMarker.id).fold(
+                onSuccess = { response ->
                     _uiState.update {
                         it.copy(
-                            buildingInfo = response.toHomeBuildingInfo(),
-                            showingDoorMarkers = response.toDoorMarkers().toImmutableList(),
-                            homeUiMode = HomeUiMode.DEFAULT
+                            specialMarkerInfo = response.toSpecialMarkerInfo(),
+                            selectedBuildingMarker = null,
+                            selectedSpecialMarker = selectedSpecialMarker,
+                            bottomSheetType = HomeBottomSheetType.NONE,
+                            searchResults = persistentListOf(),
                         )
                     }
-                }
-                .onFailure { error ->
+                },
+                onFailure = { error ->
                     Log.e(
                         "HomeViewModel",
-                        "updateBuildingInfo: Error fetching building info",
+                        "updateSpecialMarkerInfo: Error fetching special info",
                         error
                     )
                 }
+            )
         }
+
     }
 
     /**
@@ -303,9 +294,26 @@ class HomeViewModel @Inject constructor(
      * @param searchResult 검색 결과
      */
     private fun getBuildingInfoByResult(searchResult: SearchResult) {
-        // TODO: 건물 정보 API 호출
-        updateBuildingInfo(searchResult.id)
-        setBottomSheetType(HomeBottomSheetType.BUILDING_INFO)
+        viewModelScope.launch {
+            buildingRepository.getBuildingInfo(buildingId = searchResult.id)
+                .onSuccess { response ->
+                    _uiState.update {
+                        it.copy(
+                            buildingInfo = response.toHomeBuildingInfo(),
+                            showingDoorMarkers = response.toDoorMarkers().toImmutableList(),
+                            homeUiMode = HomeUiMode.DEFAULT
+                        )
+                    }
+                    setBottomSheetType(HomeBottomSheetType.BUILDING_INFO)
+                }
+                .onFailure { error ->
+                    Log.e(
+                        "HomeViewModel",
+                        "updateBuildingInfo: Error fetching building info",
+                        error
+                    )
+                }
+        }
     }
 
     /**
@@ -313,10 +321,27 @@ class HomeViewModel @Inject constructor(
      * @param selectedBuildingMarker 선택된 건물 마커
      */
     fun getBuildingInfoByMarker(selectedBuildingMarker: BuildingMarker) {
-        // TODO: 건물 정보 API 호출
-        updateBuildingInfo(selectedBuildingMarker.id)
-        updateSelectedBuildingMarker(selectedBuildingMarker)
-        setBottomSheetType(HomeBottomSheetType.BUILDING_INFO)
+        viewModelScope.launch {
+            buildingRepository.getBuildingInfo(buildingId = selectedBuildingMarker.id)
+                .onSuccess { response ->
+                    _uiState.update {
+                        it.copy(
+                            buildingInfo = response.toHomeBuildingInfo(),
+                            showingDoorMarkers = response.toDoorMarkers().toImmutableList(),
+                            homeUiMode = HomeUiMode.DEFAULT
+                        )
+                    }
+                    updateSelectedBuildingMarker(selectedBuildingMarker)
+                    setBottomSheetType(HomeBottomSheetType.BUILDING_INFO)
+                }
+                .onFailure { error ->
+                    Log.e(
+                        "HomeViewModel",
+                        "updateBuildingInfo: Error fetching building info",
+                        error
+                    )
+                }
+        }
     }
 
     /**
@@ -328,21 +353,6 @@ class HomeViewModel @Inject constructor(
             it.copy(
                 selectedBuildingMarker = selectedBuildingMarker,
                 selectedSpecialMarker = null,
-                searchResults = persistentListOf(),
-            )
-        }
-    }
-
-    /**
-     * 선택된 특이사항 마커를 업데이트합니다.
-     * @param selectedSpecialMarker 선택된 특이사항 마커
-     */
-    private fun updateSelectedSpecialMarker(selectedSpecialMarker: ToggleMarker) {
-        _uiState.update {
-            it.copy(
-                selectedBuildingMarker = null,
-                selectedSpecialMarker = selectedSpecialMarker,
-                bottomSheetType = HomeBottomSheetType.NONE,
                 searchResults = persistentListOf(),
             )
         }
@@ -447,38 +457,6 @@ class HomeViewModel @Inject constructor(
                 selectedSpecialMarker = null
             )
         }
-    }
-
-    /**
-     * 특이사항 마커 정보를 업데이트합니다.
-     * @param toggleMarker 토글 마커
-     */
-    fun updateSpecialMarkerInfo(toggleMarker: ToggleMarker) {
-        viewModelScope.launch {
-            homeRepository.getSpecialInfo(toggleMarker.id).fold(
-                onSuccess = { response ->
-                    _uiState.update {
-                        it.copy(
-                            specialMarkerInfo = response.toSpecialMarkerInfo(),
-//                                SpecialMarkerInfo(
-//                                imageUrls = listOf(
-//                                    "https://cdn.pixabay.com/photo/2015/07/08/01/22/korean-jindo-835301_1280.jpg",
-//                                    "https://cdn.pixabay.com/photo/2015/07/08/01/22/korean-jindo-835301_1280.jpg"
-//                                ),
-//                                description = response.toSpecialMarkerInfo().description
-                        )
-                    }
-                },
-                onFailure = { error ->
-                    Log.e(
-                        "HomeViewModel",
-                        "updateSpecialMarkerInfo: Error fetching special info",
-                        error
-                    )
-                }
-            )
-        }
-
     }
 
     /**
