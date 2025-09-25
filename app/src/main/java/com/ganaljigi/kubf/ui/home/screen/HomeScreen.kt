@@ -213,15 +213,15 @@ fun HomeScreen(
             selectedToggles = uiState.toggleUiStates.filter { it.isSelected }.toPersistentList(),
             buildingMarkers = uiState.buildingMarkers
                 .filter { it.id != uiState.selectedBuildingMarker?.id },
-            doorMarkers = uiState.showingDoorMarkers.takeIf { uiState.homeUiMode == HomeUiMode.FIND_MODE }
+            doorMarkers = uiState.showingDoorMarkers.takeIf { uiState.homeUiMode == HomeUiMode.DEFAULT }
                 ?: persistentListOf(),
-            curbMarkers = uiState.curbMarkers.takeIf { uiState.homeUiMode == HomeUiMode.FIND_MODE }
+            curbMarkers = uiState.curbMarkers.takeIf { uiState.homeUiMode == HomeUiMode.DEFAULT }
                 ?: persistentListOf(),
-            slopeMarkers = uiState.slopeMarkers.takeIf { uiState.homeUiMode == HomeUiMode.FIND_MODE }
+            slopeMarkers = uiState.slopeMarkers.takeIf { uiState.homeUiMode == HomeUiMode.DEFAULT }
                 ?: persistentListOf(),
-            stairsMarkers = uiState.stairsMarkers.takeIf { uiState.homeUiMode == HomeUiMode.FIND_MODE }
+            stairsMarkers = uiState.stairsMarkers.takeIf { uiState.homeUiMode == HomeUiMode.DEFAULT }
                 ?: persistentListOf(),
-            specialMarkers = uiState.specialMarkers.takeIf { uiState.homeUiMode == HomeUiMode.FIND_MODE }
+            specialMarkers = uiState.specialMarkers.takeIf { uiState.homeUiMode == HomeUiMode.DEFAULT }
                 ?: persistentListOf(),
 //            routeResults = uiState.routeResults,
             selectedRouteResult = uiState.selectedRouteResult,
