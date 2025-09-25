@@ -117,7 +117,6 @@ fun HomeRouteInfoItem(
                 style = KUBFAndroidTheme.typography.semiBold13,
                 color = Gray3,
                 maxLines = 1,
-                onTextLayout = { it -> it.lineCount }
             )
         }
     }

@@ -26,11 +26,13 @@ fun FindWayButton(
 ) {
     Box(
         modifier = modifier
-            .shadow(2.dp, RoundedCornerShape(10.dp))
+            .shadow(10.dp, RoundedCornerShape(10.dp))
             .aspectRatio(1f)
             .clickable(onClick = onClick)
     ) {
         Icon(
+            modifier = Modifier
+                .align(Alignment.Center),
             painter = painterResource(R.drawable.ic_find_way_button),
             contentDescription = "Find Way",
             tint = Color.Unspecified,

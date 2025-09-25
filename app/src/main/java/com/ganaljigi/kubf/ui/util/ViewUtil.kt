@@ -38,15 +38,12 @@ fun Modifier.conditionalModifier(
 
 fun String.toDistanceString(): String {
     Log.d("ViewUtil", "toDistanceString: this = $this")
-    val distanceInt = this.filter { it.isDigit() }
-    Log.d("ViewUtil", "toDistanceString: distanceInt = $distanceInt")
-    val q = distanceInt.toIntOrNull() ?: return this
-    val b = when {
-        q < 1000 -> "${this}m"
-        else -> "%.1fkm".format(q / 1000.0)
+    val distanceInt = this.filter { it.isDigit() }.toIntOrNull()
+    return when {
+        distanceInt == null -> this
+        distanceInt < 1000 -> "${distanceInt}m"
+        else -> "%.1fkm".format(distanceInt / 1000.0)
     }
-    Log.d("ViewUtil", "toDistanceString: b = $b")
-    return b
 }
 
 fun String.toAnnotatedString(matchKeyword: String): AnnotatedString {
