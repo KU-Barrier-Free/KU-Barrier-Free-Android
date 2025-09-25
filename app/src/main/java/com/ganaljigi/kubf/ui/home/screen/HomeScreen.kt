@@ -1,7 +1,12 @@
 package com.ganaljigi.kubf.ui.home.screen
 
+import android.Manifest
+import android.app.Activity
+import android.content.pm.PackageManager
 import android.util.Log
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -29,18 +34,25 @@ import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ganalijigi.kubf.R
+import com.ganaljigi.kubf.ui.common.component.PermissionDialog
 import com.ganaljigi.kubf.ui.common.model.SearchMode
 import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoChip
 import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoItem
@@ -85,6 +97,42 @@ fun HomeScreen(
     val bottomSheetState = scaffoldState.bottomSheetState
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
+    val activity = LocalContext.current as Activity
+    val context = LocalContext.current
+    var isLocationPermissionGranted by remember { mutableStateOf(false) }
+    var shouldShowRationale by remember { mutableStateOf(false) }
+    var openAppSettingsDialog by remember { mutableStateOf(false) }
+    val locationPermissionResultLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions(),
+    ) { permissions ->
+        val fineLocationGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false
+        val coarseLocationGranted = permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false
+
+        if (fineLocationGranted || coarseLocationGranted) {
+            Log.d("TAG", "Location permission granted")
+            isLocationPermissionGranted = true
+        } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION) ||
+                ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                shouldShowRationale = true
+            } else {
+                openAppSettingsDialog = true
+            }
+        }
+    }
+    LaunchedEffect(Unit) {
+        val fineLocationGranted = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val coarseLocationGranted = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+
+        if (fineLocationGranted || coarseLocationGranted) {
+            isLocationPermissionGranted = true
+        } else {
+            locationPermissionResultLauncher.launch(arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ))
+        }
+    }
 
     BackHandler(enabled = uiState.homeUiMode != HomeUiMode.DEFAULT) {
         viewModel.setDefaultMode()
@@ -208,6 +256,7 @@ fun HomeScreen(
         MapComponent(
             modifier = Modifier
                 .fillMaxSize(),
+            isLocationPermissionGranted = isLocationPermissionGranted,
             cameraPosition = uiState.cameraPositionState,
             selectedBuildingMarker = uiState.selectedBuildingMarker,
             selectedToggles = uiState.toggleUiStates.filter { it.isSelected }.toPersistentList(),
@@ -418,6 +467,21 @@ fun HomeScreen(
             }
         }
     }
+
+    PermissionDialog(
+        context = context,
+        showRationaleDialog = shouldShowRationale,
+        showOpenSettingsDialog = openAppSettingsDialog,
+        onDismissRationaleDialog = { shouldShowRationale = false },
+        onDismissOpenAppSettingsDialog = { openAppSettingsDialog = false },
+        onRetryClick = {
+            shouldShowRationale = false
+            locationPermissionResultLauncher.launch(arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ))
+        },
+    )
 }
 
 @Preview(showBackground = true)

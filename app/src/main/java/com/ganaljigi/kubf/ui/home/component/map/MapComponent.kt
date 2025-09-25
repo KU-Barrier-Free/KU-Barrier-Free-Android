@@ -56,10 +56,12 @@ import com.google.maps.android.compose.rememberMarkerState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
+// TODO: 현재 위치 설정, 줌인/줌아웃 버튼 추가
 @Composable
 fun MapComponent(
     modifier: Modifier = Modifier,
     cameraPosition: CameraPositionState,
+    isLocationPermissionGranted: Boolean = false,
     selectedBuildingMarker: BuildingMarker? = null,
     selectedToggles: ImmutableList<ToggleUiState> = persistentListOf(),
     buildingMarkers: List<BuildingMarker> = emptyList(),
@@ -80,7 +82,7 @@ fun MapComponent(
         modifier = modifier,
         onMapClick = { setDefaultMode() },
         cameraPositionState = cameraPosition,
-        properties = MapParam.mapProperties,
+        properties = MapParam.mapProperties.copy(isMyLocationEnabled = isLocationPermissionGranted),
         uiSettings = MapParam.mapUiSettings,
         googleMapOptionsFactory = { MapParam.mapOptions }
     ) {
@@ -382,7 +384,7 @@ object MapParam {
     val mapProperties = MapProperties(
         isBuildingEnabled = true,
         isIndoorEnabled = false,
-        isMyLocationEnabled = true,
+        isMyLocationEnabled = false,
         isTrafficEnabled = false,
         // 카메라가 이동할 수 있는 범위
         latLngBoundsForCameraTarget = LatLngBounds(
@@ -409,7 +411,7 @@ object MapParam {
         scrollGesturesEnabled = true,
         scrollGesturesEnabledDuringRotateOrZoom = true,
         tiltGesturesEnabled = true,
-        zoomControlsEnabled = true,
+        zoomControlsEnabled = false,
         zoomGesturesEnabled = true
     )
     val mapOptions = GoogleMapOptions().apply {
