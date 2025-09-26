@@ -152,20 +152,31 @@ fun MapBox(
         position = CameraPosition.fromLatLngZoom(latLng, 17f)
     }
 
-    var uiSettings by remember { mutableStateOf(MapUiSettings()) }
+    var uiSettings by remember {
+        mutableStateOf(
+            MapUiSettings(
+                zoomGesturesEnabled = true,
+                zoomControlsEnabled = true,
+                scrollGesturesEnabled = false,
+                scrollGesturesEnabledDuringRotateOrZoom = false,
+                rotationGesturesEnabled = false,
+                tiltGesturesEnabled = false
+            )
+        )
+    }
     var properties by remember {
         mutableStateOf(MapProperties(mapType = MapType.NORMAL))
     }
 
     LaunchedEffect(Unit) {
-        uiSettings = uiSettings.copy(
-            zoomGesturesEnabled = true,
-            zoomControlsEnabled = true, // 우측 +/− 버튼 (싫으면 false)
-            scrollGesturesEnabled = false,
-            scrollGesturesEnabledDuringRotateOrZoom = false,
-            rotationGesturesEnabled = false,
-            tiltGesturesEnabled = false
-        )
+//        uiSettings = uiSettings.copy(
+//            zoomGesturesEnabled = true,
+//            zoomControlsEnabled = true, // 우측 +/− 버튼 (싫으면 false)
+//            scrollGesturesEnabled = false,
+//            scrollGesturesEnabledDuringRotateOrZoom = false,
+//            rotationGesturesEnabled = false,
+//            tiltGesturesEnabled = false
+//        )
 
     }
 
