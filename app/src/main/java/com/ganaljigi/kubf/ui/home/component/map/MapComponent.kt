@@ -1,6 +1,5 @@
 package com.ganaljigi.kubf.ui.home.component.map
 
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -56,10 +55,12 @@ import com.google.maps.android.compose.rememberMarkerState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
+// TODO: 현재 위치 설정, 줌인/줌아웃 버튼 추가
 @Composable
 fun MapComponent(
     modifier: Modifier = Modifier,
     cameraPosition: CameraPositionState,
+    isLocationPermissionGranted: Boolean = false,
     selectedBuildingMarker: BuildingMarker? = null,
     selectedToggles: ImmutableList<ToggleUiState> = persistentListOf(),
     buildingMarkers: List<BuildingMarker> = emptyList(),
@@ -80,7 +81,7 @@ fun MapComponent(
         modifier = modifier,
         onMapClick = { setDefaultMode() },
         cameraPositionState = cameraPosition,
-        properties = MapParam.mapProperties,
+        properties = MapParam.mapProperties.copy(isMyLocationEnabled = isLocationPermissionGranted),
         uiSettings = MapParam.mapUiSettings,
         googleMapOptionsFactory = { MapParam.mapOptions }
     ) {
@@ -217,10 +218,6 @@ private fun SelectedSpecialMarker(
             placeholder = painterResource(R.drawable.img_special_info),
             error = painterResource(R.drawable.img_special_info),
             onSuccess = {
-                Log.d(
-                    "MapComponent",
-                    "Image $index loaded successfully for marker ${toggleMarker.id}"
-                )
                 recomposeKey[index] = !recomposeKey[index]
             }
         )
@@ -240,10 +237,6 @@ private fun SelectedSpecialMarker(
         ),
         zIndex = Float.MAX_VALUE
     ) {
-        Log.d(
-            "MapComponent",
-            "SelectedSpecialMarker ${toggleMarker.id} composing - recomposeKey: ${recomposeKey.toList()}"
-        )
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             MapSpecialInfo(
                 painters = painters,
@@ -324,7 +317,9 @@ private fun BuildingMarker(
                 ),
                 contentDescription = null,
                 tint = Color.Unspecified,
-                modifier = Modifier.shadow(1.dp)
+                modifier = Modifier
+                    .shadow(1.dp)
+                    .then(if (!isSelected) Modifier.size(20.dp) else Modifier)
             )
 
             Text(
@@ -385,12 +380,12 @@ object MapParam {
         // 카메라가 이동할 수 있는 범위
         latLngBoundsForCameraTarget = LatLngBounds(
             LatLng(
-                37.53727441241805,
-                127.0655595262516,
+                37.5373,
+                127.0656,
             ),
             LatLng(
-                37.54392357787584,
-                127.0951599033603
+                37.5450,
+                127.0952
             )
         ),
         mapStyleOptions = null,

@@ -1,6 +1,5 @@
 package com.ganaljigi.kubf.ui.home.screen
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -57,25 +56,16 @@ fun HomeSearchScreen(
             onClick = { navigateUp() }
         )
         Spacer(modifier = Modifier.height(8.dp))
-        Log.d(
-            "HomeSearchScreen",
-            "${uiState.searchWord} HomeSearchScreen with searchMode: $searchMode"
-        )
         HomeSearchBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .focusRequester(focusRequester),
-            onValueChange = {
-                viewModel.updateSearchWord(it)
-                Log.d("HomeSearchScreen", "Search word updated: ${it.text}")
-            },
-            onValueCleared = {
-                viewModel.updateSearchWord()
-                Log.d("HomeSearchScreen", "Search word cleared")
-            },
+            onValueChange = viewModel::updateSearchWord,
+            onValueCleared = viewModel::updateSearchWord,
             onSearchKeyboardEntered = {
                 if (searchMode == SearchMode.SEARCH) {
+                    viewModel.updateSearchWord(uiState.searchWord)
                     viewModel.updateSearchResults()
                     navigateUp()
                 }

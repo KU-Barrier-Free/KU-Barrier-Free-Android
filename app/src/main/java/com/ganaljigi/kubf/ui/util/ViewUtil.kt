@@ -1,6 +1,5 @@
 package com.ganaljigi.kubf.ui.util
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.remember
@@ -27,7 +26,7 @@ inline fun Modifier.noRippleClickable(
 fun Modifier.conditionalModifier(
     condition: Boolean,
     modifierIfTrue: Modifier = Modifier,
-    modifierIfFalse: Modifier = Modifier
+    modifierIfFalse: Modifier = Modifier,
 ): Modifier {
     return if (condition) {
         this.then(modifierIfTrue)
@@ -36,10 +35,12 @@ fun Modifier.conditionalModifier(
     }
 }
 
-fun Int.toDistanceString(): String {
+fun String.toDistanceString(): String {
+    val distanceInt = this.filter { it.isDigit() }.toIntOrNull()
     return when {
-        this < 1000 -> "${this}m"
-        else -> "%.1fkm".format(this / 1000.0)
+        distanceInt == null -> this
+        distanceInt < 1000 -> "${distanceInt}m"
+        else -> "%.1fkm".format(distanceInt / 1000.0)
     }
 }
 
