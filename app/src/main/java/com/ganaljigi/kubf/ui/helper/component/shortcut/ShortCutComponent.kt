@@ -29,6 +29,8 @@ import androidx.compose.ui.unit.sp
 import com.ganaljigi.kubf.ui.theme.MainGreen
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.theme.KUBFTypography
+import com.ganalijigi.kubf.R
+import com.ganaljigi.kubf.ui.theme.Gray2
 
 //바로가기 제목 박스
 @Composable
@@ -103,12 +105,12 @@ fun ShortCutItem(
             Spacer(modifier = Modifier.weight(1f))
 
             Icon(
-                imageVector = Icons.Default.KeyboardArrowRight,
+                painter = painterResource(id = R.drawable.ic_helper_arrowleft_lightgray),
                 contentDescription = "해당 바로가기 웹뷰 ㄱㄱ",
-                tint = Color.LightGray,
+                tint = Gray2,
                 modifier = Modifier
                     .padding(end = 16.dp)
-                    .size(20.dp)
+                    .size(24.dp)
             )
         }
     }
