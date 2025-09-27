@@ -1,38 +1,58 @@
 package com.ganaljigi.kubf.ui.roominfo.component
 
+import android.content.Intent
+import android.net.Uri
+import android.view.ActionMode
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.TextView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
+import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.Gray4
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
-import androidx.compose.material3.Icon
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.window.Popup
 import com.ganaljigi.kubf.ui.theme.MainGreen
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.em
-import androidx.compose.ui.window.PopupProperties
-import com.ganalijigi.kubf.R
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.util.TypedValue
+import android.widget.PopupMenu
+import androidx.core.content.res.ResourcesCompat
+import android.widget.Toast
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.ui.text.style.TextDecoration
 
 @Composable
 fun RoomInfoDefaultComponent(
@@ -182,7 +202,7 @@ fun RoomInfoDefaultComponent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_roominfo_roomtypequestion),
+                    painter = painterResource(R.drawable.ic_roominfo_roomtype), //TODO
                     contentDescription = "호실 형태 설명",
                     tint = Gray4,
                     modifier = Modifier
@@ -283,28 +303,18 @@ fun RoomInfoDefaultComponent(
                     text = department,
                     style = KUBFAndroidTheme.typography.semiBold16,
                     color = Color.Black,
-                    modifier = Modifier.padding(bottom = 4.dp)
+                    //modifier = Modifier.padding(bottom = 4.dp)
                 )
             }
 
-            Row(
-                modifier = Modifier
-                    .align(Alignment.End)
-            ) {
-                Icon(
-                    painter = painterResource(id=R.drawable.ic_roominfo_departmentnumber),
-                    contentDescription = "관리 부서 전화번호",
-                    modifier = Modifier
-                        .size(20.dp),
-                    tint = Gray4
-                )
+            Spacer(Modifier.height(4.dp))
 
-                Text(
-                    text = departmentNumber,
-                    modifier = Modifier,
-                    style = KUBFAndroidTheme.typography.regular14,
-                    color = Gray4
-                )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                DepartmentPhoneRow(departmentNumber = departmentNumber)
             }
         }
     }
@@ -331,6 +341,89 @@ fun LectureChip(
         )
     }
 }
+
+@Composable
+fun DepartmentPhoneRow(
+    departmentNumber: String,
+    modifier: Modifier = Modifier
+) {
+    val ctx = LocalContext.current
+    var showMenu by remember { mutableStateOf(false) }
+
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_roominfo_departmentnumber),
+            contentDescription = "관리 부서 전화번호",
+            modifier = Modifier.size(20.dp),
+            tint = Gray3
+        )
+
+        //Spacer(Modifier.width(6.dp))
+
+        Box {
+            Text(
+                text = departmentNumber,
+                style = KUBFAndroidTheme.typography.regular13,
+                color = Gray3,
+                textDecoration = TextDecoration.Underline,
+                modifier = Modifier
+                    .padding(vertical = 2.dp)
+                    .clickable { showMenu = true }
+            )
+
+            DropdownMenu (
+                expanded = showMenu,
+                onDismissRequest = { showMenu = false }
+            ) {
+                DropdownMenuItem(
+                    text = { Text("복사") },
+                    onClick = {
+                        copyToClipboard(ctx, departmentNumber)
+                        Toast.makeText(ctx, "전화번호가 복사되었습니다.", Toast.LENGTH_SHORT).show()
+                        showMenu = false
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text("전화하기") },
+                    onClick = {
+                        copyToClipboard(ctx, departmentNumber)
+
+                        val dial = normalizeForDial(departmentNumber)
+                        if (dial.isBlank()) {
+                            Toast.makeText(ctx, "유효한 전화번호가 없습니다.", Toast.LENGTH_SHORT).show()
+                        } else {
+                            val intent = Intent(Intent.ACTION_DIAL).apply {
+                                data = Uri.fromParts("tel", dial, null)
+                            }
+                            ctx.startActivity(intent)
+                        }
+                        showMenu = false
+                    }
+                )
+            }
+        }
+    }
+}
+
+/** 숫자/앞자리 + 허용. 나머지 제거해서 다이얼러가 확실히 인식하도록. */ //지피띠니가 해줌ㅋ
+private fun normalizeForDial(raw: String): String {
+    val t = raw.trim()
+    val out = StringBuilder()
+    t.forEachIndexed { i, c ->
+        if (c.isDigit() || (i == 0 && c == '+')) out.append(c)
+    }
+    return out.toString()
+}
+
+private fun copyToClipboard(ctx: Context, text: String) {
+    val cm = ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    cm.setPrimaryClip(ClipData.newPlainText("전화번호", text))
+}
+
+
 
 @Preview(showBackground = true)
 @Composable

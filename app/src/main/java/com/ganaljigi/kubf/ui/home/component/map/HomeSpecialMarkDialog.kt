@@ -1,10 +1,13 @@
 package com.ganaljigi.kubf.ui.home.component.map
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,7 +36,8 @@ fun HomeSpecialMarkDialog(
         Row(
             modifier = modifier
                 .heightIn(max = 272.dp)
-                .padding(horizontal = 10.dp),
+                .padding(horizontal = 10.dp)
+                .horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
         ) {
             imageUrls.forEach { imageUrl ->
@@ -41,7 +45,7 @@ fun HomeSpecialMarkDialog(
                     modifier = Modifier
                         .conditionalModifier(
                             condition = imageUrls.size > 1,
-                            modifierIfTrue = Modifier.weight(1f),
+                            modifierIfTrue = Modifier.width(180.dp),
                             modifierIfFalse = Modifier.size(272.dp)
                         )
                         .clip(RoundedCornerShape(10.dp)),

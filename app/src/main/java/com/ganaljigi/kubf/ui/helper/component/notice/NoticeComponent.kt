@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
@@ -19,12 +20,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import java.sql.Date
+import com.ganalijigi.kubf.R
 
 //공지사항도 ID
 
@@ -51,10 +54,15 @@ fun NoticeTitle(
                 )
             )
 
-            IconButton(onClick = onNavigateClick) {
+            IconButton(
+                onClick = onNavigateClick,
+                modifier = Modifier
+                    .offset(x = (12).dp)
+            ) {
                 Icon(
-                    imageVector = Icons.Default.KeyboardArrowRight,
-                    contentDescription = "공지사항 페이지로 이동"
+                    painter = painterResource(id = R.drawable.ic_helper_arrowleft_gray),
+                    contentDescription = "공지사항 페이지로 이동",
+                    tint = Gray3
                 )
             }
         }

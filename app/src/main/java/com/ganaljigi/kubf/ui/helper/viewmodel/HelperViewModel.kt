@@ -37,14 +37,17 @@ class HelperViewModel @Inject constructor(
     private fun String.toLocalDateOrMin(): LocalDate =
         runCatching { LocalDate.parse(this, dateFmt) }.getOrElse { LocalDate.MIN }
 
-    fun loadNotices(
-
-    ) {
+    fun loadNotices() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
             repository.fetchNotices().fold(
                 onSuccess = { dto ->
                     val mapped = dto.toUiState()
+
+                    val dateFmt = DateTimeFormatter.ofPattern("yyyy.MM.dd", Locale.KOREA)
+                    fun String.toLocalDateOrMin() =
+                        runCatching { LocalDate.parse(this, dateFmt) }.getOrElse { LocalDate.MIN }
+
                     val top3 = mapped.notices
                         .sortedByDescending { it.date.toLocalDateOrMin() }
                         .take(3)
@@ -55,10 +58,12 @@ class HelperViewModel @Inject constructor(
                     )
                 },
                 onFailure = { e ->
-                     _uiState.update { it.copy(isLoading = false, error = e.message ?: "") }
+                    _uiState.update { it.copy(isLoading = false, error = e.message ?: "") }
                 }
             )
         }
     }
+
+
     fun retry() = loadNotices()
 }

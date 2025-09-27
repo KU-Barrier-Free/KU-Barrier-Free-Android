@@ -94,6 +94,9 @@ fun BuildingInfoScreen(
                             Icon(Icons.Filled.ArrowBack, contentDescription = "뒤로")
                         }
                     },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.White
+                    ),
                     title = {
                         Text(
                             text = uiState.buildingInfo.name,
@@ -158,6 +161,9 @@ fun BuildingInfoScreen(
                         Icon(Icons.Filled.ArrowBack, contentDescription = "뒤로")
                     }
                 },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.White
+                ),
                 title = {
                     Text(
                         text = uiState.buildingInfo.name,

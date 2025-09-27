@@ -16,9 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ganalijigi.kubf.R
@@ -154,7 +151,7 @@ private fun HomeSearchConvItem(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_search_item_leading),
+                painter = painterResource(item.icon),
                 contentDescription = "검색 아이콘",
                 tint = Color.Unspecified,
             )

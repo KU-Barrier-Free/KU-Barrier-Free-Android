@@ -1,5 +1,6 @@
 package com.ganaljigi.kubf.navigation
 
+import androidx.navigation.NavType
 import com.ganaljigi.kubf.ui.common.model.SearchMode
 import kotlinx.serialization.Serializable
 
@@ -32,4 +33,8 @@ sealed interface Routes {
 
     @Serializable
     data object Support : Routes
+    @Serializable
+    data object DisableStudentHelper : Routes
+    @Serializable
+    data object JobInformation : Routes
 }

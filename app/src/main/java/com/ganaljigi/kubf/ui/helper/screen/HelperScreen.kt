@@ -32,11 +32,14 @@ import com.ganaljigi.kubf.ui.helper.component.shortcut.ShortCutItem
 import com.ganaljigi.kubf.ui.helper.component.shortcut.ShortCutTitle
 import com.ganaljigi.kubf.ui.helper.component.topappbar.HelperTopAppBar
 import com.ganaljigi.kubf.ui.helper.viewmodel.HelperViewModel
-import com.ganaljigi.kubf.ui.helper.viewmodel.Notice
 
 @Composable
 fun HelperScreen(
     onBackClick: () -> Unit,
+    navigateToNotice: () -> Unit = {},
+    navigateToDisableStudentHelper: () -> Unit = {},
+    navigateToSupport: () -> Unit = {},
+    navigateToJobInformation: () -> Unit = {},
     vm: HelperViewModel = hiltViewModel()
 ) {
     val state by vm.uiState.collectAsStateWithLifecycle()
@@ -53,7 +56,7 @@ fun HelperScreen(
         ) {
             //공지사항
 
-            NoticeTitle {}
+            NoticeTitle(onNavigateClick = navigateToNotice)
 //            NoticeItem(
 //                title = "[KIRD] 포용성장사업_이공계 장애 대학(원)생 경력개발 멘토링 모집 홍보 새글",
 //                date = "2025.05.13",
@@ -88,7 +91,7 @@ fun HelperScreen(
                         NoticeItem(
                             title = n.title,
                             date = n.date,
-                            number = state.notices.size - index,
+                            number = n.displayNumber,
                             index = index,
                             onClick = { uriHandler.openUri(n.url) }
                         )
@@ -107,17 +110,17 @@ fun HelperScreen(
                 ShortCutItem(
                     text = "장애학생 도우미",
                     iconResId = R.drawable.ic_helper_disablestudenthelper,
-                    onClick = {}
+                    onClick = navigateToDisableStudentHelper
                 )
                 ShortCutItem(
                     text = "지원 업무",
                     iconResId = R.drawable.ic_helper_support,
-                    onClick = {}
+                    onClick = navigateToSupport
                 )
                 ShortCutItem(
                     text = "채용 정보",
                     iconResId = R.drawable.ic_helper_jobinformation,
-                    onClick = {}
+                    onClick = navigateToJobInformation
                 )
             }
 

@@ -4,6 +4,7 @@ import com.ganaljigi.kubf.data.remote.service.BuildingService
 import com.ganaljigi.kubf.data.remote.service.HomeService
 import com.ganaljigi.kubf.data.remote.service.RouteService
 import com.ganaljigi.kubf.data.remote.service.HelperService
+import com.ganaljigi.kubf.ui.roominfo.service.RoomInfoService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,6 +37,12 @@ object ApiModule {
     @Provides
     @Singleton
     fun provideHelperService(retrofit: Retrofit): HelperService {
+        return retrofit.create()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRoomInfoService(retrofit: Retrofit): RoomInfoService {
         return retrofit.create()
     }
 }

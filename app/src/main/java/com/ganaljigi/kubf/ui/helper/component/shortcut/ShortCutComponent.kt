@@ -2,6 +2,7 @@ package com.ganaljigi.kubf.ui.helper.component.shortcut
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +21,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,6 +32,9 @@ import androidx.compose.ui.unit.sp
 import com.ganaljigi.kubf.ui.theme.MainGreen
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.theme.KUBFTypography
+import com.ganalijigi.kubf.R
+import com.ganaljigi.kubf.ui.theme.Gray1
+import com.ganaljigi.kubf.ui.theme.Gray2
 
 //바로가기 제목 박스
 @Composable
@@ -49,7 +55,6 @@ fun ShortCutTitle() {
     }
 }
 
-//바로가기 작은 박스
 @Composable
 fun ShortCutItem(
     modifier: Modifier = Modifier,
@@ -57,62 +62,75 @@ fun ShortCutItem(
     iconResId: Int? = null,
     onClick: () -> Unit
 ) {
-    Surface(
+    val shape = RoundedCornerShape(8.dp)
+
+    Box(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
-            .height(48.dp),
-        shape = RoundedCornerShape(8.dp),
-        color = Color.White,
-        shadowElevation = 2.dp,
-        border = BorderStroke(1.dp, Color(0xFFEEEEEE)),
-        onClick = onClick
+            .shadow(
+                elevation = 6.dp,           // ← blur 느낌. 필요하면 4~8dp 사이에서 조절
+                shape = shape,
+                ambientColor = Color(0x1A000000),
+                spotColor = Color(0x1A000000)
+            )
+            .clip(shape)
     ) {
-        Row(
+        Surface(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(start = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxWidth()
+                .height(48.dp),
+            shape = shape,
+            color = Color.White,
+            border = BorderStroke(1.dp, Gray1),
+            shadowElevation = 0.dp,
+            tonalElevation = 0.dp,
+            onClick = onClick
         ) {
-            // 아이콘이 null이면 기본 아이콘 또는 빈 박스 대체
-            if (iconResId != null) {
-                Image(
-                    painter = painterResource(id = iconResId),
-                    contentDescription = "바로가기 아이콘",
-                    modifier = Modifier.size(20.dp)
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (iconResId != null) {
+                    Image(
+                        painter = painterResource(id = iconResId),
+                        contentDescription = "바로가기 아이콘",
+                        modifier = Modifier.size(20.dp)
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowRight,
+                        contentDescription = "기본 아이콘",
+                        modifier = Modifier.size(20.dp),
+                        tint = Color.Gray
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Text(
+                    text = text,
+                    color = MainGreen,
+                    style = KUBFAndroidTheme.typography.medium14.copy(fontSize = 14.sp)
                 )
-            } else {
-                // 기본 아이콘으로 대체 (예시: search 아이콘)
+
+                Spacer(modifier = Modifier.weight(1f))
+
                 Icon(
-                    imageVector = Icons.Default.KeyboardArrowRight, // 또는 Search 등
-                    contentDescription = "기본 아이콘",
-                    modifier = Modifier.size(20.dp),
-                    tint = Color.Gray
+                    painter = painterResource(id = R.drawable.ic_helper_arrowleft_lightgray),
+                    contentDescription = "해당 바로가기 웹뷰 ㄱㄱ",
+                    tint = Gray2,
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .size(24.dp)
                 )
             }
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Text(
-                text = text,
-                color = MainGreen,
-                style = KUBFAndroidTheme.typography.medium14.copy(
-                    fontSize = 14.sp
-                )
-            )
-            Spacer(modifier = Modifier.weight(1f))
-
-            Icon(
-                imageVector = Icons.Default.KeyboardArrowRight,
-                contentDescription = "해당 바로가기 웹뷰 ㄱㄱ",
-                tint = Color.LightGray,
-                modifier = Modifier
-                    .padding(end = 16.dp)
-                    .size(20.dp)
-            )
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

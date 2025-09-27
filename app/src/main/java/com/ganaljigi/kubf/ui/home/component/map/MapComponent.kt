@@ -1,6 +1,5 @@
 package com.ganaljigi.kubf.ui.home.component.map
 
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +12,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
@@ -35,6 +35,7 @@ import com.ganaljigi.kubf.ui.home.model.MapToggle
 import com.ganaljigi.kubf.ui.home.model.RouteResult
 import com.ganaljigi.kubf.ui.home.model.ToggleMarker
 import com.ganaljigi.kubf.ui.home.viewmodel.SpecialMarkerInfo
+import com.ganaljigi.kubf.ui.home.viewmodel.ToggleUiState
 import com.ganaljigi.kubf.ui.theme.Gray4
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.theme.MainGreen
@@ -50,15 +51,24 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MarkerComposable
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polyline
+import com.google.maps.android.compose.rememberMarkerState
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
+// TODO: 현재 위치 설정, 줌인/줌아웃 버튼 추가
 @Composable
 fun MapComponent(
     modifier: Modifier = Modifier,
     cameraPosition: CameraPositionState,
+    isLocationPermissionGranted: Boolean = false,
     selectedBuildingMarker: BuildingMarker? = null,
-    toggleMarkers: List<ToggleMarker> = emptyList(),
+    selectedToggles: ImmutableList<ToggleUiState> = persistentListOf(),
     buildingMarkers: List<BuildingMarker> = emptyList(),
     doorMarkers: List<DoorMarker> = emptyList(),
+    curbMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
+    slopeMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
+    stairsMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
+    specialMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
     selectedRouteResult: RouteResult? = null,
     onBuildingMarkerClick: (BuildingMarker) -> Unit = { },
     onSpecialMarkerClick: (ToggleMarker) -> Unit = { },
@@ -71,7 +81,7 @@ fun MapComponent(
         modifier = modifier,
         onMapClick = { setDefaultMode() },
         cameraPositionState = cameraPosition,
-        properties = MapParam.mapProperties,
+        properties = MapParam.mapProperties.copy(isMyLocationEnabled = isLocationPermissionGranted),
         uiSettings = MapParam.mapUiSettings,
         googleMapOptionsFactory = { MapParam.mapOptions }
     ) {
@@ -86,29 +96,52 @@ fun MapComponent(
                 )
             }
         }
-        
-        toggleMarkers.forEach { mapMarker ->
-            if (mapMarker.mapToggle == MapToggle.SPECIAL_MARK) {
-                ToggleSpecialMarker(
-                    toggleMarker = mapMarker,
-                    toggleIconRes = R.drawable.ic_special_marker,
-                    onClick = { onSpecialMarkerClick(mapMarker) },
-                    onSpecialInfoClick = onSpecialInfoClick,
-                    selectedSpecialMarker = selectedSpecialMarker,
-                    specialMarkerInfo = specialMarkerInfo,
-                )
-            } else {
-                ToggleMarker(
-                    toggleMarker = mapMarker,
-                    toggleIconRes = when (mapMarker.mapToggle) {
-                        MapToggle.CURB -> R.drawable.ic_curb_marker
-                        MapToggle.SLOPE -> R.drawable.ic_slope_marker
-                        MapToggle.STAIRS -> R.drawable.ic_stairs_marker
-                        else -> R.drawable.ic_special_marker
-                    },
-                )
+        selectedToggles.forEach { toggleUiState ->
+            when (toggleUiState.toggle) {
+                MapToggle.CURB -> curbMarkers.forEach { mapMarker ->
+                    ToggleMarker(
+                        toggleMarker = mapMarker,
+                        toggleIconRes = R.drawable.ic_curb_marker,
+                    )
+                }
+
+                MapToggle.SLOPE -> slopeMarkers.forEach { mapMarker ->
+                    ToggleMarker(
+                        toggleMarker = mapMarker,
+                        toggleIconRes = R.drawable.ic_slope_marker,
+                    )
+                }
+
+                MapToggle.STAIRS -> stairsMarkers.forEach { mapMarker ->
+                    ToggleMarker(
+                        toggleMarker = mapMarker,
+                        toggleIconRes = R.drawable.ic_stairs_marker,
+                    )
+                }
+
+                MapToggle.SPECIAL_MARK -> specialMarkers.forEach { mapMarker ->
+                    val markerState = rememberMarkerState(
+                        position = LatLng(mapMarker.latitude, mapMarker.longitude)
+                    )
+                    if (mapMarker == selectedSpecialMarker && specialMarkerInfo != null) {
+                        SelectedSpecialMarker(
+                            markerState = markerState,
+                            toggleMarker = mapMarker,
+                            specialMarkerInfo = specialMarkerInfo,
+                            onSpecialInfoClick = onSpecialInfoClick,
+                        )
+                    } else {
+                        ToggleSpecialMarker(
+                            markerState = markerState,
+                            toggleMarker = mapMarker,
+                            toggleIconRes = R.drawable.ic_special_marker,
+                            onClick = { onSpecialMarkerClick(mapMarker) },
+                        )
+                    }
+                }
             }
         }
+
         selectedBuildingMarker?.let { marker ->
             BuildingMarker(
                 buildingMarker = marker,
@@ -136,117 +169,122 @@ private fun ToggleMarker(
     toggleMarker: ToggleMarker,
     @DrawableRes toggleIconRes: Int,
 ) {
-    MarkerComposable(
-        state = MarkerState(
-            position = LatLng(
-                toggleMarker.latitude,
-                toggleMarker.longitude
+    val markerState =
+        rememberMarkerState(
+            key = toggleMarker.toString(),
+            position = LatLng(toggleMarker.latitude, toggleMarker.longitude)
+        )
+    key(toggleMarker) {
+        MarkerComposable(
+//            state = MarkerState(
+//                position = LatLng(
+//                    toggleMarker.latitude,
+//                    toggleMarker.longitude
+//                )
+//            ),
+            state = markerState
+        ) {
+            Icon(
+                painter = painterResource(toggleIconRes),
+                contentDescription = null,
+                tint = Color.Unspecified,
+                modifier = Modifier
+                    .size(16.dp)
+                    .shadow(1.dp)
             )
+        }
+    }
+    DisposableEffect(toggleMarker) {
+        onDispose { markerState.position }
+    }
+}
+
+// https://velog.io/@gudrmsglgl/Compose-Google-Map
+@Composable
+private fun SelectedSpecialMarker(
+    markerState: MarkerState,
+    toggleMarker: ToggleMarker,
+    specialMarkerInfo: SpecialMarkerInfo,
+    onSpecialInfoClick: (List<String>) -> Unit = { },
+) {
+    val recomposeKey = remember { mutableStateListOf(false, false) }
+    val painters = specialMarkerInfo.imageUrls.take(2).mapIndexed { index, imageUrl ->
+        rememberAsyncImagePainter(
+            model = ImageRequest
+                .Builder(LocalContext.current)
+                .data(imageUrl)
+                .allowHardware(false)
+                .build(),
+            placeholder = painterResource(R.drawable.img_special_info),
+            error = painterResource(R.drawable.img_special_info),
+            onSuccess = {
+                recomposeKey[index] = !recomposeKey[index]
+            }
+        )
+    }
+
+    MarkerComposable(
+        state = markerState,
+        onClick = {
+            onSpecialInfoClick(specialMarkerInfo.imageUrls)
+            false
+        },
+        keys = arrayOf(
+            toggleMarker.id,
+            specialMarkerInfo,
+            recomposeKey[0],
+            if (recomposeKey.size > 1) recomposeKey[1] else false
         ),
+        zIndex = Float.MAX_VALUE
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            MapSpecialInfo(
+                painters = painters,
+                description = specialMarkerInfo.description,
+                modifier = Modifier
+                    .noRippleClickable {
+                        onSpecialInfoClick(specialMarkerInfo.imageUrls)
+                    }
+            )
+            Box(
+                modifier = Modifier
+                    .width(2.dp)
+                    .height(16.dp)
+                    .background(Color.White)
+            )
+            Icon(
+                painter = painterResource(R.drawable.ic_special_marker_selected),
+                contentDescription = null,
+                tint = Color.Unspecified,
+            )
+        }
+    }
+}
+
+@Composable
+private fun ToggleSpecialMarker(
+    markerState: MarkerState,
+    toggleMarker: ToggleMarker,
+    @DrawableRes toggleIconRes: Int,
+    onClick: () -> Unit = { },
+) {
+    MarkerComposable(
+        state = markerState,
+        onClick = {
+            onClick()
+            false
+        },
+        keys = arrayOf(toggleMarker.id),
+        zIndex = 0.0f
     ) {
         Icon(
             painter = painterResource(toggleIconRes),
             contentDescription = null,
             tint = Color.Unspecified,
             modifier = Modifier
-                .size(16.dp)
+                .size(24.dp)
                 .shadow(1.dp)
         )
-    }
-}
-
-// https://velog.io/@gudrmsglgl/Compose-Google-Map
-@Composable
-private fun ToggleSpecialMarker(
-    toggleMarker: ToggleMarker,
-    @DrawableRes toggleIconRes: Int,
-    onClick: () -> Unit = { },
-    onSpecialInfoClick: (List<String>) -> Unit = { },
-    selectedSpecialMarker: ToggleMarker?,
-    specialMarkerInfo: SpecialMarkerInfo? = null,
-) {
-    val recomposeMarker = remember { mutableStateListOf(false, false) }
-    val painters = specialMarkerInfo?.let { info ->
-        info.imageUrls.take(2).mapIndexed { index, it ->
-            rememberAsyncImagePainter(
-                model = ImageRequest
-                    .Builder(LocalContext.current)
-                    .data(it)
-                    .allowHardware(false)
-                    .build(),
-                placeholder = painterResource(R.drawable.img_special_info),
-                error = painterResource(R.drawable.img_special_info),
-                onSuccess = { result ->
-                    Log.d("MapComponent", "Image loaded successfully: ${result.result}")
-                    recomposeMarker[index] = true
-                },
-            )
-        }
-    } ?: emptyList()
-
-    val painter1 = if (painters.isNotEmpty()) painters[0] else null
-    val painter2 = if (painters.size == 2) painters[1] else null
-
-
-    key(recomposeMarker[0], recomposeMarker[1]) {
-        MarkerComposable(
-            state = MarkerState(
-                position = LatLng(
-                    toggleMarker.latitude,
-                    toggleMarker.longitude
-                )
-            ),
-            onClick = {
-                if (toggleMarker == selectedSpecialMarker && specialMarkerInfo != null) {
-                    onSpecialInfoClick(specialMarkerInfo.imageUrls)
-                } else {
-                    onClick()
-                }
-                false
-            },
-            keys = arrayOf(
-                { painter1?.state },
-                { painter2?.state },
-                { selectedSpecialMarker },
-                { specialMarkerInfo })
-        ) {
-            if (toggleMarker == selectedSpecialMarker && specialMarkerInfo != null) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    MapSpecialInfo(
-                        painters = painters,
-                        description = specialMarkerInfo.description,
-                        modifier = Modifier
-                            .noRippleClickable {
-                                Log.d(
-                                    "MapComponent",
-                                    "Special marker clicked: ${specialMarkerInfo.description}"
-                                )
-                                onSpecialInfoClick(specialMarkerInfo.imageUrls)
-                            }
-                    )
-                    Box(
-                        modifier = Modifier
-                            .width(2.dp)
-                            .height(16.dp)
-                            .background(Color.White)
-                    )
-                    Icon(
-                        painter = painterResource(R.drawable.ic_special_marker_selected),
-                        contentDescription = null,
-                        tint = Color.Unspecified,
-                    )
-                }
-            } else {
-                Icon(
-                    painter = painterResource(toggleIconRes),
-                    contentDescription = null,
-                    tint = Color.Unspecified,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .shadow(1.dp)
-                )
-            }
-        }
     }
 }
 
@@ -254,7 +292,7 @@ private fun ToggleSpecialMarker(
 private fun BuildingMarker(
     buildingMarker: BuildingMarker,
     isSelected: Boolean = false,
-    onClick: (BuildingMarker) -> Unit = { }
+    onClick: (BuildingMarker) -> Unit = { },
 ) {
     MarkerComposable(
         onClick = { onClick(buildingMarker); false },
@@ -264,7 +302,7 @@ private fun BuildingMarker(
                 buildingMarker.longitude
             )
         ),
-        zIndex = 0f,
+        zIndex = if (isSelected) Float.MAX_VALUE else 0f,
         keys = arrayOf({ buildingMarker.id }, { isSelected })
     ) {
         Column(
@@ -279,7 +317,9 @@ private fun BuildingMarker(
                 ),
                 contentDescription = null,
                 tint = Color.Unspecified,
-                modifier = Modifier.shadow(1.dp)
+                modifier = Modifier
+                    .shadow(1.dp)
+                    .then(if (!isSelected) Modifier.size(20.dp) else Modifier)
             )
 
             Text(
@@ -294,7 +334,7 @@ private fun BuildingMarker(
 
 @Composable
 private fun DoorMarker(
-    doorMarker: DoorMarker
+    doorMarker: DoorMarker,
 ) {
     MarkerComposable(
         state = MarkerState(
@@ -340,12 +380,12 @@ object MapParam {
         // 카메라가 이동할 수 있는 범위
         latLngBoundsForCameraTarget = LatLngBounds(
             LatLng(
-                37.53727441241805,
-                127.0655595262516,
+                37.5373,
+                127.0656,
             ),
             LatLng(
-                37.54392357787584,
-                127.0951599033603
+                37.5450,
+                127.0952
             )
         ),
         mapStyleOptions = null,

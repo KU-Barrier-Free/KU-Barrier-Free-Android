@@ -1,6 +1,11 @@
 package com.ganaljigi.kubf.ui.home.screen
 
-import android.util.Log
+import android.Manifest
+import android.app.Activity
+import android.content.pm.PackageManager
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -28,18 +33,25 @@ import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ganalijigi.kubf.R
+import com.ganaljigi.kubf.ui.common.component.PermissionDialog
 import com.ganaljigi.kubf.ui.common.model.SearchMode
 import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoChip
 import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoItem
@@ -60,6 +72,8 @@ import com.ganaljigi.kubf.ui.theme.Black
 import com.ganaljigi.kubf.ui.theme.Gray2
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.util.noRippleClickable
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -82,12 +96,47 @@ fun HomeScreen(
     val bottomSheetState = scaffoldState.bottomSheetState
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
+    val activity = LocalContext.current as Activity
+    val context = LocalContext.current
+    var isLocationPermissionGranted by remember { mutableStateOf(false) }
+    var shouldShowRationale by remember { mutableStateOf(false) }
+    var openAppSettingsDialog by remember { mutableStateOf(false) }
+    val locationPermissionResultLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions(),
+    ) { permissions ->
+        val fineLocationGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false
+        val coarseLocationGranted = permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false
+
+        if (fineLocationGranted || coarseLocationGranted) {
+            isLocationPermissionGranted = true
+        } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION) ||
+                ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                shouldShowRationale = true
+            } else {
+                openAppSettingsDialog = true
+            }
+        }
+    }
+    LaunchedEffect(Unit) {
+        val fineLocationGranted = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val coarseLocationGranted = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+
+        if (fineLocationGranted || coarseLocationGranted) {
+            isLocationPermissionGranted = true
+        } else {
+            locationPermissionResultLauncher.launch(arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ))
+        }
+    }
+
+    BackHandler(enabled = uiState.homeUiMode != HomeUiMode.DEFAULT) {
+        viewModel.setDefaultMode()
+    }
 
     LaunchedEffect(uiState.isBottomSheetExpanded, uiState.bottomSheetType) {
-        Log.d(
-            "HomeScreen",
-            "Bottom sheet state changed, ${uiState.bottomSheetType} ${uiState.isBottomSheetExpanded}"
-        )
         if (uiState.isBottomSheetExpanded && uiState.bottomSheetType != HomeBottomSheetType.NONE) {
             if (bottomSheetState.isVisible.not()) {
                 scope.launch {
@@ -201,12 +250,22 @@ fun HomeScreen(
         MapComponent(
             modifier = Modifier
                 .fillMaxSize(),
+            isLocationPermissionGranted = isLocationPermissionGranted,
             cameraPosition = uiState.cameraPositionState,
             selectedBuildingMarker = uiState.selectedBuildingMarker,
-            toggleMarkers = uiState.showingToggleMarkers,
+            selectedToggles = uiState.toggleUiStates.filter { it.isSelected }.toPersistentList(),
             buildingMarkers = uiState.buildingMarkers
                 .filter { it.id != uiState.selectedBuildingMarker?.id },
-            doorMarkers = uiState.showingDoorMarkers,
+            doorMarkers = uiState.showingDoorMarkers.takeIf { uiState.homeUiMode == HomeUiMode.DEFAULT }
+                ?: persistentListOf(),
+            curbMarkers = uiState.curbMarkers.takeIf { uiState.homeUiMode == HomeUiMode.DEFAULT }
+                ?: persistentListOf(),
+            slopeMarkers = uiState.slopeMarkers.takeIf { uiState.homeUiMode == HomeUiMode.DEFAULT }
+                ?: persistentListOf(),
+            stairsMarkers = uiState.stairsMarkers.takeIf { uiState.homeUiMode == HomeUiMode.DEFAULT }
+                ?: persistentListOf(),
+            specialMarkers = uiState.specialMarkers.takeIf { uiState.homeUiMode == HomeUiMode.DEFAULT }
+                ?: persistentListOf(),
 //            routeResults = uiState.routeResults,
             selectedRouteResult = uiState.selectedRouteResult,
             onBuildingMarkerClick = { marker ->
@@ -222,14 +281,14 @@ fun HomeScreen(
             visible = true
         ) { }
 
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
                 .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Box {
+            Box(
+                modifier = Modifier.align(Alignment.TopCenter)
+            ) {
                 androidx.compose.animation.AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.FIND_MODE || uiState.homeUiMode == HomeUiMode.ROUTE_MODE,
                     enter = slideInVertically(
@@ -329,7 +388,9 @@ fun HomeScreen(
                 }
             }
 
-            Box {
+            Box(
+                modifier = Modifier.align(Alignment.BottomCenter)
+            ) {
                 androidx.compose.animation.AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.BARRIER_FREE_SHOWN,
                     enter = slideInVertically(
@@ -345,6 +406,10 @@ fun HomeScreen(
                         }
                     )
                 }
+            }
+            Box(
+                modifier = Modifier.align(Alignment.BottomCenter)
+            ) {
                 androidx.compose.animation.AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.DEFAULT,
                     enter = slideInVertically(
@@ -370,6 +435,10 @@ fun HomeScreen(
                         }
                     }
                 }
+            }
+            Box(
+                modifier = Modifier.align(Alignment.BottomCenter)
+            ) {
                 androidx.compose.animation.AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.ROUTE_MODE,
                     enter = slideInVertically(
@@ -392,6 +461,21 @@ fun HomeScreen(
             }
         }
     }
+
+    PermissionDialog(
+        context = context,
+        showRationaleDialog = shouldShowRationale,
+        showOpenSettingsDialog = openAppSettingsDialog,
+        onDismissRationaleDialog = { shouldShowRationale = false },
+        onDismissOpenAppSettingsDialog = { openAppSettingsDialog = false },
+        onRetryClick = {
+            shouldShowRationale = false
+            locationPermissionResultLauncher.launch(arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ))
+        },
+    )
 }
 
 @Preview(showBackground = true)

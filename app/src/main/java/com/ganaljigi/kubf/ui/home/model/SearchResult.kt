@@ -1,7 +1,6 @@
 package com.ganaljigi.kubf.ui.home.model
 
 import androidx.annotation.DrawableRes
-import androidx.compose.ui.text.AnnotatedString
 import com.ganalijigi.kubf.R
 
 data class SearchResult(

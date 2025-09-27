@@ -21,11 +21,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
+import com.ganalijigi.kubf.R
 
 //장애학생지원센터 TopAppBar
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,7 +55,7 @@ fun HelperTopAppBar(
                 modifier = Modifier.fillMaxHeight()
             ) {
                 Icon(
-                    imageVector = Icons.Default.KeyboardArrowLeft,
+                    painter = painterResource(id = R.drawable.ic_helper_arrowleft_black),
                     contentDescription = "뒤로가기",
                     modifier = Modifier.size(24.dp)
                 )

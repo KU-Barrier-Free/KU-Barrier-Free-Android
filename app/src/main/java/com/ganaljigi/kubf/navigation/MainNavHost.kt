@@ -8,13 +8,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.ganaljigi.kubf.ui.buildinginfo.screen.BuildingInfoScreen
-import com.ganaljigi.kubf.ui.buildinginfo.viewmodel.BuildingViewModel
+import com.ganaljigi.kubf.ui.helper.screen.DisableStudentHelperScreen
 import com.ganaljigi.kubf.ui.helper.screen.HelperScreen
+import com.ganaljigi.kubf.ui.helper.screen.JobInformationScreen
+import com.ganaljigi.kubf.ui.helper.screen.SupportScreen
 import com.ganaljigi.kubf.ui.home.screen.HomeScreen
 import com.ganaljigi.kubf.ui.home.screen.HomeSearchScreen
 import com.ganaljigi.kubf.ui.home.viewmodel.HomeViewModel
 import com.ganaljigi.kubf.ui.roominfo.RoomInfoScreen
-import com.ganaljigi.kubf.ui.roominfo.viewmodel.RoomInfoViewModel
 
 @Composable
 fun MainNavHost(
@@ -67,6 +68,10 @@ fun MainNavHost(
 //                padding = padding,
 //                navigateToNotice = { navController.navigate(Routes.Notice) },
                 onBackClick = { navController.popBackStack() },
+                navigateToNotice = { navController.navigate(Routes.Notice) },
+                navigateToDisableStudentHelper = { navController.navigate(Routes.DisableStudentHelper) },
+                navigateToSupport = { navController.navigate(Routes.Support) },
+                navigateToJobInformation = { navController.navigate(Routes.JobInformation) }
             )
         }
 
@@ -96,10 +101,22 @@ fun MainNavHost(
         }
 
         composable<Routes.RoomInfo> { navBackStackEntry ->
-            val roomNumber = navBackStackEntry.toRoute<Routes.RoomInfo>()
              RoomInfoScreen(
                 onBackClick = {navController.popBackStack()},
              )
         }
+
+        composable<Routes.DisableStudentHelper> {
+            DisableStudentHelperScreen(onBackClick = { navController.popBackStack() })
+        }
+
+        composable<Routes.Support> {
+            SupportScreen(onBackClick = { navController.popBackStack() })
+        }
+
+        composable<Routes.JobInformation> {
+            JobInformationScreen(onBackClick = { navController.popBackStack() })
+        }
+
     }
 }
