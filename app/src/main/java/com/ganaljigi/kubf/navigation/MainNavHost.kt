@@ -44,7 +44,7 @@ fun MainNavHost(
             HomeScreen(
                 padding = padding,
                 navigateToHelper = { navController.navigate(Routes.Helper) },
-                navigateToBuildingInfo = { navController.navigate(Routes.BuildingInfo(it.toInt())) },
+                navigateToBuildingInfo = { navController.navigate(Routes.BuildingInfo(it.toLong())) },
                 navigateToSearch = { title ->
                     navController.navigate(Routes.HomeSearch(title))
                 },
@@ -83,22 +83,27 @@ fun MainNavHost(
         }
 
         composable<Routes.BuildingInfo> { navBackStackEntry ->
-            val buildingNumber = navBackStackEntry.toRoute<Routes.BuildingInfo>().number
-            BuildingInfoScreen(
-                buildingId = buildingNumber.toLong(),
-                onBack = { navController.popBackStack() },
-                onSearch = {},
-                onDoorClick = {},
+            val buildingId = navBackStackEntry.toRoute<Routes.BuildingInfo>().number
 
-            )
+             BuildingInfoScreen(
+                buildingId = buildingId,
+                onRoomClick = { room, buildingName ->
+                    navController.navigate(Routes.RoomInfo(
+                        buildingId = buildingId,
+                        spaceId = room.id,
+                        type = if (room.isLecture) 1 else 0,
+                        buildingName = buildingName
+                    ))
+
+                },
+                onBack = { navController.popBackStack() }
+             )
         }
 
         composable<Routes.RoomInfo> { navBackStackEntry ->
-            //val roomNumber = navBackStackEntry.toRoute<Routes.BuildingInfo>().number
-            val args = navBackStackEntry.toRoute<Routes.RoomInfo>()
-            RoomInfoScreen(
-                onBackClick = { navController.popBackStack() }
-            )
+             RoomInfoScreen(
+                onBackClick = {navController.popBackStack()},
+             )
         }
 
         composable<Routes.DisableStudentHelper> {

@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,14 +27,20 @@ fun FloorComponent(
 ) {
     Column {
         if(current.imageUrl.isNotEmpty()){
-            AsyncImage(
-                model = current.imageUrl.first(),
-                contentDescription = "${current.floorLabel}층 사진",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.padding(horizontal = 16.dp)
-                    .clip(RoundedCornerShape(10.dp))
-            )
-            Spacer(Modifier.height(20.dp))
+            LazyRow {
+                item {
+                    current.imageUrl.let { url ->
+                        AsyncImage(
+                            model = url,
+                            contentDescription = "${current.floorLabel}층 사진",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                        )
+                        Spacer(Modifier.width(20.dp))
+                    }
+                }
+            }
         }
         if (current.facilities.isNotEmpty()){
             FacilityComponent(current.facilities)
