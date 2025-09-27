@@ -63,6 +63,7 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MapType
 import android.net.Uri
+import androidx.compose.ui.graphics.Color
 
 //정보 제목 박스
 @Composable
@@ -218,7 +219,7 @@ fun InfoBox(
             .padding(horizontal = 16.dp)
             .wrapContentHeight()
             .clip(RoundedCornerShape(8.dp))
-            .background(color = Gray1)
+            .background(color = Color.White)
             .border(
                 color = Gray1,
                 shape = RoundedCornerShape(8.dp),
