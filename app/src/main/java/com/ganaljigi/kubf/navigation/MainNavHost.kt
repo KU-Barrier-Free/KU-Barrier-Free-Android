@@ -23,8 +23,6 @@ fun MainNavHost(
 ) {
 
     val homeViewModel = hiltViewModel<HomeViewModel>()
-    val buildingViewModel = hiltViewModel<BuildingViewModel>()
-    val roomViewModel = hiltViewModel<RoomInfoViewModel>()
 
     NavHost(
         navController = navController,
@@ -80,7 +78,7 @@ fun MainNavHost(
         }
 
         composable<Routes.BuildingInfo> { navBackStackEntry ->
-            val buildingId = navBackStackEntry.toRoute<Routes.BuildingInfo>().number.toLong()
+            val buildingId = navBackStackEntry.toRoute<Routes.BuildingInfo>().number
 
              BuildingInfoScreen(
                 buildingId = buildingId,
@@ -93,16 +91,14 @@ fun MainNavHost(
                     ))
 
                 },
-                onBack = { navController.popBackStack() },
-                 viewModel = buildingViewModel
+                onBack = { navController.popBackStack() }
              )
         }
 
         composable<Routes.RoomInfo> { navBackStackEntry ->
-            val roomNumber = navBackStackEntry.toRoute<Routes.BuildingInfo>().number
+            val roomNumber = navBackStackEntry.toRoute<Routes.RoomInfo>()
              RoomInfoScreen(
                 onBackClick = {navController.popBackStack()},
-                 viewModel = roomViewModel
              )
         }
     }
