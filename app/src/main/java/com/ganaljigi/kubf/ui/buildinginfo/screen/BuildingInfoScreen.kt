@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -100,7 +98,8 @@ fun BuildingInfoScreen(
                 TopAppBar(
                     navigationIcon = {
                         IconButton(onClick = onBack) {
-                            Icon(Icons.Filled.ArrowBack, contentDescription = "뒤로")
+                            Icon(painter = painterResource(R.drawable.ic_backarrow),
+                                contentDescription = "뒤로가기")
                         }
                     },
                     title = {
@@ -164,7 +163,8 @@ fun BuildingInfoScreen(
             TopAppBar(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "뒤로")
+                        Icon(painter = painterResource(R.drawable.ic_backarrow),
+                            contentDescription = "뒤로가기")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -383,7 +383,11 @@ fun BuildingInfoScreen(
                         showSearchPopup = false
                         viewModel.clearQuery()
                     },
-                    onRoomClick = {}
+                    onRoomClick = { result ->
+                        result.room?.let { room ->
+                            onRoomClick(room, uiState.buildingInfo.name)
+                        }
+                    }
                 )
             }
         }

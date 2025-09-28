@@ -88,10 +88,10 @@ fun SearchPopup(
                 isFocused = isFocused,
                 onValueCleared = { viewModel.clearQuery() }
             )
-            Spacer(Modifier.height(24.dp))
 
             // 결과 개수: 0이면 숨김
             if (hasQuery && hasResult) {
+                Spacer(Modifier.height(24.dp))
                 Row(Modifier.padding(horizontal = 16.dp)) {
                     Text("결과 ", style = KUBFAndroidTheme.typography.regular13, color = Gray3)
                     Text("${ui.result.size}", style = KUBFAndroidTheme.typography.regular13, color = MainGreen)

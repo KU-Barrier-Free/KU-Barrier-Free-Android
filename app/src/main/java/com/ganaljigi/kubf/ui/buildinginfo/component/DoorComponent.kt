@@ -1,6 +1,7 @@
 package com.ganaljigi.kubf.ui.buildinginfo.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,17 +15,25 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import coil3.compose.AsyncImage
 import com.ganaljigi.kubf.ui.buildinginfo.model.Door
 import com.ganaljigi.kubf.ui.theme.Gray2
@@ -40,13 +49,55 @@ import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
  */
 @Composable
 fun DoorComponent(doors: List<Door>) {
-
+    var previewDoor by remember { mutableStateOf<Door?>(null) }
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
-        items(doors) { door ->
-            DoorCard(door)
+        items(doors, key = { it.label }) { door ->
+            DoorCard(door) {
+                previewDoor = door
+            }
+        }
+
+    }
+    previewDoor?.let { door ->
+        DoorImageDialog(
+            door = door,
+            onDismiss = { previewDoor = null }
+        )
+    }
+}
+
+@Composable
+fun DoorImageDialog(door: Door, onDismiss: () -> Unit) {
+    val images = door.imageUrl.ifEmpty { listOf<String>() }
+    Dialog(onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Box(Modifier.fillMaxWidth()){
+            val pagerState = rememberPagerState(pageCount = {images.size})
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.fillMaxWidth()
+            ) { page ->
+                AsyncImage(
+                    model = images.getOrNull(page),
+                    contentDescription = "문 사진",
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+            if (images.size > 1){
+                Text(
+                    text = "${pagerState.currentPage+1}/${images.size}",
+                    color = Color.White,
+                    modifier = Modifier.align(Alignment.BottomCenter)
+                        .padding(bottom = 16.dp),
+                    textAlign = TextAlign.Center,
+                    style = KUBFAndroidTheme.typography.medium13
+                )
+            }
         }
     }
 }
@@ -57,11 +108,12 @@ fun DoorComponent(doors: List<Door>) {
  * - 휠체어 여부
  */
 @Composable
-fun DoorCard(door: Door) {
+fun DoorCard(door: Door, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .width(80.dp)
             .background(Color.White)
+            .clickable { onClick() }
     ) {
         Column(
             modifier = Modifier
@@ -76,7 +128,8 @@ fun DoorCard(door: Door) {
                 AsyncImage(
                     model = door.imageUrl.first(),
                     contentDescription = "${door.label}",
-                    modifier = Modifier.matchParentSize()
+                    modifier = Modifier
+                        .matchParentSize()
                         .clip(RoundedCornerShape(10.dp))
                         .background(Gray2),
                     contentScale = ContentScale.Crop
@@ -91,7 +144,7 @@ fun DoorCard(door: Door) {
                         .widthIn(min = 16.dp)
                         .wrapContentWidth(),
                     contentAlignment = Alignment.Center,
-                    ) {
+                ) {
                     Text( // 출입문 이름
                         text = door.label,
                         style = KUBFAndroidTheme.typography.medium14,
