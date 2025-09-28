@@ -266,7 +266,7 @@ fun BuildingInfoScreen(
                 Spacer(modifier = Modifier.height(12.dp))
                 DoorComponent(doors = uiState.buildingInfo.doors)
                 Spacer(Modifier.height(20.dp))
-                if (uiState.buildingInfo.notes.isNotEmpty()) { // for문 사용하기
+                if (uiState.buildingInfo.notes.isNotEmpty()) {
                     Text(
                         text = "특이사항",
                         style = KUBFAndroidTheme.typography.semiBold16,
