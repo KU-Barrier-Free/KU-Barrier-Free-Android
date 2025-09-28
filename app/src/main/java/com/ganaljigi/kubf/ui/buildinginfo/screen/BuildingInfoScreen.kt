@@ -372,7 +372,7 @@ fun BuildingInfoScreen(
             }
         }
         if (showSearchPopup) {
-            Dialog( // TODO: 위치 조정
+            Dialog(
                 onDismissRequest = {
                     showSearchPopup = false
                     viewModel.clearQuery()

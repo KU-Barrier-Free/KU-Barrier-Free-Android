@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,10 +26,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.ui.buildinginfo.model.Room
 import com.ganaljigi.kubf.ui.theme.Black
 import com.ganaljigi.kubf.ui.theme.Gray3
@@ -40,6 +44,7 @@ import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
  * - Room 데이터 받기
  * - 이미지 - 세로크기는 고정하고 비율은 유지
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun RoomComponent(
     room: Room,
@@ -66,15 +71,11 @@ fun RoomComponent(
             modifier = Modifier.matchParentSize(),
             contentAlignment = Alignment.TopEnd
         ) {
-            Icon(
-                imageVector = Icons.Default.KeyboardArrowRight,
-                contentDescription = "navTo${room.number}",
-                modifier = Modifier.size(24.dp),
-                tint = Gray4
-            )
+            Icon(painter = painterResource(R.drawable.ic_chevron_right),
+                contentDescription = "이동")
         }
         Column {
-            Row {
+            FlowRow(modifier = Modifier.width(300.dp)) {
                 Text(
                     text = "${room.number} ${room.name}",
                     style = KUBFAndroidTheme.typography.semiBold16,
@@ -100,8 +101,8 @@ fun RoomComponent(
                         )
                     }
                 }
-
             }
+
             if (hasNote) {
                 Spacer(Modifier.height(14.dp))
                 Row {
