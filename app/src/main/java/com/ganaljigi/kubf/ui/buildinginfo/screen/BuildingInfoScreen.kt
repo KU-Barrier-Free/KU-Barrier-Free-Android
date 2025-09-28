@@ -84,6 +84,15 @@ fun BuildingInfoScreen(
 
     var showSearchPopup by remember { mutableStateOf(false) }
 
+    LaunchedEffect(floors) {
+        if (floors.isNotEmpty()){
+            val oneFloorIndex = floors.indexOfFirst { f ->
+                f.floorLabel.trim().equals("1")
+            }
+            selectedIndex = if (oneFloorIndex >= 0) oneFloorIndex else 0
+        }
+    }
+
     if (floors.isEmpty()) {
         Scaffold(
             containerColor = Color.White,
@@ -280,7 +289,7 @@ fun BuildingInfoScreen(
                 Spacer(Modifier.height(12.dp))
             }
             stickyHeader {
-                if (uiState.totalFloor.num < 8) {
+                if (uiState.totalFloor.num < 7) {
                     TabRow(
                         selectedTabIndex = selectedIndex,
                         indicator = { position ->
@@ -325,7 +334,8 @@ fun BuildingInfoScreen(
                             )
                         },
                         modifier = Modifier.fillMaxWidth(),
-                        edgePadding = 0.dp
+                        edgePadding = 0.dp,
+                        containerColor = Color.White
                     ) {
                         floors.forEachIndexed { idx, floorInfo ->
                             Tab(
