@@ -118,6 +118,10 @@ fun FloorComponent(
 @Composable
 fun FloorImageDialog(floor: FloorInfo, onDismiss: () -> Unit, initialPage: Int) {
     val images = floor.imageUrl.ifEmpty { listOf<String>() }
+    if (images.isEmpty()){
+        onDismiss()
+        return
+    }
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(usePlatformDefaultWidth = false)
