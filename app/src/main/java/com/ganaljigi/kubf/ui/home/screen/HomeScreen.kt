@@ -72,6 +72,9 @@ import com.ganaljigi.kubf.ui.theme.Black
 import com.ganaljigi.kubf.ui.theme.Gray2
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.util.noRippleClickable
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
@@ -144,6 +147,26 @@ fun HomeScreen(
                     Manifest.permission.ACCESS_COARSE_LOCATION
                 )
             )
+        }
+    }
+
+    LaunchedEffect(isLocationPermissionGranted) {
+        if (isLocationPermissionGranted) {
+            try {
+                val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+                fusedLocationClient.getCurrentLocation(
+                    Priority.PRIORITY_HIGH_ACCURACY,
+                    null
+                ).addOnSuccessListener { location ->
+                    location?.let {
+                        viewModel.updateUserLocation(
+                            LatLng(it.latitude, it.longitude)
+                        )
+                    }
+                }
+            } catch (e: SecurityException) {
+                // Handle security exception
+            }
         }
     }
 
@@ -297,6 +320,7 @@ fun HomeScreen(
             setDefaultMode = { viewModel.setDefaultMode() },
             selectedSpecialMarker = uiState.selectedSpecialMarker,
             specialMarkerInfo = uiState.specialMarkerInfo,
+            userLocation = uiState.userLocation,
         )
         AnimatedVisibility(
             visible = true

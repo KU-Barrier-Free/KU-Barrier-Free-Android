@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
@@ -78,12 +79,13 @@ fun MapComponent(
     selectedSpecialMarker: ToggleMarker? = null,
     specialMarkerInfo: SpecialMarkerInfo?,
     setDefaultMode: () -> Unit = { },
+    userLocation: LatLng? = null,
 ) {
     GoogleMap(
         modifier = modifier,
         onMapClick = { setDefaultMode() },
         cameraPositionState = cameraPosition,
-        properties = MapParam.mapProperties.copy(isMyLocationEnabled = isLocationPermissionGranted),
+        properties = MapParam.mapProperties.copy(isMyLocationEnabled = false),
         uiSettings = MapParam.mapUiSettings,
         googleMapOptionsFactory = { MapParam.mapOptions }
     ) {
@@ -162,6 +164,11 @@ fun MapComponent(
 //        doorMarkers.forEach { mapMarker ->
 //            DoorMarker(doorMarker = mapMarker)
 //        }
+
+        // 사용자 위치 마커 렌더링
+        if (isLocationPermissionGranted && userLocation != null) {
+            UserMarker(latLng = userLocation)
+        }
     }
 }
 
@@ -387,9 +394,10 @@ fun UserMarker(
                 latLng.longitude
             )
         ),
+        anchor = Offset(0.5f, 0.5f),
     ) {
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .size(40.dp)
                 .background(
                     color = MainGreen.copy(alpha = 0.12f),

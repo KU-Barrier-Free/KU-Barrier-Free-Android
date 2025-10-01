@@ -53,6 +53,7 @@ data class HomeUiState(
     val routeResults: ImmutableList<RouteResult> = persistentListOf(),
     val selectedRouteResult: RouteResult = RouteResult(),
     val isBottomSheetExpanded: Boolean = false,
+    val userLocation: LatLng? = null,
 )
 
 
