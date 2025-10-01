@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -318,16 +319,26 @@ private fun BuildingMarker(
                 contentDescription = null,
                 tint = Color.Unspecified,
                 modifier = Modifier
-                    .shadow(1.dp)
+                    .shadow(10.dp)
                     .then(if (!isSelected) Modifier.size(20.dp) else Modifier)
             )
 
-            Text(
-                text = buildingMarker.name,
-                style = KUBFAndroidTheme.typography.semiBold14.copy(
+            Box {
+                Text(
+                    text = buildingMarker.name,
+                    style = KUBFAndroidTheme.typography.semiBold14.copy(
+                        drawStyle = Stroke(
+                            width = 4f, // 테두리 두께
+                        ),
+                    ),
+                    color = Color.White,
+                )
+                Text(
+                    text = buildingMarker.name,
+                    style = KUBFAndroidTheme.typography.semiBold14,
                     color = if (isSelected) MainGreen else Color(0xFF5A6860),
-                ),
-            )
+                )
+            }
         }
     }
 }
