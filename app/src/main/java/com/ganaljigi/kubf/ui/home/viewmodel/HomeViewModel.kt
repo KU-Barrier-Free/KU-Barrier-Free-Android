@@ -370,6 +370,14 @@ class HomeViewModel @Inject constructor(
     }
 
     /**
+     * 바텀 표시 여부를.
+     * @param flag 바텀 시트 표시 여부
+     */
+    fun setBottomSheetVisible(flag: Boolean) {
+        _uiState.update { it.copy(isBottomSheetExpanded = flag) }
+    }
+
+    /**
      * 문의하기 다이얼로그 표시 여부를 설정합니다.
      * @param showInquiryDialog 문의하기 다이얼로그 표시 여부
      */
