@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -86,7 +87,8 @@ fun KUBFSearchBar(
             interactionSource = interactionSource,
             cursorBrush = SolidColor(Gray4), // Cursor color
             keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Search
+                imeAction = ImeAction.Search,
+                keyboardType = KeyboardType.Text
             ),
             keyboardActions = KeyboardActions(
                 onSearch = {

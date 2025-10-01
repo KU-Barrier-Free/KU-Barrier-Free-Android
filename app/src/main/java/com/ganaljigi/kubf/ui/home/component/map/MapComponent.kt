@@ -2,6 +2,7 @@ package com.ganaljigi.kubf.ui.home.component.map
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,7 +20,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -76,12 +79,13 @@ fun MapComponent(
     selectedSpecialMarker: ToggleMarker? = null,
     specialMarkerInfo: SpecialMarkerInfo?,
     setDefaultMode: () -> Unit = { },
+    userLocation: LatLng? = null,
 ) {
     GoogleMap(
         modifier = modifier,
         onMapClick = { setDefaultMode() },
         cameraPositionState = cameraPosition,
-        properties = MapParam.mapProperties.copy(isMyLocationEnabled = isLocationPermissionGranted),
+        properties = MapParam.mapProperties.copy(isMyLocationEnabled = false),
         uiSettings = MapParam.mapUiSettings,
         googleMapOptionsFactory = { MapParam.mapOptions }
     ) {
@@ -160,6 +164,11 @@ fun MapComponent(
 //        doorMarkers.forEach { mapMarker ->
 //            DoorMarker(doorMarker = mapMarker)
 //        }
+
+        // 사용자 위치 마커 렌더링
+        if (isLocationPermissionGranted && userLocation != null) {
+            UserMarker(latLng = userLocation)
+        }
     }
 }
 
@@ -282,7 +291,7 @@ private fun ToggleSpecialMarker(
             contentDescription = null,
             tint = Color.Unspecified,
             modifier = Modifier
-                .size(24.dp)
+                .size(20.dp)
                 .shadow(1.dp)
         )
     }
@@ -318,16 +327,26 @@ private fun BuildingMarker(
                 contentDescription = null,
                 tint = Color.Unspecified,
                 modifier = Modifier
-                    .shadow(1.dp)
+                    .shadow(10.dp)
                     .then(if (!isSelected) Modifier.size(20.dp) else Modifier)
             )
 
-            Text(
-                text = buildingMarker.name,
-                style = KUBFAndroidTheme.typography.semiBold14.copy(
+            Box {
+                Text(
+                    text = buildingMarker.name,
+                    style = KUBFAndroidTheme.typography.semiBold14.copy(
+                        drawStyle = Stroke(
+                            width = 4f, // 테두리 두께
+                        ),
+                    ),
+                    color = Color.White,
+                )
+                Text(
+                    text = buildingMarker.name,
+                    style = KUBFAndroidTheme.typography.semiBold14,
                     color = if (isSelected) MainGreen else Color(0xFF5A6860),
-                ),
-            )
+                )
+            }
         }
     }
 }
@@ -358,6 +377,46 @@ private fun DoorMarker(
                 style = KUBFAndroidTheme.typography.medium14.copy(
                     color = Color.White
                 ),
+            )
+        }
+    }
+}
+
+@Composable
+fun UserMarker(
+    modifier: Modifier = Modifier,
+    latLng: LatLng,
+) {
+    MarkerComposable(
+        state = MarkerState(
+            position = LatLng(
+                latLng.latitude,
+                latLng.longitude
+            )
+        ),
+        anchor = Offset(0.5f, 0.5f),
+    ) {
+        Box(
+            modifier = modifier
+                .size(40.dp)
+                .background(
+                    color = MainGreen.copy(alpha = 0.12f),
+                    shape = CircleShape
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(20.dp)
+                    .border(
+                        width = 2.dp,
+                        color = Color.White,
+                        shape = CircleShape
+                    )
+                    .background(
+                        color = MainGreen,
+                        shape = CircleShape
+                    )
             )
         }
     }

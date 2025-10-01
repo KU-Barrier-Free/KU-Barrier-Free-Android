@@ -17,6 +17,7 @@ import com.ganaljigi.kubf.ui.home.model.MapToggle
 import com.ganaljigi.kubf.ui.home.model.RouteResult
 import com.ganaljigi.kubf.ui.home.model.SearchResult
 import com.ganaljigi.kubf.ui.home.model.ToggleMarker
+import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -370,6 +371,14 @@ class HomeViewModel @Inject constructor(
     }
 
     /**
+     * 바텀 표시 여부를.
+     * @param flag 바텀 시트 표시 여부
+     */
+    fun setBottomSheetVisible(flag: Boolean) {
+        _uiState.update { it.copy(isBottomSheetExpanded = flag) }
+    }
+
+    /**
      * 문의하기 다이얼로그 표시 여부를 설정합니다.
      * @param showInquiryDialog 문의하기 다이얼로그 표시 여부
      */
@@ -481,6 +490,16 @@ class HomeViewModel @Inject constructor(
                 searchResults = persistentListOf(),
                 showingDoorMarkers = persistentListOf(),
             )
+        }
+    }
+
+    /**
+     * 사용자의 현재 위치를 업데이트합니다.
+     * @param location 사용자의 위치
+     */
+    fun updateUserLocation(location: LatLng) {
+        _uiState.update {
+            it.copy(userLocation = location)
         }
     }
 }

@@ -72,6 +72,9 @@ import com.ganaljigi.kubf.ui.theme.Black
 import com.ganaljigi.kubf.ui.theme.Gray2
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.util.noRippleClickable
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
@@ -110,8 +113,15 @@ fun HomeScreen(
         if (fineLocationGranted || coarseLocationGranted) {
             isLocationPermissionGranted = true
         } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION) ||
-                ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    activity,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) ||
+                ActivityCompat.shouldShowRequestPermissionRationale(
+                    activity,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            ) {
                 shouldShowRationale = true
             } else {
                 openAppSettingsDialog = true
@@ -119,16 +129,44 @@ fun HomeScreen(
         }
     }
     LaunchedEffect(Unit) {
-        val fineLocationGranted = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        val coarseLocationGranted = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val fineLocationGranted = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        val coarseLocationGranted = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
 
         if (fineLocationGranted || coarseLocationGranted) {
             isLocationPermissionGranted = true
         } else {
-            locationPermissionResultLauncher.launch(arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ))
+            locationPermissionResultLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        }
+    }
+
+    LaunchedEffect(isLocationPermissionGranted) {
+        if (isLocationPermissionGranted) {
+            try {
+                val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+                fusedLocationClient.getCurrentLocation(
+                    Priority.PRIORITY_HIGH_ACCURACY,
+                    null
+                ).addOnSuccessListener { location ->
+                    location?.let {
+                        viewModel.updateUserLocation(
+                            LatLng(it.latitude, it.longitude)
+                        )
+                    }
+                }
+            } catch (e: SecurityException) {
+                // Handle security exception
+            }
         }
     }
 
@@ -136,7 +174,10 @@ fun HomeScreen(
         viewModel.setDefaultMode()
     }
 
-    LaunchedEffect(uiState.isBottomSheetExpanded, uiState.bottomSheetType) {
+    LaunchedEffect(
+        uiState.isBottomSheetExpanded,
+        uiState.bottomSheetType,
+    ) {
         if (uiState.isBottomSheetExpanded && uiState.bottomSheetType != HomeBottomSheetType.NONE) {
             if (bottomSheetState.isVisible.not()) {
                 scope.launch {
@@ -148,6 +189,9 @@ fun HomeScreen(
                 bottomSheetState.hide()
             }
         }
+    }
+    LaunchedEffect(bottomSheetState.isVisible) {
+        viewModel.setBottomSheetVisible(bottomSheetState.isVisible)
     }
 
     BottomSheetScaffold(
@@ -193,41 +237,6 @@ fun HomeScreen(
             }
         }
     ) { innerPadding ->
-
-        if (uiState.isBottomSheetExpanded) {
-            when (uiState.bottomSheetType) {
-                HomeBottomSheetType.SEARCH -> {
-                    HomeSearchBottomSheet(
-                        searchResults = uiState.searchResults,
-                        onInquireClick = {
-                            viewModel.setShowInquiryDialog(true)
-                        },
-                        onFromClick = { searchResult ->
-                            viewModel.onFromClick(searchResult)
-                        },
-                        onToClick = { searchResult ->
-                            viewModel.onToClick(searchResult)
-                        },
-                        onItemClick = { buildingId ->
-                            navigateToBuildingInfo(buildingId)
-                        },
-                    )
-                }
-
-                HomeBottomSheetType.BUILDING_INFO -> {
-                    HomeBuildingInfoSheetContent(
-                        modifier = Modifier.fillMaxWidth(),
-                        buildingInfo = uiState.buildingInfo,
-                        onItemClick = { buildingId ->
-                            navigateToBuildingInfo(buildingId)
-                        },
-                    )
-                }
-
-                else -> {}
-            }
-        }
-
 
         if (uiState.showInquiryDialog) {
             HomeInquiryDialog(
@@ -276,6 +285,7 @@ fun HomeScreen(
             setDefaultMode = { viewModel.setDefaultMode() },
             selectedSpecialMarker = uiState.selectedSpecialMarker,
             specialMarkerInfo = uiState.specialMarkerInfo,
+            userLocation = uiState.userLocation,
         )
         AnimatedVisibility(
             visible = true
@@ -470,10 +480,12 @@ fun HomeScreen(
         onDismissOpenAppSettingsDialog = { openAppSettingsDialog = false },
         onRetryClick = {
             shouldShowRationale = false
-            locationPermissionResultLauncher.launch(arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ))
+            locationPermissionResultLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
         },
     )
 }

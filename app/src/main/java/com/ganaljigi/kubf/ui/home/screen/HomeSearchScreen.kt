@@ -1,5 +1,6 @@
 package com.ganaljigi.kubf.ui.home.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,6 +51,7 @@ fun HomeSearchScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color.White)
             .padding(padding)
     ) {
         HomeSearchTopBar(
