@@ -238,41 +238,6 @@ fun HomeScreen(
         }
     ) { innerPadding ->
 
-//        if (uiState.isBottomSheetExpanded) {
-//            when (uiState.bottomSheetType) {
-//                HomeBottomSheetType.SEARCH -> {
-//                    HomeSearchBottomSheet(
-//                        searchResults = uiState.searchResults,
-//                        onInquireClick = {
-//                            viewModel.setShowInquiryDialog(true)
-//                        },
-//                        onFromClick = { searchResult ->
-//                            viewModel.onFromClick(searchResult)
-//                        },
-//                        onToClick = { searchResult ->
-//                            viewModel.onToClick(searchResult)
-//                        },
-//                        onItemClick = { buildingId ->
-//                            navigateToBuildingInfo(buildingId)
-//                        },
-//                    )
-//                }
-//
-//                HomeBottomSheetType.BUILDING_INFO -> {
-//                    HomeBuildingInfoSheetContent(
-//                        modifier = Modifier.fillMaxWidth(),
-//                        buildingInfo = uiState.buildingInfo,
-//                        onItemClick = { buildingId ->
-//                            navigateToBuildingInfo(buildingId)
-//                        },
-//                    )
-//                }
-//
-//                else -> {}
-//            }
-//        }
-
-
         if (uiState.showInquiryDialog) {
             HomeInquiryDialog(
                 inquiryField = uiState.inquiryField,
