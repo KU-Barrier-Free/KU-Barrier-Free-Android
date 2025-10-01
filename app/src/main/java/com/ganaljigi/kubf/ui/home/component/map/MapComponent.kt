@@ -2,6 +2,7 @@ package com.ganaljigi.kubf.ui.home.component.map
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -283,7 +284,7 @@ private fun ToggleSpecialMarker(
             contentDescription = null,
             tint = Color.Unspecified,
             modifier = Modifier
-                .size(24.dp)
+                .size(20.dp)
                 .shadow(1.dp)
         )
     }
@@ -369,6 +370,45 @@ private fun DoorMarker(
                 style = KUBFAndroidTheme.typography.medium14.copy(
                     color = Color.White
                 ),
+            )
+        }
+    }
+}
+
+@Composable
+fun UserMarker(
+    modifier: Modifier = Modifier,
+    latLng: LatLng,
+) {
+    MarkerComposable(
+        state = MarkerState(
+            position = LatLng(
+                latLng.latitude,
+                latLng.longitude
+            )
+        ),
+    ) {
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .background(
+                    color = MainGreen.copy(alpha = 0.12f),
+                    shape = CircleShape
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(20.dp)
+                    .border(
+                        width = 2.dp,
+                        color = Color.White,
+                        shape = CircleShape
+                    )
+                    .background(
+                        color = MainGreen,
+                        shape = CircleShape
+                    )
             )
         }
     }
