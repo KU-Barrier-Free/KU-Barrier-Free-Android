@@ -32,7 +32,10 @@ fun RoomInfoResponseDto.toUiState(): RoomInfoUiState {
         departmentNumber = r.departmentNumber,
 
         //이미지(ROOM만 쓸거임)
-        roomPicUrls = r.images.filter { it.imageType == "ROOM" }.map { it.imageUrl },
+        roomPicUrls = r.images
+            .sortedBy { it.imageType != "ROOM" }
+            .map { it.imageUrl }
+            .distinct(),
 
         // roomInfo가 null이면 전부 false로 (이렇게 하는게 좋다고 지피띠니가 말해줌
         allInOne = info?.allInOne ?: false,
