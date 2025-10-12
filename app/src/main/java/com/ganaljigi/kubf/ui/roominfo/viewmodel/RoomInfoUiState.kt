@@ -33,4 +33,7 @@ data class RoomInfoUiState(
     //문 정보 (Door)
     val frontDoor: Boolean = false,
     val backDoor: Boolean = false,
+
+    //API RoomInfo null 여부
+    val hasRoomInfo: Boolean = true
 )

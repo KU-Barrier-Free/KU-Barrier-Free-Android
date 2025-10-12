@@ -46,6 +46,9 @@ fun RoomInfoResponseDto.toUiState(): RoomInfoUiState {
         wheelchairTable = info?.wheelchairTable ?: false,
         computerTable = info?.computerTable ?: false,
         frontDoor = info?.frontDoor ?: false,
-        backDoor = info?.backDoor ?: false
+        backDoor = info?.backDoor ?: false,
+
+        //roomInfo null 여부
+        hasRoomInfo = (info != null)
     )
 }
