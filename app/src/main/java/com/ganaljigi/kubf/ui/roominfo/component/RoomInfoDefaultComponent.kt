@@ -50,8 +50,10 @@ import android.util.TypedValue
 import android.widget.PopupMenu
 import androidx.core.content.res.ResourcesCompat
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Surface
 import androidx.compose.ui.text.style.TextDecoration
 
 @Composable
@@ -250,19 +252,39 @@ fun RoomInfoDefaultComponent(
                     properties = PopupProperties(focusable = true),
                     onDismissRequest = { showTooltip = false }
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .size(width = 248.dp, height = 82.dp)
-                            .shadow(elevation = 4.dp, shape = RoundedCornerShape(8.dp))
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(Color.White)
-                            .padding(12.dp),
-                        contentAlignment = Alignment.CenterStart
+//                    Box(
+//                        modifier = Modifier
+//                            .size(width = 248.dp, height = 82.dp)
+//                            .shadow(elevation = 4.dp, shape = RoundedCornerShape(8.dp))
+//                            .clip(RoundedCornerShape(8.dp))
+//                            .background(Color.White)
+//                            .padding(12.dp),
+//                        contentAlignment = Alignment.CenterStart
+//                    ) {
+//                        Text(
+//                            text = buildAnnotatedString {
+//                                withStyle(SpanStyle(color = MainGreen)) { append("평탄식") }
+//                                append("은 바닥이 전부 평평한 호실, \n")
+//                                withStyle(SpanStyle(color = MainGreen)) { append("계단식") }
+//                                append("은 바닥에 단차가 있는 호실입니다.")
+//                            },
+//                            style = KUBFAndroidTheme.typography.regular14.copy(
+//                                lineHeight = 25.sp,
+//                                letterSpacing = (-0.025).em
+//                            )
+//                        )
+//                    }
+                    Surface(
+                        shape = RoundedCornerShape(20.dp),
+                        color = Color.White.copy(alpha = 0.9f),
+                        border = BorderStroke(1.dp, Color.White),
+                        shadowElevation = 4.dp
                     ) {
                         Text(
+                            modifier = Modifier.padding(16.dp),
                             text = buildAnnotatedString {
                                 withStyle(SpanStyle(color = MainGreen)) { append("평탄식") }
-                                append("은 바닥이 전부 평평한 호실, \n")
+                                append("은 바닥이 전부 평평한 호실,\n")
                                 withStyle(SpanStyle(color = MainGreen)) { append("계단식") }
                                 append("은 바닥에 단차가 있는 호실입니다.")
                             },
