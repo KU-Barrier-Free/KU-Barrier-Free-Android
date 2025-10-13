@@ -55,7 +55,9 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Surface
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun RoomInfoDefaultComponent(
     roomNumber: String,
@@ -75,9 +77,10 @@ fun RoomInfoDefaultComponent(
             .padding(horizontal = 16.dp, vertical = 16.dp)
     ) {
         // 상단 제목 + 강의실 칩
-        Row(
+        FlowRow (
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
                 text = "$roomNumber ${roomName ?: ""}",
@@ -85,9 +88,12 @@ fun RoomInfoDefaultComponent(
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 ),
-                color = Color.Black
+                color = Color.Black,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
             )
-            Spacer(modifier = Modifier.width(8.dp))
+
+            //Spacer(modifier = Modifier.width(8.dp))
             if (lecture) {
                 LectureChip()
             }
