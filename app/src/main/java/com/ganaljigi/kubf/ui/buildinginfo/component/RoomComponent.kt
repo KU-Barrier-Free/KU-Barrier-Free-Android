@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,11 +56,14 @@ fun RoomComponent(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .shadow(
-                elevation = 2.dp,
-                shape = RoundedCornerShape(20.dp),
+            .graphicsLayer {
+                shadowElevation = 4.dp.toPx()
+                ambientShadowColor = Color.Black.copy(alpha = 0.2f)
+                spotShadowColor = Color.Black.copy(alpha = 0.3f)
+                shape = RoundedCornerShape(16.dp)
                 clip = false
-            )
+
+            }
             .clip(RoundedCornerShape(20.dp))
             .background(
                 color = Color(0xFFFFFFFF)
@@ -144,8 +148,13 @@ fun RoomComponent(
 @Preview
 @Composable
 private fun PreviewRoom() {
-    var urlL = mutableListOf("http")
-    //val room = Room(urlL, "101", "전산실습실", "강의", mutableListOf("경사로"))
-    val room = Room(10,urlL,"101","전산실습실",true,"")
-    RoomComponent(room)
+    Box(
+        modifier = Modifier.background(Color.White).size(500.dp),
+        contentAlignment = Alignment.Center
+    ){
+        var urlL = mutableListOf("http")
+        val room = Room(10,urlL,"101","전산실습실",true,"")
+        RoomComponent(room)
+    }
+
 }
