@@ -27,7 +27,7 @@ fun RoomInfoResponseDto.toUiState(): RoomInfoUiState {
         area = r.area,
         floorSpace = r.floorSpace,
         roomType = r.roomType,
-        //roomComment = r.roomComment,
+        roomComment = r.roomComment.orEmpty(),
         department = r.department,
         departmentNumber = r.departmentNumber,
 

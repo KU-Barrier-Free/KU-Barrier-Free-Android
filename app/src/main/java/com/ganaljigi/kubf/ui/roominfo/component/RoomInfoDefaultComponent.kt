@@ -63,6 +63,7 @@ fun RoomInfoDefaultComponent(
     lecture: Boolean,
     capacity: Int,
     area: Double,
+    roomComment: String?,
     floorSpace: Double,
     roomType: String,
     department: String,
@@ -185,6 +186,43 @@ fun RoomInfoDefaultComponent(
                     style = KUBFAndroidTheme.typography.regular14,
                     color = Color.Black
                 )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // 특이사항
+        val commentText = roomComment?.takeUnless { it.isBlank() } ?: "-"
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_roominfo_roomcomment),
+                contentDescription = "특이사항",
+                tint = Gray4,
+                modifier = Modifier
+                    .size(20.dp)
+            )
+
+            Spacer(Modifier.width(8.dp))
+
+            Text(
+                text = "특이사항",
+                style = KUBFAndroidTheme.typography.regular14,
+                color = Gray4
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Row(
+                verticalAlignment = Alignment.Bottom,
+            ) {
+                Text(
+                    text = commentText,
+                    style = KUBFAndroidTheme.typography.semiBold16,
+                    color = Color.Black
+                )
+
             }
         }
 
@@ -457,6 +495,7 @@ fun RoomInfoDefaultComponentPreview() {
             lecture = true,
             capacity = 34,
             area = 60.6,
+            roomComment = "",
             floorSpace = 18.3,
             roomType = "평탄식",
             department = "정보인프라팀",

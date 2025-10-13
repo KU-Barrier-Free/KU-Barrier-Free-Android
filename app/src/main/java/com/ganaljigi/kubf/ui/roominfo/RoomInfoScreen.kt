@@ -62,6 +62,7 @@ fun RoomInfoScreen(
                 lecture = uiState.lecture,
                 capacity = uiState.capacity,
                 area = uiState.area,
+                roomComment = uiState.roomComment,
                 floorSpace = uiState.floorSpace,
                 roomType = uiState.roomType,
                 department = uiState.department,
