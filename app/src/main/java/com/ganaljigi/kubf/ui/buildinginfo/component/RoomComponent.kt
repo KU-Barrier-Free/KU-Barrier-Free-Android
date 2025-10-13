@@ -92,12 +92,13 @@ fun RoomComponent(
                                 color = Color(0xFFD29027).copy(alpha = 0.1f)
                             )
                             .wrapContentWidth(),
+                        //contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = "강의실",
                             color = Color(0xFFD29027),
                             style = MaterialTheme.typography.labelSmall,
-                            modifier = Modifier.padding(horizontal = 4.dp)
+                            modifier = Modifier.padding(horizontal = 4.dp).padding(top =1.dp)
                         )
                     }
                 }
@@ -114,7 +115,7 @@ fun RoomComponent(
                     Spacer(Modifier.width(16.dp))
                     Text(
                         text = room.comment,
-                        style = KUBFAndroidTheme.typography.medium14,
+                        style = KUBFAndroidTheme.typography.regular14,
                         color = Gray3,
                         fontWeight = FontWeight.Bold
                     )
@@ -145,5 +146,6 @@ fun RoomComponent(
 private fun PreviewRoom() {
     var urlL = mutableListOf("http")
     //val room = Room(urlL, "101", "전산실습실", "강의", mutableListOf("경사로"))
-   // RoomComponent(room)
+    val room = Room(10,urlL,"101","전산실습실",true,"")
+    RoomComponent(room)
 }
