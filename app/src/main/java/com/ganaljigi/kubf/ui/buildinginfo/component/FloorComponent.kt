@@ -135,11 +135,9 @@ fun FloorImageDialog(floor: FloorInfo, onDismiss: () -> Unit, initialPage: Int) 
                 state = pagerState,
                 modifier = Modifier.fillMaxWidth()
             ) { page ->
-                AsyncImage(
-                    model = images.getOrNull(page),
-                    contentDescription = "층별 사진",
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier.fillMaxWidth()
+                TransformableImage(
+                    modifier = Modifier.fillMaxWidth(),
+                    imageUrl = images.getOrNull(page)
                 )
             }
             if (images.size > 1){
@@ -154,6 +152,8 @@ fun FloorImageDialog(floor: FloorInfo, onDismiss: () -> Unit, initialPage: Int) 
         }
     }
 }
+
+
 
 @Preview
 @Composable

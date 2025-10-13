@@ -2,6 +2,9 @@ package com.ganaljigi.kubf.ui.buildinginfo.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTransformGestures
+import androidx.compose.foundation.gestures.rememberTransformableState
+import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +23,8 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,10 +32,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -41,6 +57,7 @@ import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.Gray4
 import com.ganaljigi.kubf.ui.theme.MainGreen
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
+import kotlin.math.absoluteValue
 
 
 /**
@@ -72,33 +89,126 @@ fun DoorComponent(doors: List<Door>) {
 @Composable
 fun DoorImageDialog(door: Door, onDismiss: () -> Unit) {
     val images = door.imageUrl.ifEmpty { listOf<String>() }
-    Dialog(onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
+    Dialog(
+        onDismissRequest =
+            onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
-        Box(Modifier.fillMaxWidth()){
-            val pagerState = rememberPagerState(pageCount = {images.size})
+        Box(Modifier.fillMaxWidth()) {
+            val pagerState =
+                rememberPagerState(pageCount = { images.size })
             HorizontalPager(
-                state = pagerState,
-                modifier = Modifier.fillMaxWidth()
+                state =
+                    pagerState, modifier = Modifier.fillMaxWidth()
             ) { page ->
-                AsyncImage(
-                    model = images.getOrNull(page),
-                    contentDescription = "문 사진",
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier.fillMaxWidth()
+                TransformableImage(
+                    modifier = Modifier.fillMaxWidth(),
+                    images.getOrNull(page)
                 )
             }
-            if (images.size > 1){
+            if (images.size > 1) {
                 Text(
-                    text = "${pagerState.currentPage+1}/${images.size}",
+                    text = "${pagerState.currentPage + 1}/${images.size}",
                     color = Color.White,
-                    modifier = Modifier.align(Alignment.BottomCenter)
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
                         .padding(bottom = 16.dp),
                     textAlign = TextAlign.Center,
                     style = KUBFAndroidTheme.typography.medium13
                 )
             }
         }
+    }
+}
+
+@Composable
+fun TransformableImage(modifier: Modifier = Modifier, imageUrl: String?) {
+    var containerSize by remember { mutableStateOf(IntSize.Zero) }
+    var imageSize by remember { mutableStateOf(IntSize.Zero) }
+    var scale by remember { mutableStateOf(1f) }
+    var offset by remember { mutableStateOf(Offset.Companion.Zero) }
+    val scaledWidth by remember(imageSize, scale) { derivedStateOf { imageSize.width * scale } }
+    val scaledHeight by remember(imageSize, scale) { derivedStateOf { imageSize.height * scale } }
+    val imageRect by remember(
+        scaledHeight,
+        scaledWidth,
+        offset,
+        containerSize
+    ) {
+        derivedStateOf {
+            val cx = containerSize.width / 2f
+            val cy = containerSize.height / 2f
+            Rect(
+                offset = Offset(
+                    x = cx - scaledWidth / 2f + offset.x,
+                    y = cy - scaledHeight / 2f + offset.y
+                ), size = Size(scaledWidth, scaledHeight)
+            )
+        }
+    }
+    Box(
+        modifier = modifier
+            .onSizeChanged { containerSize = it }
+            .pointerInput(Unit) {
+                detectTransformGestures { centroid, panChange, zoomChange, _ ->
+                    if (!imageRect.contains(centroid)) return@detectTransformGestures
+                    if (zoomChange != 1f) {
+                        val newScale = (scale * zoomChange).coerceAtLeast(1f)
+                        val currentCenter = Offset(
+                            x = containerSize.width / 2f + offset.x,
+                            y = containerSize.height / 2f + offset.y
+                        )
+                        val relative = centroid - currentCenter
+                        val scaleChange = newScale / scale
+                        var newOffsetX = offset.x + relative.x * (1f - scaleChange)
+                        var newOffsetY = offset.y + relative.y * (1f - scaleChange)
+                        newOffsetX += panChange.x
+                        newOffsetY += panChange.y
+                        scale = newScale
+                        val maxOffsetX =
+                            ((imageSize.width * newScale - containerSize.width) / 2f).coerceAtLeast(
+                                0f
+                            )
+                        val maxOffsetY =
+                            ((imageSize.height * newScale - containerSize.height) / 2f).coerceAtLeast(
+                                0f
+                            )
+                        offset = if (newScale == 1f) {
+                            Offset.Zero
+                        } else {
+                            Offset(
+                                x = newOffsetX.coerceIn(-maxOffsetX, maxOffsetX),
+                                y = newOffsetY.coerceIn(-maxOffsetY, maxOffsetY)
+                            )
+                        }
+                        return@detectTransformGestures
+                    }
+                    val maxOffsetX = ((scaledWidth - containerSize.width) / 2f).absoluteValue
+                    val maxOffsetY =
+                        ((scaledHeight - containerSize.height) / 2f).absoluteValue
+                    offset = if (scale == 1f) {
+                        Offset.Zero
+                    } else {
+                        Offset(
+                            x = (offset.x + panChange.x).coerceIn(-maxOffsetX, maxOffsetX),
+                            y = (offset.y + panChange.y).coerceIn(-maxOffsetY, maxOffsetY)
+                        )
+                    }
+                }
+            }) {
+        AsyncImage(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .graphicsLayer(
+                    scaleX = scale,
+                    scaleY = scale,
+                    translationX = offset.x,
+                    translationY = offset.y
+                )
+                .onGloballyPositioned { coord -> imageSize = coord.size },
+            model = imageUrl,
+            contentDescription = null,
+            contentScale = ContentScale.Fit
+        )
     }
 }
 
