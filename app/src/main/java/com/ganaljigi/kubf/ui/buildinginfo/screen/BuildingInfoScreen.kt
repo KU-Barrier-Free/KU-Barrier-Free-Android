@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -84,6 +82,15 @@ fun BuildingInfoScreen(
 
     var showSearchPopup by remember { mutableStateOf(false) }
 
+    LaunchedEffect(floors) {
+        if (floors.isNotEmpty()){
+            val oneFloorIndex = floors.indexOfFirst { f ->
+                f.floorLabel.trim().equals("1")
+            }
+            selectedIndex = if (oneFloorIndex >= 0) oneFloorIndex else 0
+        }
+    }
+
     if (floors.isEmpty()) {
         Scaffold(
             containerColor = Color.White,
@@ -91,7 +98,8 @@ fun BuildingInfoScreen(
                 TopAppBar(
                     navigationIcon = {
                         IconButton(onClick = onBack) {
-                            Icon(Icons.Filled.ArrowBack, contentDescription = "뒤로")
+                            Icon(painter = painterResource(R.drawable.ic_backarrow),
+                                contentDescription = "뒤로가기")
                         }
                     },
                     title = {
@@ -155,7 +163,8 @@ fun BuildingInfoScreen(
             TopAppBar(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "뒤로")
+                        Icon(painter = painterResource(R.drawable.ic_backarrow),
+                            contentDescription = "뒤로가기")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -257,7 +266,7 @@ fun BuildingInfoScreen(
                 Spacer(modifier = Modifier.height(12.dp))
                 DoorComponent(doors = uiState.buildingInfo.doors)
                 Spacer(Modifier.height(20.dp))
-                if (uiState.buildingInfo.notes.isNotEmpty()) { // for문 사용하기
+                if (uiState.buildingInfo.notes.isNotEmpty()) {
                     Text(
                         text = "특이사항",
                         style = KUBFAndroidTheme.typography.semiBold16,
@@ -280,7 +289,7 @@ fun BuildingInfoScreen(
                 Spacer(Modifier.height(12.dp))
             }
             stickyHeader {
-                if (uiState.totalFloor.num < 8) {
+                if (uiState.totalFloor.num < 7) {
                     TabRow(
                         selectedTabIndex = selectedIndex,
                         indicator = { position ->
@@ -325,7 +334,8 @@ fun BuildingInfoScreen(
                             )
                         },
                         modifier = Modifier.fillMaxWidth(),
-                        edgePadding = 0.dp
+                        edgePadding = 0.dp,
+                        containerColor = Color.White
                     ) {
                         floors.forEachIndexed { idx, floorInfo ->
                             Tab(
@@ -362,7 +372,7 @@ fun BuildingInfoScreen(
             }
         }
         if (showSearchPopup) {
-            Dialog( // TODO: 위치 조정
+            Dialog(
                 onDismissRequest = {
                     showSearchPopup = false
                     viewModel.clearQuery()
@@ -373,7 +383,11 @@ fun BuildingInfoScreen(
                         showSearchPopup = false
                         viewModel.clearQuery()
                     },
-                    onRoomClick = {}
+                    onRoomClick = { result ->
+                        result.room?.let { room ->
+                            onRoomClick(room, uiState.buildingInfo.name)
+                        }
+                    }
                 )
             }
         }

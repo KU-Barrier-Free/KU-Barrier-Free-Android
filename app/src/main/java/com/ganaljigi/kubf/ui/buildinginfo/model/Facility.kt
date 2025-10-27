@@ -12,10 +12,11 @@ enum class Facility(val label: String, @DrawableRes val iconResId:Int){
     KHUB("K-Hub",R.drawable.ic_feature_kcube),
     SERVICE("IT-서비스센터", R.drawable.ic_feature_itser),
     PARK("주차장", R.drawable.ic_feature_park),
-    BANK("은행",R.drawable.ic_feature_itser),
-    ELEV("엘리베이터",R.drawable.ic_building),
-    POST("우체국",R.drawable.ic_toggle_special),
-    TOILET("장애인화장실",R.drawable.ic_toggle_special),
-    CULF("문화시설",R.drawable.ic_toggle_special),
-    STORE("복지매장",R.drawable.ic_toggle_special)
+    BANK("은행",R.drawable.ic_feature_bank),
+    ELEV("엘리베이터",R.drawable.ic_feature_elevator),
+    POST("우체국",R.drawable.ic_feature_post),
+    TOILET("장애인화장실",R.drawable.ic_feature_disable_toilet),
+    CULF("문화시설",R.drawable.ic_feature_culture),
+    STORE("복지매장",R.drawable.ic_feature_welfare),
+    RES("식당",R.drawable.ic_feature_restaurant)
 }

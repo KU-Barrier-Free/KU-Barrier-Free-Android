@@ -83,15 +83,15 @@ fun SearchPopup(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 value = ui.query,
                 onValueChange = viewModel::onQueryChange,
-                placeHolderText = "건물, 편의시설 검색",
+                placeHolderText = "강의실명, 호실 검색",
                 interactionSource = interactionSource,
                 isFocused = isFocused,
                 onValueCleared = { viewModel.clearQuery() }
             )
-            Spacer(Modifier.height(24.dp))
 
             // 결과 개수: 0이면 숨김
             if (hasQuery && hasResult) {
+                Spacer(Modifier.height(24.dp))
                 Row(Modifier.padding(horizontal = 16.dp)) {
                     Text("결과 ", style = KUBFAndroidTheme.typography.regular13, color = Gray3)
                     Text("${ui.result.size}", style = KUBFAndroidTheme.typography.regular13, color = MainGreen)
@@ -109,7 +109,7 @@ fun SearchPopup(
                     !hasQuery -> {
                         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                             Text(
-                                "건물, 편의시설을 검색해보세요.",
+                                "강의실명, 호실을 검색해보세요.",
                                 style = KUBFAndroidTheme.typography.regular14,
                                 color = Gray3
                             )
