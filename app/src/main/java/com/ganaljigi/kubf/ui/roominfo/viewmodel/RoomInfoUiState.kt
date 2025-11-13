@@ -1,5 +1,7 @@
 package com.ganaljigi.kubf.ui.roominfo.viewmodel
 
+import org.w3c.dom.Comment
+
 data class RoomInfoUiState(
     //상태 공통
     val isLoading: Boolean = false,
@@ -13,6 +15,7 @@ data class RoomInfoUiState(
     val lecture: Boolean = false,
     val capacity: Int = 0,
     val area: Double = 0.0,
+    val roomComment: String = "",
     val floorSpace: Double = 0.0,
     val roomType: String = "",
     val department: String = "",
@@ -33,4 +36,7 @@ data class RoomInfoUiState(
     //문 정보 (Door)
     val frontDoor: Boolean = false,
     val backDoor: Boolean = false,
+
+    //API RoomInfo null 여부
+    val hasRoomInfo: Boolean = true
 )

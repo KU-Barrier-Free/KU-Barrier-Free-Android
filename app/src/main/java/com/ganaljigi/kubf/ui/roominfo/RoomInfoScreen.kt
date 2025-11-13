@@ -37,6 +37,9 @@ fun RoomInfoScreen(
 ) {
     val scrollState = rememberScrollState()
 
+    val showDeskAndChair = uiState.hasRoomInfo
+    val showDoor = uiState.hasRoomInfo
+
     Scaffold(
         topBar = {
             RoomInfoTopAppBar(
@@ -74,31 +77,36 @@ fun RoomInfoScreen(
                 lecture = uiState.lecture,
                 capacity = uiState.capacity,
                 area = uiState.area,
+                roomComment = uiState.roomComment,
                 floorSpace = uiState.floorSpace,
                 roomType = uiState.roomType,
                 department = uiState.department,
                 departmentNumber = uiState.departmentNumber
             )
 
-            DeskAndChairComponent(
-                allInOne = uiState.allInOne,
-                cinemaSeat = uiState.cinemaSeat,
-                oneSeat = uiState.oneSeat,
-                twoSeat = uiState.twoSeat,
-                multiSeat = uiState.multiSeat,
-                panel = uiState.panel,
-                backOfChair = uiState.backOfChair,
-                wheelChair = uiState.wheelChair,
-                wheelchairTable = uiState.wheelchairTable,
-                computerTable = uiState.computerTable,
-                modifier = Modifier.fillMaxWidth()
-            )
+            if (showDeskAndChair) {
+                DeskAndChairComponent(
+                    allInOne = uiState.allInOne,
+                    cinemaSeat = uiState.cinemaSeat,
+                    oneSeat = uiState.oneSeat,
+                    twoSeat = uiState.twoSeat,
+                    multiSeat = uiState.multiSeat,
+                    panel = uiState.panel,
+                    backOfChair = uiState.backOfChair,
+                    wheelChair = uiState.wheelChair,
+                    wheelchairTable = uiState.wheelchairTable,
+                    computerTable = uiState.computerTable,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
 
-            DoorComponent(
-                frontDoor = uiState.frontDoor,
-                backDoor = uiState.backDoor,
-                modifier = Modifier.fillMaxWidth()
-            )
+            if (showDoor) {
+                DoorComponent(
+                    frontDoor = uiState.frontDoor,
+                    backDoor = uiState.backDoor,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
 
             Spacer(modifier = Modifier.height(30.dp))
         }

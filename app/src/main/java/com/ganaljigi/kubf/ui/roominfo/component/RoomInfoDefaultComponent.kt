@@ -50,10 +50,14 @@ import android.util.TypedValue
 import android.widget.PopupMenu
 import androidx.core.content.res.ResourcesCompat
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Surface
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun RoomInfoDefaultComponent(
     roomNumber: String,
@@ -61,6 +65,7 @@ fun RoomInfoDefaultComponent(
     lecture: Boolean,
     capacity: Int,
     area: Double,
+    roomComment: String?,
     floorSpace: Double,
     roomType: String,
     department: String,
@@ -72,9 +77,10 @@ fun RoomInfoDefaultComponent(
             .padding(horizontal = 16.dp, vertical = 16.dp)
     ) {
         // 상단 제목 + 강의실 칩
-        Row(
+        FlowRow (
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
                 text = "$roomNumber ${roomName ?: ""}",
@@ -82,9 +88,12 @@ fun RoomInfoDefaultComponent(
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 ),
-                color = Color.Black
+                color = Color.Black,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
             )
-            Spacer(modifier = Modifier.width(8.dp))
+
+            //Spacer(modifier = Modifier.width(8.dp))
             if (lecture) {
                 LectureChip()
             }
@@ -188,6 +197,43 @@ fun RoomInfoDefaultComponent(
 
         Spacer(modifier = Modifier.height(20.dp))
 
+        // 특이사항
+        val commentText = roomComment?.takeUnless { it.isBlank() } ?: "-"
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_roominfo_roomcomment),
+                contentDescription = "특이사항",
+                tint = Gray4,
+                modifier = Modifier
+                    .size(20.dp)
+            )
+
+            Spacer(Modifier.width(8.dp))
+
+            Text(
+                text = "특이사항",
+                style = KUBFAndroidTheme.typography.regular14,
+                color = Gray4
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Row(
+                verticalAlignment = Alignment.Bottom,
+            ) {
+                Text(
+                    text = commentText,
+                    style = KUBFAndroidTheme.typography.semiBold16,
+                    color = Color.Black
+                )
+
+            }
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
         // 호실 형태
         var showTooltip by remember { mutableStateOf(false) }
 
@@ -250,19 +296,39 @@ fun RoomInfoDefaultComponent(
                     properties = PopupProperties(focusable = true),
                     onDismissRequest = { showTooltip = false }
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .size(width = 248.dp, height = 82.dp)
-                            .shadow(elevation = 4.dp, shape = RoundedCornerShape(8.dp))
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(Color.White)
-                            .padding(12.dp),
-                        contentAlignment = Alignment.CenterStart
+//                    Box(
+//                        modifier = Modifier
+//                            .size(width = 248.dp, height = 82.dp)
+//                            .shadow(elevation = 4.dp, shape = RoundedCornerShape(8.dp))
+//                            .clip(RoundedCornerShape(8.dp))
+//                            .background(Color.White)
+//                            .padding(12.dp),
+//                        contentAlignment = Alignment.CenterStart
+//                    ) {
+//                        Text(
+//                            text = buildAnnotatedString {
+//                                withStyle(SpanStyle(color = MainGreen)) { append("평탄식") }
+//                                append("은 바닥이 전부 평평한 호실, \n")
+//                                withStyle(SpanStyle(color = MainGreen)) { append("계단식") }
+//                                append("은 바닥에 단차가 있는 호실입니다.")
+//                            },
+//                            style = KUBFAndroidTheme.typography.regular14.copy(
+//                                lineHeight = 25.sp,
+//                                letterSpacing = (-0.025).em
+//                            )
+//                        )
+//                    }
+                    Surface(
+                        shape = RoundedCornerShape(20.dp),
+                        color = Color.White.copy(alpha = 0.9f),
+                        border = BorderStroke(1.dp, Color.White),
+                        shadowElevation = 4.dp
                     ) {
                         Text(
+                            modifier = Modifier.padding(16.dp),
                             text = buildAnnotatedString {
                                 withStyle(SpanStyle(color = MainGreen)) { append("평탄식") }
-                                append("은 바닥이 전부 평평한 호실, \n")
+                                append("은 바닥이 전부 평평한 호실,\n")
                                 withStyle(SpanStyle(color = MainGreen)) { append("계단식") }
                                 append("은 바닥에 단차가 있는 호실입니다.")
                             },
@@ -435,6 +501,7 @@ fun RoomInfoDefaultComponentPreview() {
             lecture = true,
             capacity = 34,
             area = 60.6,
+            roomComment = "",
             floorSpace = 18.3,
             roomType = "평탄식",
             department = "정보인프라팀",
