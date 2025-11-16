@@ -34,6 +34,10 @@ jobs: # CI에서 수행할 작업을 정의한다.
         run: |
           echo '${{ secrets.LOCAL_PROPERTIES }}' >> ./local.properties
 
+      - name: Generate network_security_config.xml
+        run: |
+          echo '${{ secrets.NETWORK_SECURITY_CONFIG }}' >> ./app/src/main/res/xml/network_security_config.xml
+
       #- name: Generate google-services.json
       #  run: |
       #    echo '${{ secrets.GOOGLE_SERVICES }}' >> ./app/google-services.json

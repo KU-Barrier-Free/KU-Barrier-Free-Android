@@ -8,33 +8,24 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
-import java.sql.Date
-import com.ganalijigi.kubf.R
 
 //공지사항도 ID
 
 //Helper화면의 NoticeBox의 Title
 @Composable
 fun NoticeTitle(
-    onNavigateClick: () -> Unit
+    onNavigateClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -44,27 +35,14 @@ fun NoticeTitle(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .height(52.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = "공지사항",
                 style = KUBFAndroidTheme.typography.semiBold18.copy(
-                   fontSize = 18.sp
+                    fontSize = 18.sp
                 )
             )
-
-            IconButton(
-                onClick = onNavigateClick,
-                modifier = Modifier
-                    .offset(x = (12).dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_helper_arrowleft_gray),
-                    contentDescription = "공지사항 페이지로 이동",
-                    tint = Gray3
-                )
-            }
         }
     }
 }
@@ -77,10 +55,9 @@ fun NoticeItem(
     number: Int,
     index: Int,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val backgroundColor
-    = if (index%2==0) Color(0xFFF8FFFA) else Color.White
+    val backgroundColor = if (index % 2 == 0) Color(0xFFF8FFFA) else Color.White
 
     Column(
         modifier = modifier
@@ -97,7 +74,7 @@ fun NoticeItem(
             )
         )
         Spacer(modifier = Modifier.height(8.dp))
-        Row (
+        Row(
             modifier = Modifier
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween

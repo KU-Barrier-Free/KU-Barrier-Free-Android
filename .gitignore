@@ -13,6 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+app/src/main/res/xml/network_security_config.xml
 
 # Created by https://www.toptal.com/developers/gitignore/api/android,androidstudio,kotlin,macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=android,androidstudio,kotlin,macos

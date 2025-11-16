@@ -49,7 +49,7 @@ import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 @Composable
 fun RoomComponent(
     room: Room,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     val hasNote: Boolean = room.comment.isNotEmpty()
     val hasImage = room.roomImages.isNotEmpty()
@@ -75,8 +75,10 @@ fun RoomComponent(
             modifier = Modifier.matchParentSize(),
             contentAlignment = Alignment.TopEnd
         ) {
-            Icon(painter = painterResource(R.drawable.ic_chevron_right),
-                contentDescription = "이동")
+            Icon(
+                painter = painterResource(R.drawable.ic_chevron_right),
+                contentDescription = "이동"
+            )
         }
         Column {
             FlowRow(modifier = Modifier.width(300.dp)) {
@@ -87,7 +89,7 @@ fun RoomComponent(
                     color = Black
                 )
                 Spacer(Modifier.width(8.dp))
-                if (room.isLecture){
+                if (room.isLecture) {
                     Box(
                         modifier = Modifier
                             .height(20.dp)
@@ -96,13 +98,15 @@ fun RoomComponent(
                                 color = Color(0xFFD29027).copy(alpha = 0.1f)
                             )
                             .wrapContentWidth(),
-                        //contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = "강의실",
                             color = Color(0xFFD29027),
                             style = MaterialTheme.typography.labelSmall,
-                            modifier = Modifier.padding(horizontal = 4.dp).padding(top =1.dp)
+                            modifier = Modifier
+                                .padding(horizontal = 4.dp)
+                                .padding(top = 1.dp)
                         )
                     }
                 }
@@ -121,7 +125,7 @@ fun RoomComponent(
                         text = room.comment,
                         style = KUBFAndroidTheme.typography.regular14,
                         color = Gray3,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Medium
                     )
                 }
             }
@@ -149,11 +153,13 @@ fun RoomComponent(
 @Composable
 private fun PreviewRoom() {
     Box(
-        modifier = Modifier.background(Color.White).size(500.dp),
+        modifier = Modifier
+            .background(Color.White)
+            .size(500.dp),
         contentAlignment = Alignment.Center
-    ){
+    ) {
         var urlL = mutableListOf("http")
-        val room = Room(10,urlL,"101","전산실습실",true,"")
+        val room = Room(10, urlL, "101", "전산실습실", true, "")
         RoomComponent(room)
     }
 
