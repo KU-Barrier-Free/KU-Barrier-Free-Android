@@ -3,6 +3,7 @@ package com.ganaljigi.kubf.ui.roominfo.component
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -24,24 +25,34 @@ fun DoorComponent(
     backDoor: Boolean,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier.padding(start = 20.dp)) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+    ) {
         HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             color = Gray1,
             thickness = 1.dp
         )
 
-        Text(
-            text = "출입문",
-            style = KUBFAndroidTheme.typography.semiBold16
-        )
+        Column(
+            modifier = Modifier.padding(start = 20.dp)
+        ) {
 
-        Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = "출입문",
+                style = KUBFAndroidTheme.typography.semiBold16
+            )
 
-        DoorItem(label = "앞문", exists = frontDoor)
+            Spacer(modifier = Modifier.height(12.dp))
 
-        Spacer(modifier = Modifier.height(20.dp))
-        DoorItem(label = "뒷문", exists = backDoor)
+            DoorItem(label = "앞문", exists = frontDoor)
+
+            Spacer(modifier = Modifier.height(20.dp))
+            DoorItem(label = "뒷문", exists = backDoor)
+        }
     }
 }
 

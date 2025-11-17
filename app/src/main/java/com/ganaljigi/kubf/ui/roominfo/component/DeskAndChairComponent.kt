@@ -27,46 +27,56 @@ fun DeskAndChairComponent(
     computerTable: Boolean,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier.padding(start = 20.dp)) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+    ) {
         HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             color = Gray1,
             thickness = 1.dp
         )
 
-        Text(
-            text = "책상 · 의자 종류",
-            style = KUBFAndroidTheme.typography.semiBold16
-        )
+        Column(
+            modifier = Modifier
+                .padding(start = 20.dp)
+        ) {
+            Text(
+                text = "책상 · 의자 종류",
+                style = KUBFAndroidTheme.typography.semiBold16
+            )
 
-        Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-        // 위쪽 그룹 //TODO: form 또는 LazyColumn으로 고치면 좋음
-        DeskAndChairItem("일체형", allInOne)
-        Spacer(modifier = Modifier.height(12.dp))
-        DeskAndChairItem("영화관", cinemaSeat)
-        Spacer(modifier = Modifier.height(12.dp))
-        DeskAndChairItem("1인용", oneSeat)
-        Spacer(modifier = Modifier.height(12.dp))
-        DeskAndChairItem("2인용", twoSeat)
-        Spacer(modifier = Modifier.height(12.dp))
-        DeskAndChairItem("다인용", multiSeat)
+            // 위쪽 그룹 //TODO: form 또는 LazyColumn으로 고치면 좋음
+            DeskAndChairItem("일체형", allInOne)
+            Spacer(modifier = Modifier.height(12.dp))
+            DeskAndChairItem("영화관", cinemaSeat)
+            Spacer(modifier = Modifier.height(12.dp))
+            DeskAndChairItem("1인용", oneSeat)
+            Spacer(modifier = Modifier.height(12.dp))
+            DeskAndChairItem("2인용", twoSeat)
+            Spacer(modifier = Modifier.height(12.dp))
+            DeskAndChairItem("다인용", multiSeat)
 
-        Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-        // 중간 그룹
-        DeskAndChairItem("다리 가리개", panel)
-        Spacer(modifier = Modifier.height(12.dp))
-        DeskAndChairItem("등받이", backOfChair)
-        Spacer(modifier = Modifier.height(12.dp))
-        DeskAndChairItem("바퀴 의자", wheelChair)
+            // 중간 그룹
+            DeskAndChairItem("다리 가리개", panel)
+            Spacer(modifier = Modifier.height(12.dp))
+            DeskAndChairItem("등받이", backOfChair)
+            Spacer(modifier = Modifier.height(12.dp))
+            DeskAndChairItem("바퀴 의자", wheelChair)
 
-        Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-        // 아래 그룹
-        DeskAndChairItem("휠체어용 책상", wheelchairTable)
-        Spacer(modifier = Modifier.height(12.dp))
-        DeskAndChairItem("컴퓨터 책상", computerTable)
+            // 아래 그룹
+            DeskAndChairItem("휠체어용 책상", wheelchairTable)
+            Spacer(modifier = Modifier.height(12.dp))
+            DeskAndChairItem("컴퓨터 책상", computerTable)
+        }
     }
 }
 
