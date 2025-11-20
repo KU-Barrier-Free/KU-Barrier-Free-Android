@@ -60,7 +60,7 @@ fun ShortCutItem(
     modifier: Modifier = Modifier,
     text: String,
     iconResId: Int? = null,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     val shape = RoundedCornerShape(8.dp)
 
@@ -120,7 +120,7 @@ fun ShortCutItem(
 
                 Icon(
                     painter = painterResource(id = R.drawable.ic_helper_arrowleft_lightgray),
-                    contentDescription = "해당 바로가기 웹뷰 ㄱㄱ",
+                    contentDescription = null,
                     tint = Gray2,
                     modifier = Modifier
                         .padding(end = 16.dp)

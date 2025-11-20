@@ -34,7 +34,7 @@ fun FindWayButton(
             modifier = Modifier
                 .align(Alignment.Center),
             painter = painterResource(R.drawable.ic_find_way_button),
-            contentDescription = "Find Way",
+            contentDescription = null,
             tint = Color.Unspecified,
         )
         Text(

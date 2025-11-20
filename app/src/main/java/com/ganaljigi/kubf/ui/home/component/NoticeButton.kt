@@ -32,7 +32,7 @@ fun NoticeButton(
             modifier = Modifier
                 .padding(12.dp),
             painter = painterResource(R.drawable.ic_notice_white_24),
-            contentDescription = "Notice",
+            contentDescription = "장애학생 지원센터",
             tint = Color.White
         )
     }
