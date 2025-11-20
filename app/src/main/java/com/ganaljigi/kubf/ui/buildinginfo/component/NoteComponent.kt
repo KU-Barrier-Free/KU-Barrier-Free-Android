@@ -1,5 +1,6 @@
 package com.ganaljigi.kubf.ui.buildinginfo.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,7 +25,8 @@ import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 
 @Composable
 fun NoteComponent(
-    note: Note
+    note: Note,
+    onImageClick: (String) -> Unit = {}
 ) {
     Box(
         modifier = Modifier.padding(horizontal = 16.dp)
@@ -43,7 +45,10 @@ fun NoteComponent(
                     AsyncImage(
                         model = url,
                         contentDescription = "특이사항 이미지",
-                        modifier = Modifier.clip(RoundedCornerShape(10.dp)).height(84.dp)
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(10.dp))
+                            .height(84.dp)
+                            .clickable { onImageClick(url) }
                     )
                 }
             }

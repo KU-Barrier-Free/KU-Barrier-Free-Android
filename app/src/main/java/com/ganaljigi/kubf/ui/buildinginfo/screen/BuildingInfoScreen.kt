@@ -53,6 +53,7 @@ import com.ganaljigi.kubf.ui.buildinginfo.component.FacilityComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.FloorComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.NoteComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.SearchPopup
+import com.ganaljigi.kubf.ui.buildinginfo.component.TransformableImage
 import com.ganaljigi.kubf.ui.buildinginfo.model.Room
 import com.ganaljigi.kubf.ui.buildinginfo.viewmodel.BuildingViewModel
 import com.ganaljigi.kubf.ui.theme.Gray3
@@ -66,9 +67,9 @@ import kotlinx.coroutines.launch
 fun BuildingInfoScreen(
     buildingId: Long,
     onBack: () -> Unit,
-    onRoomClick: ( Room, String)-> Unit,
+    onRoomClick: (Room, String) -> Unit,
     viewModel: BuildingViewModel = hiltViewModel(),
-    ) {
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(buildingId) {
         viewModel.init(buildingId)
@@ -83,9 +84,10 @@ fun BuildingInfoScreen(
     val current = floors.getOrNull(safeIndex)
 
     var showSearchPopup by remember { mutableStateOf(false) }
+    var selectedImageUrl by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(buildingId) {
-        if (floors.isNotEmpty()){
+        if (floors.isNotEmpty()) {
             val oneFloorIndex = floors.indexOfFirst { f ->
                 f.floorLabel.trim().equals("1")
             }
@@ -100,8 +102,10 @@ fun BuildingInfoScreen(
                 TopAppBar(
                     navigationIcon = {
                         IconButton(onClick = onBack) {
-                            Icon(painter = painterResource(R.drawable.ic_backarrow),
-                                contentDescription = "뒤로가기")
+                            Icon(
+                                painter = painterResource(R.drawable.ic_backarrow),
+                                contentDescription = "뒤로가기"
+                            )
                         }
                     },
                     title = {
@@ -162,37 +166,41 @@ fun BuildingInfoScreen(
     Scaffold(
         containerColor = Color.White,
         topBar = {
-            TopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(painter = painterResource(R.drawable.ic_backarrow),
-                            contentDescription = "뒤로가기")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White
-                ),
-                title = {
-                    Text(
-                        text = uiState.buildingInfo.name,
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        style = KUBFAndroidTheme.typography.medium15.copy(
-                            fontSize = 16.sp
+            if (selectedImageUrl == null) {
+                TopAppBar(
+                    navigationIcon = {
+                        IconButton(onClick = onBack) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_backarrow),
+                                contentDescription = "뒤로가기"
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.White
+                    ),
+                    title = {
+                        Text(
+                            text = uiState.buildingInfo.name,
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center,
+                            style = KUBFAndroidTheme.typography.medium15.copy(
+                                fontSize = 16.sp
+                            )
                         )
-                    )
-                },
-                actions = {
-                    IconButton(onClick = {
-                        showSearchPopup = true
-                    }) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_search_bar_leading),
-                            contentDescription = "검색"
-                        )
+                    },
+                    actions = {
+                        IconButton(onClick = {
+                            showSearchPopup = true
+                        }) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_search_bar_leading),
+                                contentDescription = "검색"
+                            )
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     ) { inner ->
         LazyColumn(
@@ -276,7 +284,12 @@ fun BuildingInfoScreen(
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     uiState.buildingInfo.notes.forEachIndexed { idx, note ->
-                        NoteComponent(note = note)
+                        NoteComponent(
+                            note = note,
+                            onImageClick = { imageUrl ->
+                                selectedImageUrl = imageUrl
+                            }
+                        )
                         if (idx < uiState.buildingInfo.notes.lastIndex)
                             Spacer(Modifier.height(8.dp))
                     }
@@ -394,8 +407,34 @@ fun BuildingInfoScreen(
                 )
             }
         }
+
+        selectedImageUrl?.let { imageUrl ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black)
+            ) {
+                TransformableImage(
+                    modifier = Modifier.fillMaxSize(),
+                    imageUrl = imageUrl
+                )
+                IconButton(
+                    onClick = { selectedImageUrl = null },
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(16.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_searchbar_close),
+                        contentDescription = "닫기",
+                        tint = Color.White
+                    )
+                }
+            }
+        }
     }
 }
+
 @Preview
 @Composable
 private fun PreviewBuilding() {
