@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">가날지기</string>
+    <string name="app_name">쿠맵</string>
 
     <!-- Home -->
     <string name="home_notice_button_description">장애학생지원센터 이동 버튼</string>
