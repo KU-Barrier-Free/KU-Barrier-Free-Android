@@ -461,7 +461,7 @@ object MapParam {
         scrollGesturesEnabled = true,
         scrollGesturesEnabledDuringRotateOrZoom = true,
         tiltGesturesEnabled = true,
-        zoomControlsEnabled = false,
+        zoomControlsEnabled = true,
         zoomGesturesEnabled = true
     )
     val mapOptions = GoogleMapOptions().apply {
