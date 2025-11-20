@@ -440,7 +440,9 @@ fun HomeScreen(
                             viewModel.setHomeUiMode(HomeUiMode.BARRIER_FREE_SHOWN)
                         }
 
-                        NoticeButton {
+                        NoticeButton(
+                            modifier = Modifier.padding(end = 40.dp)
+                        ) {
                             navigateToHelper()
                         }
                     }
