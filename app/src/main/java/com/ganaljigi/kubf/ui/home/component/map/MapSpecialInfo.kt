@@ -32,30 +32,36 @@ fun MapSpecialInfo(
     modifier: Modifier = Modifier,
     painters: List<Painter>,
     description: String,
+    scale: Float = 1f,
 ) {
+    val cornerRadius = 20.dp * scale
+    val imageSize = 80.dp * scale
+    val fontSize = (14 * scale).coerceAtLeast(10f)
+    val lineHeight = (22 * scale).coerceAtLeast(14f)
+
     Column(
         modifier = modifier
-            .background(Color.White, shape = RoundedCornerShape(20.dp))
+            .background(Color.White, shape = RoundedCornerShape(cornerRadius))
             .border(
                 width = 1.dp,
                 color = Gray2.copy(alpha = 0.5f),
-                shape = RoundedCornerShape(20.dp)
+                shape = RoundedCornerShape(cornerRadius)
             )
-            .padding(12.dp)
-            .widthIn(max = 214.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+            .padding(12.dp * scale)
+            .widthIn(max = 214.dp * scale),
+        verticalArrangement = Arrangement.spacedBy(16.dp * scale),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp * scale)
         ) {
             painters.forEach { it ->
                 Image(
                     painter = it,
                     contentDescription = description,
                     modifier = Modifier
-                        .size(80.dp)
-                        .clip(RoundedCornerShape(10.dp)),
+                        .size(imageSize)
+                        .clip(RoundedCornerShape(10.dp * scale)),
                     contentScale = ContentScale.Crop,
                 )
             }
@@ -63,7 +69,8 @@ fun MapSpecialInfo(
         Text(
             text = description,
             style = KUBFAndroidTheme.typography.semiBold14.copy(
-                lineHeight = 22.sp,
+                fontSize = fontSize.sp,
+                lineHeight = lineHeight.sp,
             ),
             textAlign = TextAlign.Center
         )

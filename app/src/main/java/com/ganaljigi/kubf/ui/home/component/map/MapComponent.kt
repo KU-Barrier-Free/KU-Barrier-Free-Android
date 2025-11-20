@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.request.allowHardware
@@ -81,6 +82,13 @@ fun MapComponent(
     setDefaultMode: () -> Unit = { },
     userLocation: LatLng? = null,
 ) {
+    val currentZoom = cameraPosition.position.zoom
+    val markerScale = calculateMarkerScale(
+        currentZoom = currentZoom,
+        minZoom = MapParam.MIN_ZOOM,
+        maxZoom = MapParam.MAX_ZOOM
+    )
+
     GoogleMap(
         modifier = modifier,
         onMapClick = { setDefaultMode() },
@@ -106,6 +114,7 @@ fun MapComponent(
                     ToggleMarker(
                         toggleMarker = mapMarker,
                         toggleIconRes = R.drawable.ic_curb_marker,
+                        scale = markerScale
                     )
                 }
 
@@ -113,6 +122,7 @@ fun MapComponent(
                     ToggleMarker(
                         toggleMarker = mapMarker,
                         toggleIconRes = R.drawable.ic_slope_marker,
+                        scale = markerScale
                     )
                 }
 
@@ -120,6 +130,7 @@ fun MapComponent(
                     ToggleMarker(
                         toggleMarker = mapMarker,
                         toggleIconRes = R.drawable.ic_stairs_marker,
+                        scale = markerScale
                     )
                 }
 
@@ -133,6 +144,7 @@ fun MapComponent(
                             toggleMarker = mapMarker,
                             specialMarkerInfo = specialMarkerInfo,
                             onSpecialInfoClick = onSpecialInfoClick,
+                            scale = markerScale
                         )
                     } else {
                         ToggleSpecialMarker(
@@ -140,6 +152,7 @@ fun MapComponent(
                             toggleMarker = mapMarker,
                             toggleIconRes = R.drawable.ic_special_marker,
                             onClick = { onSpecialMarkerClick(mapMarker) },
+                            scale = markerScale
                         )
                     }
                 }
@@ -149,7 +162,8 @@ fun MapComponent(
         selectedBuildingMarker?.let { marker ->
             BuildingMarker(
                 buildingMarker = marker,
-                isSelected = true
+                isSelected = true,
+                scale = markerScale
             )
         }
 
@@ -157,6 +171,7 @@ fun MapComponent(
             BuildingMarker(
                 buildingMarker = mapMarker,
                 isSelected = false,
+                scale = markerScale
             ) {
                 onBuildingMarkerClick(it)
             }
@@ -177,6 +192,7 @@ fun MapComponent(
 private fun ToggleMarker(
     toggleMarker: ToggleMarker,
     @DrawableRes toggleIconRes: Int,
+    scale: Float = 1f,
 ) {
     val markerState =
         rememberMarkerState(
@@ -185,12 +201,6 @@ private fun ToggleMarker(
         )
     key(toggleMarker) {
         MarkerComposable(
-//            state = MarkerState(
-//                position = LatLng(
-//                    toggleMarker.latitude,
-//                    toggleMarker.longitude
-//                )
-//            ),
             state = markerState
         ) {
             Icon(
@@ -198,7 +208,7 @@ private fun ToggleMarker(
                 contentDescription = null,
                 tint = Color.Unspecified,
                 modifier = Modifier
-                    .size(16.dp)
+                    .size(16.dp * scale)
                     .shadow(1.dp)
             )
         }
@@ -215,7 +225,9 @@ private fun SelectedSpecialMarker(
     toggleMarker: ToggleMarker,
     specialMarkerInfo: SpecialMarkerInfo,
     onSpecialInfoClick: (List<String>) -> Unit = { },
+    scale: Float = 1f,
 ) {
+    val iconScale = scale * 2.0f
     val recomposeKey = remember { mutableStateListOf(false, false) }
     val painters = specialMarkerInfo.imageUrls.take(2).mapIndexed { index, imageUrl ->
         rememberAsyncImagePainter(
@@ -242,7 +254,8 @@ private fun SelectedSpecialMarker(
             toggleMarker.id,
             specialMarkerInfo,
             recomposeKey[0],
-            if (recomposeKey.size > 1) recomposeKey[1] else false
+            if (recomposeKey.size > 1) recomposeKey[1] else false,
+            scale
         ),
         zIndex = Float.MAX_VALUE
     ) {
@@ -253,7 +266,8 @@ private fun SelectedSpecialMarker(
                 modifier = Modifier
                     .noRippleClickable {
                         onSpecialInfoClick(specialMarkerInfo.imageUrls)
-                    }
+                    },
+                scale = scale
             )
             Box(
                 modifier = Modifier
@@ -265,6 +279,7 @@ private fun SelectedSpecialMarker(
                 painter = painterResource(R.drawable.ic_special_marker_selected),
                 contentDescription = null,
                 tint = Color.Unspecified,
+                modifier = Modifier.size(24.dp * iconScale)
             )
         }
     }
@@ -276,6 +291,7 @@ private fun ToggleSpecialMarker(
     toggleMarker: ToggleMarker,
     @DrawableRes toggleIconRes: Int,
     onClick: () -> Unit = { },
+    scale: Float = 1f,
 ) {
     MarkerComposable(
         state = markerState,
@@ -283,7 +299,7 @@ private fun ToggleSpecialMarker(
             onClick()
             false
         },
-        keys = arrayOf(toggleMarker.id),
+        keys = arrayOf(toggleMarker.id, scale),
         zIndex = 0.0f
     ) {
         Icon(
@@ -291,7 +307,7 @@ private fun ToggleSpecialMarker(
             contentDescription = null,
             tint = Color.Unspecified,
             modifier = Modifier
-                .size(20.dp)
+                .size(20.dp * scale)
                 .shadow(1.dp)
         )
     }
@@ -301,8 +317,13 @@ private fun ToggleSpecialMarker(
 private fun BuildingMarker(
     buildingMarker: BuildingMarker,
     isSelected: Boolean = false,
+    scale: Float = 1f,
     onClick: (BuildingMarker) -> Unit = { },
 ) {
+    val iconScale = if (isSelected) scale * 2.0f else scale
+    val iconSize = if (isSelected) (32.dp * iconScale) else (20.dp * iconScale)
+    val fontSize = (14 * scale).coerceAtLeast(10f)
+
     MarkerComposable(
         onClick = { onClick(buildingMarker); false },
         state = MarkerState(
@@ -312,7 +333,7 @@ private fun BuildingMarker(
             )
         ),
         zIndex = if (isSelected) Float.MAX_VALUE else 0f,
-        keys = arrayOf({ buildingMarker.id }, { isSelected })
+        keys = arrayOf({ buildingMarker.id }, { isSelected }, scale)
     ) {
         Column(
             modifier = Modifier.noRippleClickable { onClick(buildingMarker) },
@@ -328,22 +349,25 @@ private fun BuildingMarker(
                 tint = Color.Unspecified,
                 modifier = Modifier
                     .shadow(10.dp)
-                    .then(if (!isSelected) Modifier.size(20.dp) else Modifier)
+                    .size(iconSize)
             )
 
             Box {
                 Text(
                     text = buildingMarker.name,
                     style = KUBFAndroidTheme.typography.semiBold14.copy(
+                        fontSize = fontSize.sp,
                         drawStyle = Stroke(
-                            width = 4f, // 테두리 두께
+                            width = 4f * scale,
                         ),
                     ),
                     color = Color.White,
                 )
                 Text(
                     text = buildingMarker.name,
-                    style = KUBFAndroidTheme.typography.semiBold14,
+                    style = KUBFAndroidTheme.typography.semiBold14.copy(
+                        fontSize = fontSize.sp
+                    ),
                     color = if (isSelected) MainGreen else Color(0xFF5A6860),
                 )
             }
@@ -431,6 +455,9 @@ private fun MapComponentPreview() {
 
 
 object MapParam {
+    const val MIN_ZOOM = 16.0f
+    const val MAX_ZOOM = 18.0f
+
     val mapProperties = MapProperties(
         isBuildingEnabled = true,
         isIndoorEnabled = false,
@@ -449,8 +476,8 @@ object MapParam {
         ),
         mapStyleOptions = null,
         mapType = MapType.NORMAL,
-        maxZoomPreference = 21.0f,
-        minZoomPreference = 10.0f,
+        maxZoomPreference = MAX_ZOOM,
+        minZoomPreference = MIN_ZOOM,
     )
     val mapUiSettings = MapUiSettings(
         compassEnabled = false,
@@ -467,4 +494,22 @@ object MapParam {
     val mapOptions = GoogleMapOptions().apply {
         mapId(BuildConfig.GOOGLE_MAPS_ID)
     }
+}
+
+/**
+ * 줌 레벨에 따라 마커의 스케일을 계산합니다.
+ * @param currentZoom 현재 줌 레벨
+ * @param minZoom 최소 줌 레벨
+ * @param maxZoom 최대 줌 레벨
+ * @return 0.6 ~ 1.0 사이의 스케일 값
+ */
+private fun calculateMarkerScale(
+    currentZoom: Float,
+    minZoom: Float,
+    maxZoom: Float,
+): Float {
+    val minScale = 0.8f
+    val maxScale = 1.0f
+    val normalizedZoom = ((currentZoom - minZoom) / (maxZoom - minZoom)).coerceIn(0f, 1f)
+    return minScale + (normalizedZoom * (maxScale - minScale))
 }
