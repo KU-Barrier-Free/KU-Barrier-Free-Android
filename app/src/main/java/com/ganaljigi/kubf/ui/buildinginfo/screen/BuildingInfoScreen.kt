@@ -32,6 +32,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -73,7 +74,7 @@ fun BuildingInfoScreen(
         viewModel.init(buildingId)
         viewModel.clearQuery()
     }
-    var selectedIndex by remember { mutableIntStateOf(0) }
+    var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
     val floors = uiState.totalFloor.floorList
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
@@ -83,12 +84,12 @@ fun BuildingInfoScreen(
 
     var showSearchPopup by remember { mutableStateOf(false) }
 
-    LaunchedEffect(floors) {
+    LaunchedEffect(buildingId) {
         if (floors.isNotEmpty()){
             val oneFloorIndex = floors.indexOfFirst { f ->
                 f.floorLabel.trim().equals("1")
             }
-            selectedIndex = if (oneFloorIndex >= 0) oneFloorIndex else 0
+//            selectedIndex = if (oneFloorIndex >= 0) oneFloorIndex else 0
         }
     }
 
@@ -367,7 +368,8 @@ fun BuildingInfoScreen(
                         current = floor,
                         onRoomClick = { room ->
                             onRoomClick(room, uiState.buildingInfo.name)
-                        }
+                        },
+                        buildingName = uiState.buildingInfo.name
                     )
                 }
             }

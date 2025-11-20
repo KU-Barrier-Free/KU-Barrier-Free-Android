@@ -41,7 +41,8 @@ import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 @Composable
 fun FloorComponent(
     current: FloorInfo,
-    onRoomClick: (Room) -> Unit
+    onRoomClick: (Room) -> Unit,
+    buildingName: String = ""
 ) {
     var showDialog by remember { mutableStateOf(false) }
     var startIndex by remember { mutableStateOf(0) }
@@ -64,7 +65,7 @@ fun FloorComponent(
                     val url = current.imageUrl.get(page)
                     AsyncImage(
                         model = url,
-                        contentDescription = null,
+                        contentDescription = "$buildingName ${current.floorLabel}층 도면",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
                             .clickable {
