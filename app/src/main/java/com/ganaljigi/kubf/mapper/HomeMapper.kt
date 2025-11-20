@@ -60,7 +60,7 @@ fun HomeSearchResponseDto.toUiState(matchKeyword: String): List<SearchResult> =
         )
     } + this.facilities.map {
         SearchResult(
-            id = it.buildingId.toLong(),
+            id = it.id.toLong(),
             name = it.name,
             building = it.buildingName,
             searchKeyword = matchKeyword,
