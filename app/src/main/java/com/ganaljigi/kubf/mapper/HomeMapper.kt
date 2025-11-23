@@ -15,6 +15,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 
 fun HomeResponseDto.toUiState() = HomeUiState(
+    showingBuildingMarkers = this.buildings.toBuildingMarkers(),
     buildingMarkers = this.buildings.toBuildingMarkers(),
     curbMarkers = this.curbs.toToggleMarkers(MapToggle.CURB),
     slopeMarkers = this.ramps.toToggleMarkers(MapToggle.SLOPE),

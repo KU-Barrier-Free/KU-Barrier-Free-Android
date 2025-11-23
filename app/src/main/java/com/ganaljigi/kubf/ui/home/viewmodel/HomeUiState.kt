@@ -3,7 +3,6 @@ package com.ganaljigi.kubf.ui.home.viewmodel
 import androidx.compose.ui.text.input.TextFieldValue
 import com.ganaljigi.kubf.ui.common.model.Convenience
 import com.ganaljigi.kubf.ui.common.model.DoorInfo
-import com.ganaljigi.kubf.ui.common.model.SearchMode
 import com.ganaljigi.kubf.ui.home.model.BuildingMarker
 import com.ganaljigi.kubf.ui.home.model.DoorMarker
 import com.ganaljigi.kubf.ui.home.model.MapToggle
@@ -37,6 +36,7 @@ data class HomeUiState(
         )
     }.toPersistentList(),
     val buildingMarkers: ImmutableList<BuildingMarker> = persistentListOf(),
+    val showingBuildingMarkers: ImmutableList<BuildingMarker> = persistentListOf(),
     val selectedBuildingMarker: BuildingMarker? = null,
     val doorMarkers: ImmutableList<DoorMarker> = persistentListOf(),
     val showingDoorMarkers: ImmutableList<DoorMarker> = persistentListOf(),

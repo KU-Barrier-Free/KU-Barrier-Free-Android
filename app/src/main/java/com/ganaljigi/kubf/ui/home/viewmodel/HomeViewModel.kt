@@ -104,6 +104,7 @@ class HomeViewModel @Inject constructor(
                             selectedSpecialMarker = selectedSpecialMarker,
                             bottomSheetType = HomeBottomSheetType.NONE,
                             searchResults = persistentListOf(),
+                            showingBuildingMarkers = it.buildingMarkers
                         )
                     }
                 },
@@ -312,7 +313,7 @@ class HomeViewModel @Inject constructor(
                         it.copy(
                             buildingInfo = response.toHomeBuildingInfo(),
                             showingDoorMarkers = response.toDoorMarkers().toImmutableList(),
-                            homeUiMode = HomeUiMode.DEFAULT
+                            homeUiMode = HomeUiMode.DEFAULT,
                         )
                     }
                     updateSelectedBuildingMarker(selectedBuildingMarker)
@@ -336,6 +337,8 @@ class HomeViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 selectedBuildingMarker = selectedBuildingMarker,
+                showingToggleMarkers = persistentListOf(),
+                showingBuildingMarkers = persistentListOf(selectedBuildingMarker),
                 selectedSpecialMarker = null,
                 searchResults = persistentListOf(),
             )
@@ -365,7 +368,16 @@ class HomeViewModel @Inject constructor(
             it.copy(
                 bottomSheetType = bottomSheetType,
                 isBottomSheetExpanded = isBottomSheetExpanded,
-                showingDoorMarkers = if (bottomSheetType == HomeBottomSheetType.BUILDING_INFO) it.showingDoorMarkers else persistentListOf()
+                showingDoorMarkers = if (bottomSheetType == HomeBottomSheetType.BUILDING_INFO) it.showingDoorMarkers else persistentListOf(),
+                showingBuildingMarkers = if (bottomSheetType == HomeBottomSheetType.BUILDING_INFO) it.showingBuildingMarkers else it.buildingMarkers,
+                showingToggleMarkers = if (bottomSheetType == HomeBottomSheetType.BUILDING_INFO) it.showingToggleMarkers else it.toggleUiStates.map { toggleUiState ->
+                    when (toggleUiState.toggle) {
+                        MapToggle.CURB -> uiState.value.curbMarkers
+                        MapToggle.SLOPE -> uiState.value.slopeMarkers
+                        MapToggle.STAIRS -> uiState.value.stairsMarkers
+                        MapToggle.SPECIAL_MARK -> uiState.value.specialMarkers
+                    }
+                }.toPersistentList()
             )
         }
     }
@@ -489,6 +501,7 @@ class HomeViewModel @Inject constructor(
                 toLocation = SearchResult(),
                 searchResults = persistentListOf(),
                 showingDoorMarkers = persistentListOf(),
+                showingBuildingMarkers = it.buildingMarkers,
             )
         }
     }

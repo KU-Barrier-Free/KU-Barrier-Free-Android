@@ -187,6 +187,7 @@ fun HomeScreen(
         } else {
             scope.launch {
                 bottomSheetState.hide()
+                viewModel.setBottomSheetType(HomeBottomSheetType.NONE)
             }
         }
     }
@@ -263,7 +264,7 @@ fun HomeScreen(
             cameraPosition = uiState.cameraPositionState,
             selectedBuildingMarker = uiState.selectedBuildingMarker,
             selectedToggles = uiState.toggleUiStates.filter { it.isSelected }.toPersistentList(),
-            buildingMarkers = uiState.buildingMarkers
+            buildingMarkers = uiState.showingBuildingMarkers
                 .filter { it.id != uiState.selectedBuildingMarker?.id },
             doorMarkers = uiState.showingDoorMarkers.takeIf { uiState.homeUiMode == HomeUiMode.DEFAULT }
                 ?: persistentListOf(),

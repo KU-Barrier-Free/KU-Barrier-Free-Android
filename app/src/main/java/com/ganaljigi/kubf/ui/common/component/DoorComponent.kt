@@ -63,9 +63,8 @@ fun DoorComponent(
                 Text(
                     text = doorInfo.label,
                     modifier = Modifier.align(Alignment.Center),
-                    style = KUBFAndroidTheme.typography.medium14.copy(
-                        color = Color.White
-                    ),
+                    style = KUBFAndroidTheme.typography.medium14,
+                    color = if (doorInfo.isWheelchairAccessible) MainGreen else Color.White,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )

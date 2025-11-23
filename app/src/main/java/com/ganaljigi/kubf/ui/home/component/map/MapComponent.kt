@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
@@ -176,9 +178,9 @@ fun MapComponent(
                 onBuildingMarkerClick(it)
             }
         }
-//        doorMarkers.forEach { mapMarker ->
-//            DoorMarker(doorMarker = mapMarker)
-//        }
+        doorMarkers.forEach { mapMarker ->
+            DoorMarker(doorMarker = mapMarker, scale = markerScale)
+        }
 
         // 사용자 위치 마커 렌더링
         if (isLocationPermissionGranted && userLocation != null) {
@@ -378,7 +380,10 @@ private fun BuildingMarker(
 @Composable
 private fun DoorMarker(
     doorMarker: DoorMarker,
+    scale: Float = 1f,
 ) {
+    val fontSize = (14 * scale).coerceAtLeast(10f)
+
     MarkerComposable(
         state = MarkerState(
             position = LatLng(
@@ -386,19 +391,22 @@ private fun DoorMarker(
                 doorMarker.longitude
             )
         ),
-        keys = arrayOf({ doorMarker.id }),
+        keys = arrayOf({ doorMarker.id }, scale),
     ) {
         Box(
             modifier = Modifier
-                .size(16.dp)
                 .background(
                     color = if (doorMarker.isWheelChairAccessible) MainGreen else Gray4,
                     shape = CircleShape
                 )
+                .padding(horizontal = 4.dp * scale, vertical = 2.dp * scale)
+                .sizeIn(minWidth = 16.dp * scale, minHeight = 16.dp * scale),
+            contentAlignment = Alignment.Center,
         ) {
             Text(
                 text = doorMarker.label,
                 style = KUBFAndroidTheme.typography.medium14.copy(
+                    fontSize = fontSize.sp,
                     color = Color.White
                 ),
             )
