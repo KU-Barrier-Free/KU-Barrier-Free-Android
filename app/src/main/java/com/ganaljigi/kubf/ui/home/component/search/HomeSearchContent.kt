@@ -123,10 +123,9 @@ private fun HomeSearchBuildingItem(
                 tint = Color.Unspecified,
             )
             Text(
-                text = item.building,
-                style = KUBFAndroidTheme.typography.medium15.copy(
-                    color = MainGreen
-                ),
+                text = item.name,
+                style = KUBFAndroidTheme.typography.medium15,
+                color = MainGreen,
             )
         }
     }
