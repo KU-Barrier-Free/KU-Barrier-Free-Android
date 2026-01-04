@@ -46,7 +46,7 @@ data class HomeUiState(
     val specialMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
     val showingToggleMarkers: ImmutableList<ImmutableList<ToggleMarker>> = persistentListOf(),
     val selectedSpecialMarker: ToggleMarker? = null,
-    val specialMarkerInfo: SpecialMarkerInfo? = null,
+    val specialMarkerInfo: SpecialMarkerInfo = SpecialMarkerInfo(),
     val popularKeywords: ImmutableList<String> = persistentListOf(),
     val fromLocation: SearchResult = SearchResult(),
     val toLocation: SearchResult = SearchResult(),
@@ -81,8 +81,8 @@ data class HomeBuildingInfo(
 )
 
 data class SpecialMarkerInfo(
-    val imageUrls: List<String>,
-    val description: String,
+    val imageUrls: List<String> = emptyList(),
+    val description: String = "",
 )
 
 data class ToggleUiState(

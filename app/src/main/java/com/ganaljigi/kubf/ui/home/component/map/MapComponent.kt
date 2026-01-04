@@ -6,16 +6,17 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
@@ -80,7 +81,7 @@ fun MapComponent(
     onSpecialMarkerClick: (ToggleMarker) -> Unit = { },
     onSpecialInfoClick: (List<String>) -> Unit = { },
     selectedSpecialMarker: ToggleMarker? = null,
-    specialMarkerInfo: SpecialMarkerInfo?,
+    specialMarkerInfo: SpecialMarkerInfo = SpecialMarkerInfo(),
     setDefaultMode: () -> Unit = { },
     userLocation: LatLng? = null,
 ) {
@@ -140,23 +141,15 @@ fun MapComponent(
                     val markerState = rememberMarkerState(
                         position = LatLng(mapMarker.latitude, mapMarker.longitude)
                     )
-                    if (mapMarker == selectedSpecialMarker && specialMarkerInfo != null) {
-                        SelectedSpecialMarker(
-                            markerState = markerState,
-                            toggleMarker = mapMarker,
-                            specialMarkerInfo = specialMarkerInfo,
-                            onSpecialInfoClick = onSpecialInfoClick,
-                            scale = markerScale
-                        )
-                    } else {
-                        ToggleSpecialMarker(
-                            markerState = markerState,
-                            toggleMarker = mapMarker,
-                            toggleIconRes = R.drawable.ic_special_marker,
-                            onClick = { onSpecialMarkerClick(mapMarker) },
-                            scale = markerScale
-                        )
-                    }
+                    val isSelected = mapMarker == selectedSpecialMarker
+                    SpecialMarker(
+                        markerState = markerState,
+                        isSelected = isSelected,
+                        specialMarkerInfo = if (isSelected) specialMarkerInfo else SpecialMarkerInfo(),
+                        onSpecialMarkerClick = { onSpecialMarkerClick(mapMarker) },
+                        onSpecialInfoClick = onSpecialInfoClick,
+                        scale = markerScale
+                    )
                 }
             }
         }
@@ -222,16 +215,19 @@ private fun ToggleMarker(
 
 // https://velog.io/@gudrmsglgl/Compose-Google-Map
 @Composable
-private fun SelectedSpecialMarker(
+private fun SpecialMarker(
     markerState: MarkerState,
-    toggleMarker: ToggleMarker,
+    isSelected: Boolean = false,
     specialMarkerInfo: SpecialMarkerInfo,
+    onSpecialMarkerClick: () -> Unit = { },
     onSpecialInfoClick: (List<String>) -> Unit = { },
     scale: Float = 1f,
 ) {
-    val iconScale = scale * 2.0f
-    val recomposeKey = remember { mutableStateListOf(false, false) }
-    val painters = specialMarkerInfo.imageUrls.take(2).mapIndexed { index, imageUrl ->
+    val iconScale = if (isSelected) scale * 2.0f else scale
+    val imageUrls = specialMarkerInfo.imageUrls.take(2)
+    val isImageLoaded =
+        remember(isSelected) { mutableStateListOf(*Array(imageUrls.size) { false }) }
+    val painters = imageUrls.mapIndexed { index, imageUrl ->
         rememberAsyncImagePainter(
             model = ImageRequest
                 .Builder(LocalContext.current)
@@ -240,77 +236,35 @@ private fun SelectedSpecialMarker(
                 .build(),
             placeholder = painterResource(R.drawable.img_special_info),
             error = painterResource(R.drawable.img_special_info),
-            onSuccess = {
-                recomposeKey[index] = !recomposeKey[index]
-            }
+            onSuccess = { isImageLoaded[index] = true }
         )
     }
+    val allImagesLoaded by derivedStateOf { isImageLoaded.all { it } }
 
-    MarkerComposable(
-        state = markerState,
-        onClick = {
-            onSpecialInfoClick(specialMarkerInfo.imageUrls)
-            false
-        },
-        keys = arrayOf(
-            toggleMarker.id,
-            specialMarkerInfo,
-            recomposeKey[0],
-            if (recomposeKey.size > 1) recomposeKey[1] else false,
-            scale
-        ),
-        zIndex = Float.MAX_VALUE
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            MapSpecialInfo(
-                painters = painters,
-                description = specialMarkerInfo.description,
-                modifier = Modifier
-                    .noRippleClickable {
-                        onSpecialInfoClick(specialMarkerInfo.imageUrls)
-                    },
-                scale = scale
-            )
-            Box(
-                modifier = Modifier
-                    .width(2.dp)
-                    .height(16.dp)
-                    .background(Color.White)
-            )
-            Icon(
-                painter = painterResource(R.drawable.ic_special_marker_selected),
-                contentDescription = null,
-                tint = Color.Unspecified,
-                modifier = Modifier.size(24.dp * iconScale)
-            )
+    // API 응답이 오고 이미지가 로딩되었을 때 Info Window 표시
+    LaunchedEffect(specialMarkerInfo, allImagesLoaded) {
+        if (isSelected && allImagesLoaded) {
+            markerState.showInfoWindow()
         }
     }
-}
 
-@Composable
-private fun ToggleSpecialMarker(
-    markerState: MarkerState,
-    toggleMarker: ToggleMarker,
-    @DrawableRes toggleIconRes: Int,
-    onClick: () -> Unit = { },
-    scale: Float = 1f,
-) {
-    MarkerComposable(
-        state = markerState,
-        onClick = {
-            onClick()
-            false
-        },
-        keys = arrayOf(toggleMarker.id, scale),
-        zIndex = 0.0f
+    MarkerComposableInfoWindow(
+        markerState = markerState,
+        isSelected = isSelected,
+        specialMarkerInfo = specialMarkerInfo,
+        onSpecialMarkerClick = onSpecialMarkerClick,
+        onSpecialInfoClick = onSpecialInfoClick,
+        painters = painters
     ) {
         Icon(
-            painter = painterResource(toggleIconRes),
+            painter = painterResource(
+                if (isSelected) R.drawable.ic_special_marker_selected
+                else R.drawable.ic_special_marker
+            ),
             contentDescription = null,
             tint = Color.Unspecified,
             modifier = Modifier
-                .size(20.dp * scale)
-                .shadow(1.dp)
+                .size(20.dp * iconScale)
         )
     }
 }

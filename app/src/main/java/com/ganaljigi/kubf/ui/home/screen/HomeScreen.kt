@@ -276,7 +276,6 @@ fun HomeScreen(
                 ?: persistentListOf(),
             specialMarkers = uiState.specialMarkers.takeIf { uiState.homeUiMode == HomeUiMode.DEFAULT }
                 ?: persistentListOf(),
-//            routeResults = uiState.routeResults,
             selectedRouteResult = uiState.selectedRouteResult,
             onBuildingMarkerClick = { marker ->
                 viewModel.getBuildingInfoByMarker(selectedBuildingMarker = marker)
