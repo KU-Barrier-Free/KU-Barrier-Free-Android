@@ -358,6 +358,15 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun setSelectedMarkersUnselected() {
+        _uiState.update {
+            it.copy(
+                selectedBuildingMarker = null,
+                selectedSpecialMarker = null,
+            )
+        }
+    }
+
     /**
      * 바텀 시트 타입을 설정합니다.
      * @param bottomSheetType 바텀 시트 타입

@@ -188,6 +188,7 @@ fun HomeScreen(
             scope.launch {
                 bottomSheetState.hide()
                 viewModel.setBottomSheetType(HomeBottomSheetType.NONE)
+                viewModel.setSelectedMarkersUnselected()
             }
         }
     }
@@ -287,9 +288,6 @@ fun HomeScreen(
             specialMarkerInfo = uiState.specialMarkerInfo,
             userLocation = uiState.userLocation,
         )
-        AnimatedVisibility(
-            visible = true
-        ) { }
 
         Box(
             modifier = Modifier
