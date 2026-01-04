@@ -13,4 +13,6 @@ data class SearchResult(
     val latitude: Double = 0.0,
     val longitude: Double = 0.0,
     @DrawableRes val icon: Int = R.drawable.ic_toggle_curb, // TODO: Response 형식에 맞춰 수정
-)
+) {
+    fun getBuildingId() = if (isBuilding) this.id else this.buildingId
+}

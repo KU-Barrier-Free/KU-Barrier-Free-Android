@@ -116,7 +116,9 @@ fun HomeSearchBottomSheetSingleItem(
                             color = MainGreen,
                             shape = RoundedCornerShape(20.dp)
                         )
-                        .noRippleClickable { onShowBuildingClick(searchResult.id) }
+                        .noRippleClickable {
+                            onShowBuildingClick(searchResult.getBuildingId())
+                        }
                 ) {
                     Text(
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 13.5.dp),
