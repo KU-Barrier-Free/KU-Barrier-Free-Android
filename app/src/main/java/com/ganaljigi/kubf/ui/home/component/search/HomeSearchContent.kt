@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -26,6 +28,7 @@ import com.ganaljigi.kubf.ui.theme.Gray4
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.theme.MainGreen
 import com.ganaljigi.kubf.ui.util.noRippleClickable
+import com.ganaljigi.kubf.ui.util.noRippleClickableSingle
 import com.ganaljigi.kubf.ui.util.toAnnotatedString
 
 @Composable
@@ -39,6 +42,7 @@ fun HomeSearchContent(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp)
     ) {
         Row(
@@ -108,7 +112,7 @@ private fun HomeSearchBuildingItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .noRippleClickable { onClick(item) }
+            .noRippleClickableSingle() { onClick(item) }
             .padding(vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -140,7 +144,7 @@ private fun HomeSearchConvItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .noRippleClickable { onClick(item) }
+            .noRippleClickableSingle() { onClick(item) }
             .padding(vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween

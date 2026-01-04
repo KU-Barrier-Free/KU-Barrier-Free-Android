@@ -2,9 +2,12 @@ package com.ganaljigi.kubf.ui.util
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.platform.debugInspectorInfo
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -33,6 +36,51 @@ fun Modifier.conditionalModifier(
     } else {
         this.then(modifierIfFalse)
     }
+}
+
+fun Modifier.clickableSingle(
+    enabled: Boolean = true,
+    onClickLabel: String? = null,
+    role: Role? = null,
+    onClick: () -> Unit,
+) = composed(
+    inspectorInfo = debugInspectorInfo {
+        name = "clickable"
+        properties["enabled"] = enabled
+        properties["onClickLabel"] = onClickLabel
+        properties["role"] = role
+        properties["onClick"] = onClick
+    },
+) {
+    val multipleEventsCutter = remember { MultipleEventsCutter.get() }
+    Modifier.clickable(
+        enabled = enabled,
+        onClickLabel = onClickLabel,
+        onClick = { multipleEventsCutter.processEvent { onClick() } },
+        role = role,
+        indication = ripple(),
+        interactionSource = remember { MutableInteractionSource() },
+    )
+}
+
+fun Modifier.noRippleClickableSingle(
+    enabled: Boolean = true,
+    onClickLabel: String? = null,
+    role: Role? = null,
+    onClick: () -> Unit,
+) = composed(
+    inspectorInfo = debugInspectorInfo {
+        name = "clickable"
+        properties["enabled"] = enabled
+        properties["onClickLabel"] = onClickLabel
+        properties["role"] = role
+        properties["onClick"] = onClick
+    },
+) {
+    val multipleEventsCutter = remember { MultipleEventsCutter.get() }
+    Modifier.noRippleClickable(
+        onClick = { multipleEventsCutter.processEvent { onClick() } },
+    )
 }
 
 fun String.toDistanceString(): String {

@@ -72,14 +72,14 @@ class HomeViewModel @Inject constructor(
      * @param newSearchWord 검색어
      */
     // 검색 결과 호출 API
-    fun getSearchResults(newSearchWord: String = uiState.value.searchWord.text) {
+    fun getSearchResults(newSearchWord: String = uiState.value.searchWord.text, showSheet: Boolean = true) {
         if (newSearchWord.isEmpty()) {
             return
         }
         viewModelScope.launch {
             homeRepository.getHomeSearchResult(newSearchWord).fold(
                 onSuccess = { response ->
-                    updateSearchResults(response.toUiState(newSearchWord), false)
+                    updateSearchResults(response.toUiState(newSearchWord), showSheet)
                 },
                 onFailure = { error ->
                     Log.e("HomeViewModel", "getSearchResults: Error fetching search results", error)
@@ -155,10 +155,11 @@ class HomeViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     selectedBuildingMarker = null,
-                    bottomSheetType = HomeBottomSheetType.SEARCH,
                     searchResults = persistentListOf(searchResult),
+                    homeUiMode = HomeUiMode.DEFAULT
                 )
             }
+            setBottomSheetType(HomeBottomSheetType.SEARCH)
         }
     }
 
@@ -255,6 +256,7 @@ class HomeViewModel @Inject constructor(
                         _uiState.update {
                             it.copy(
                                 homeUiMode = HomeUiMode.ROUTE_MODE,
+                                bottomSheetType = HomeBottomSheetType.NONE,
                                 routeResults = routeResults.toImmutableList(),
                                 selectedRouteResult = routeResults.first()
                             )

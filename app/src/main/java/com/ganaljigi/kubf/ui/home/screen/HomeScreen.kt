@@ -208,6 +208,7 @@ fun HomeScreen(
                 when (uiState.bottomSheetType) {
                     HomeBottomSheetType.SEARCH -> {
                         HomeSearchBottomSheet(
+                            searchKeyword = uiState.searchWord.text,
                             searchResults = uiState.searchResults,
                             onInquireClick = {
                                 viewModel.setShowInquiryDialog(true)

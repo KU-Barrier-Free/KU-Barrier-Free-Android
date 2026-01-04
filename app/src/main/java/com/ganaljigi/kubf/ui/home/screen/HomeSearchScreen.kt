@@ -11,7 +11,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -38,15 +41,29 @@ fun HomeSearchScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val focusRequester = remember { FocusRequester() }
+    var shouldNavigateUp by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
-        viewModel.getSearchResults()
+        viewModel.getSearchResults(showSheet = false)
     }
     LaunchedEffect(Unit) {
         viewModel.updateSearchWord(TextFieldValue(""))
         viewModel.updateSearchResults(emptyList(), false)
     }
+
+    // SearchMode.SEARCH이고 길찾기 모드가 아닐 때만 바텀시트가 설정되면 화면 닫기
+    LaunchedEffect(shouldNavigateUp, uiState.bottomSheetType, uiState.homeUiMode) {
+        if (shouldNavigateUp &&
+            searchMode == SearchMode.SEARCH &&
+            uiState.bottomSheetType != com.ganaljigi.kubf.ui.home.viewmodel.HomeBottomSheetType.NONE &&
+            uiState.homeUiMode != com.ganaljigi.kubf.ui.home.viewmodel.HomeUiMode.FIND_MODE &&
+            uiState.homeUiMode != com.ganaljigi.kubf.ui.home.viewmodel.HomeUiMode.ROUTE_MODE) {
+            navigateUp()
+            shouldNavigateUp = false
+        }
+    }
+
 
     Column(
         modifier = Modifier
@@ -68,9 +85,8 @@ fun HomeSearchScreen(
             onValueCleared = viewModel::updateSearchWord,
             onSearchKeyboardEntered = {
                 if (searchMode == SearchMode.SEARCH) {
-                    viewModel.updateSearchWord(uiState.searchWord)
-                    viewModel.updateSearchResults()
-                    navigateUp()
+                    viewModel.getSearchResults()
+                    shouldNavigateUp = true
                 }
             },
             value = uiState.searchWord,
@@ -86,11 +102,19 @@ fun HomeSearchScreen(
             },
             onItemClick = {
                 when (searchMode) {
-                    SearchMode.SEARCH -> viewModel.updateSearchResults(listOf(it))
-                    SearchMode.FIND_FROM_LOCATION -> viewModel.onFromClick(it)
-                    SearchMode.FIND_TO_LOCATION -> viewModel.onToClick(it)
+                    SearchMode.SEARCH -> {
+                        viewModel.updateSearchResults(listOf(it))
+                        shouldNavigateUp = true
+                    }
+                    SearchMode.FIND_FROM_LOCATION -> {
+                        viewModel.onFromClick(it)
+                        navigateUp()
+                    }
+                    SearchMode.FIND_TO_LOCATION -> {
+                        viewModel.onToClick(it)
+                        navigateUp()
+                    }
                 }
-                navigateUp()
             },
             searchResults = uiState.searchResults,
             popularKeywords = uiState.popularKeywords,

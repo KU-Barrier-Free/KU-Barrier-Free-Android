@@ -58,8 +58,8 @@ import com.ganaljigi.kubf.ui.buildinginfo.model.Room
 import com.ganaljigi.kubf.ui.buildinginfo.viewmodel.BuildingViewModel
 import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.Gray4
-import com.ganaljigi.kubf.ui.theme.MainGreen
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.ui.theme.MainGreen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -239,7 +239,9 @@ fun BuildingInfoScreen(
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        text = "건물번호: ${uiState.buildingInfo.number}",
+                        text = "건물번호: ${
+                            if (uiState.buildingInfo.number == 0) "없음" else uiState.buildingInfo.number.toString()
+                        }",
                         style = KUBFAndroidTheme.typography.regular14,
                         color = Gray3
                     )

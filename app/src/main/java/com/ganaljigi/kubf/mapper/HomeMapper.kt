@@ -53,18 +53,24 @@ fun List<HomeResponseDto.HomePin>.toToggleMarkers(
 fun HomeSearchResponseDto.toUiState(matchKeyword: String): List<SearchResult> =
     this.buildings.map {
         SearchResult(
-            id = it.id.toLong(),
+            id = it.id,
+            buildingId = it.id,
             name = it.name,
             searchKeyword = matchKeyword,
+            latitude = it.latitude,
+            longitude = it.longitude,
             isBuilding = true,
             icon = R.drawable.ic_building,
         )
     } + this.facilities.map {
         SearchResult(
-            id = it.id.toLong(),
+            id = it.id,
+            buildingId = it.buildingId,
             name = it.name,
             building = it.buildingName,
             searchKeyword = matchKeyword,
+            latitude = it.latitude,
+            longitude = it.longitude,
             isBuilding = false,
             icon = getIconResByName(it.purpose)
         )

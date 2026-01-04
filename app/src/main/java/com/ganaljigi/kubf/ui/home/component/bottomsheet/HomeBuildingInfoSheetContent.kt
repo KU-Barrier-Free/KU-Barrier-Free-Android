@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImagePainter.State.Empty.painter
 import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.ui.common.component.ConvenienceChip
 import com.ganaljigi.kubf.ui.common.component.DoorComponent
@@ -45,6 +46,8 @@ fun HomeBuildingInfoSheetContent(
     buildingInfo: HomeBuildingInfo,
     onItemClick: (Long) -> Unit = {},
 ) {
+    val buildingNumber = if(buildingInfo.buildingNumber == 0) "없음" else buildingInfo.buildingNumber.toString()
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -84,7 +87,7 @@ fun HomeBuildingInfoSheetContent(
                     )
                     Text(
                         modifier = Modifier.padding(start = 8.dp),
-                        text = "건물번호: ${buildingInfo.buildingNumber}",
+                        text = "건물번호: $buildingNumber",
                         style = KUBFAndroidTheme.typography.regular14.copy(
                             color = Gray3
                         )

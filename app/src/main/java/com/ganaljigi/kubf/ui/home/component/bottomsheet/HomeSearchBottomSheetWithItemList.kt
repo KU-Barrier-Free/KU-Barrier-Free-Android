@@ -29,6 +29,7 @@ import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.theme.MainGreen
 import com.ganaljigi.kubf.ui.util.noRippleClickable
+import com.ganaljigi.kubf.ui.util.noRippleClickableSingle
 
 @Composable
 fun HomeSearchBottomSheetWithItemList(
@@ -87,7 +88,12 @@ private fun HomeSearchBottomSheetItem(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .noRippleClickable { onItemClick(searchResult.id) },
+            .noRippleClickableSingle {
+                onItemClick(
+                    if (searchResult.isBuilding) searchResult.id
+                    else searchResult.buildingId
+                )
+            },
     ) {
         Row(
             modifier = Modifier.align(Alignment.Start),
