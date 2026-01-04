@@ -47,7 +47,12 @@ class HomeViewModel @Inject constructor(
      */
     fun updateSearchWord(newSearchWord: TextFieldValue = TextFieldValue("")) {
         if (newSearchWord.text == uiState.value.searchWord.text) return
-        _uiState.update { it.copy(searchWord = newSearchWord) }
+        _uiState.update {
+            it.copy(
+                searchWord = newSearchWord,
+                searchResults = if (newSearchWord.text.isEmpty()) persistentListOf() else it.searchResults
+            )
+        }
         getSearchResults(newSearchWord.text)
     }
 
@@ -72,7 +77,10 @@ class HomeViewModel @Inject constructor(
      * @param newSearchWord 검색어
      */
     // 검색 결과 호출 API
-    fun getSearchResults(newSearchWord: String = uiState.value.searchWord.text, showSheet: Boolean = true) {
+    fun getSearchResults(
+        newSearchWord: String = uiState.value.searchWord.text,
+        showSheet: Boolean = true,
+    ) {
         if (newSearchWord.isEmpty()) {
             return
         }
